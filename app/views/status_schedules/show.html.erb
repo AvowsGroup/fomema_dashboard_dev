@@ -1,0 +1,64 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Status scheduleable type:</strong>
+  <%= @status_schedule.status_scheduleable_type %>
+</p>
+
+<p>
+  <strong>Status scheduleable:</strong>
+  <%= @status_schedule.status_scheduleable_id %>
+</p>
+
+<p>
+  <strong>From:</strong>
+  <%= @status_schedule.from %>
+</p>
+
+<p>
+  <strong>To:</strong>
+  <%= @status_schedule.to %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @status_schedule.status %>
+</p>
+
+<p>
+  <strong>Status reason:</strong>
+  <%= @status_schedule.status_reason %>
+</p>
+
+<p>
+  <strong>Comment:</strong>
+  <%= @status_schedule.comment %>
+</p>
+
+<p>
+  <strong>Previous status:</strong>
+  <%= @status_schedule.previous_status %>
+</p>
+
+<p>
+  <strong>Previous status reason:</strong>
+  <%= @status_schedule.previous_status_reason %>
+</p>
+
+<p>
+  <strong>Created by:</strong>
+  <%= @status_schedule.created_by %>
+</p>
+
+<p>
+  <strong>Updated by:</strong>
+  <%= @status_schedule.updated_by %>
+</p>
+
+<p>
+  <strong>Previous comment:</strong>
+  <%= @status_schedule.previous_comment %>
+</p>
+
+<%= link_to 'Edit', edit_status_schedule_path(@status_schedule) %> |
+<%= link_to 'Back', status_schedules_path %>

@@ -1,0 +1,237 @@
+<%= form_with(model: survey_monkey_customer, local: true) do |form| %>
+  <% if survey_monkey_customer.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(survey_monkey_customer.errors.count, "error") %> prohibited this survey_monkey_customer from being saved:</h2>
+
+      <ul>
+      <% survey_monkey_customer.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :respondent_id %>
+    <%= form.text_field :respondent_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :collector_id %>
+    <%= form.text_field :collector_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :start_date %>
+    <%= form.datetime_select :start_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :end_date %>
+    <%= form.datetime_select :end_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :ip_address %>
+    <%= form.text_field :ip_address %>
+  </div>
+
+  <div class="field">
+    <%= form.label :email_address %>
+    <%= form.text_field :email_address %>
+  </div>
+
+  <div class="field">
+    <%= form.label :first_name %>
+    <%= form.text_field :first_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :last_name %>
+    <%= form.text_field :last_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :custom_data %>
+    <%= form.text_field :custom_data %>
+  </div>
+
+  <div class="field">
+    <%= form.label :what_is_your_email_address %>
+    <%= form.text_field :what_is_your_email_address %>
+  </div>
+
+  <div class="field">
+    <%= form.label :what_is_your_gender %>
+    <%= form.text_field :what_is_your_gender %>
+  </div>
+
+  <div class="field">
+    <%= form.label :what_is_your_age %>
+    <%= form.text_field :what_is_your_age %>
+  </div>
+
+  <div class="field">
+    <%= form.label :what_is_customer_suits_you %>
+    <%= form.text_field :what_is_customer_suits_you %>
+  </div>
+
+  <div class="field">
+    <%= form.label :which_sector_below_represents %>
+    <%= form.text_field :which_sector_below_represents %>
+  </div>
+
+  <div class="field">
+    <%= form.label :where_did_you_register_your_worker %>
+    <%= form.text_field :where_did_you_register_your_worker %>
+  </div>
+
+  <div class="field">
+    <%= form.label :process_emp_reg %>
+    <%= form.text_field :process_emp_reg %>
+  </div>
+
+  <div class="field">
+    <%= form.label :process_worker_reg %>
+    <%= form.text_field :process_worker_reg %>
+  </div>
+
+  <div class="field">
+    <%= form.label :panel_clinic_xray_facilities %>
+    <%= form.text_field :panel_clinic_xray_facilities %>
+  </div>
+
+  <div class="field">
+    <%= form.label :overall_experience_reg_process %>
+    <%= form.text_field :overall_experience_reg_process %>
+  </div>
+
+  <div class="field">
+    <%= form.label :other %>
+    <%= form.text_field :other %>
+  </div>
+
+  <div class="field">
+    <%= form.label :location_panel_clinics %>
+    <%= form.text_field :location_panel_clinics %>
+  </div>
+
+  <div class="field">
+    <%= form.label :Fomema_medical_examincation_are_understandable %>
+    <%= form.text_field :Fomema_medical_examincation_are_understandable %>
+  </div>
+
+  <div class="field">
+    <%= form.label :medical_Examinations_are_easy_toobtain %>
+    <%= form.text_field :medical_Examinations_are_easy_toobtain %>
+  </div>
+
+  <div class="field">
+    <%= form.label :Overall_rate_experience_medical_examination %>
+    <%= form.text_field :Overall_rate_experience_medical_examination %>
+  </div>
+
+  <div class="field">
+    <%= form.label :Other_medical %>
+    <%= form.text_field :Other_medical %>
+  </div>
+
+  <div class="field">
+    <%= form.label :worker_status_found_medical_unsuitable %>
+    <%= form.text_field :worker_status_found_medical_unsuitable %>
+  </div>
+
+  <div class="field">
+    <%= form.label :undergo_fomema_appeal_process %>
+    <%= form.text_field :undergo_fomema_appeal_process %>
+  </div>
+
+  <div class="field">
+    <%= form.label :tell_experience_appeal_process %>
+    <%= form.text_field :tell_experience_appeal_process %>
+  </div>
+
+  <div class="field">
+    <%= form.label :other_appealprocess %>
+    <%= form.text_field :other_appealprocess %>
+  </div>
+
+  <div class="field">
+    <%= form.label :recommend_fomema_friend_collegue %>
+    <%= form.text_field :recommend_fomema_friend_collegue %>
+  </div>
+
+  <div class="field">
+    <%= form.label :announcement_business_operator %>
+    <%= form.text_field :announcement_business_operator %>
+  </div>
+
+  <div class="field">
+    <%= form.label :delivering_health %>
+    <%= form.text_field :delivering_health %>
+  </div>
+
+  <div class="field">
+    <%= form.label :aligned_info_moh_MOHA %>
+    <%= form.text_field :aligned_info_moh_MOHA %>
+  </div>
+
+  <div class="field">
+    <%= form.label :facebook %>
+    <%= form.text_field :facebook %>
+  </div>
+
+  <div class="field">
+    <%= form.label :twitter %>
+    <%= form.text_field :twitter %>
+  </div>
+
+  <div class="field">
+    <%= form.label :instagram %>
+    <%= form.text_field :instagram %>
+  </div>
+
+  <div class="field">
+    <%= form.label :telegram %>
+    <%= form.text_field :telegram %>
+  </div>
+
+  <div class="field">
+    <%= form.label :other_social %>
+    <%= form.text_field :other_social %>
+  </div>
+
+  <div class="field">
+    <%= form.label :what_tochange_fomema_socialmedia %>
+    <%= form.text_field :what_tochange_fomema_socialmedia %>
+  </div>
+
+  <div class="field">
+    <%= form.label :how_do_you_reachus %>
+    <%= form.text_field :how_do_you_reachus %>
+  </div>
+
+  <div class="field">
+    <%= form.label :how_long_did_you_wait %>
+    <%= form.text_field :how_long_did_you_wait %>
+  </div>
+
+  <div class="field">
+    <%= form.label :is_this_issue_or_problem %>
+    <%= form.text_field :is_this_issue_or_problem %>
+  </div>
+
+  <div class="field">
+    <%= form.label :how_would_you_rate %>
+    <%= form.text_field :how_would_you_rate %>
+  </div>
+
+  <div class="field">
+    <%= form.label :overall_how_satisfied_are_you %>
+    <%= form.text_field :overall_how_satisfied_are_you %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

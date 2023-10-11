@@ -1,0 +1,107 @@
+<%= form_with(model: survey_monkey, local: true) do |form| %>
+  <% if survey_monkey.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(survey_monkey.errors.count, "error") %> prohibited this survey_monkey from being saved:</h2>
+
+      <ul>
+      <% survey_monkey.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :respondent_id %>
+    <%= form.text_field :respondent_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :collector_id %>
+    <%= form.text_field :collector_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :start_date %>
+    <%= form.datetime_select :start_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :end_date %>
+    <%= form.datetime_select :end_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :ip_address %>
+    <%= form.text_field :ip_address %>
+  </div>
+
+  <div class="field">
+    <%= form.label :email_address %>
+    <%= form.text_field :email_address %>
+  </div>
+
+  <div class="field">
+    <%= form.label :first_name %>
+    <%= form.text_field :first_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :last_name %>
+    <%= form.text_field :last_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :custom_data %>
+    <%= form.text_field :custom_data %>
+  </div>
+
+  <div class="field">
+    <%= form.label :what_is_your_email_address %>
+    <%= form.text_field :what_is_your_email_address %>
+  </div>
+
+  <div class="field">
+    <%= form.label :what_is_your_gender %>
+    <%= form.text_field :what_is_your_gender %>
+  </div>
+
+  <div class="field">
+    <%= form.label :what_is_your_age %>
+    <%= form.text_field :what_is_your_age %>
+  </div>
+
+  <div class="field">
+    <%= form.label :what_is_customer_suits_you %>
+    <%= form.text_field :what_is_customer_suits_you %>
+  </div>
+
+  <div class="field">
+    <%= form.label :how_do_you_reachus %>
+    <%= form.text_field :how_do_you_reachus %>
+  </div>
+
+  <div class="field">
+    <%= form.label :how_long_did_you_wait %>
+    <%= form.text_field :how_long_did_you_wait %>
+  </div>
+
+  <div class="field">
+    <%= form.label :is_this_issue_or_problem %>
+    <%= form.text_field :is_this_issue_or_problem %>
+  </div>
+
+  <div class="field">
+    <%= form.label :how_would_you_rate %>
+    <%= form.text_field :how_would_you_rate %>
+  </div>
+
+  <div class="field">
+    <%= form.label :overall_how_satisfied_are_you %>
+    <%= form.text_field :overall_how_satisfied_are_you %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

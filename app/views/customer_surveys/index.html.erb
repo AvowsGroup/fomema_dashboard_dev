@@ -1,0 +1,61 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Customer Surveys</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Respondent</th>
+      <th>Collector</th>
+      <th>Start date</th>
+      <th>End date</th>
+      <th>Ip address</th>
+      <th>Email address</th>
+      <th>First name</th>
+      <th>Last name</th>
+      <th>Custom data</th>
+      <th>What is your email address</th>
+      <th>What is your gender</th>
+      <th>What is your age</th>
+      <th>What is customer suits you</th>
+      <th>How do you reachus</th>
+      <th>How long did you wait</th>
+      <th>Is this issue or problem</th>
+      <th>How would you rate</th>
+      <th>Overall how satisfied are you</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @customer_surveys.each do |customer_survey| %>
+      <tr>
+        <td><%= customer_survey.respondent_id %></td>
+        <td><%= customer_survey.collector_id %></td>
+        <td><%= customer_survey.start_date %></td>
+        <td><%= customer_survey.end_date %></td>
+        <td><%= customer_survey.ip_address %></td>
+        <td><%= customer_survey.email_address %></td>
+        <td><%= customer_survey.first_name %></td>
+        <td><%= customer_survey.last_name %></td>
+        <td><%= customer_survey.custom_data %></td>
+        <td><%= customer_survey.what_is_your_email_address %></td>
+        <td><%= customer_survey.what_is_your_gender %></td>
+        <td><%= customer_survey.what_is_your_age %></td>
+        <td><%= customer_survey.what_is_customer_suits_you %></td>
+        <td><%= customer_survey.how_do_you_reachus %></td>
+        <td><%= customer_survey.how_long_did_you_wait %></td>
+        <td><%= customer_survey.is_this_issue_or_problem %></td>
+        <td><%= customer_survey.how_would_you_rate %></td>
+        <td><%= customer_survey.overall_how_satisfied_are_you %></td>
+        <td><%= link_to 'Show', customer_survey %></td>
+        <td><%= link_to 'Edit', edit_customer_survey_path(customer_survey) %></td>
+        <td><%= link_to 'Destroy', customer_survey, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Customer Survey', new_customer_survey_path %>

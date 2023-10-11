@@ -1,0 +1,217 @@
+<%= form_with(model: radiologist, local: true) do |form| %>
+  <% if radiologist.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(radiologist.errors.count, "error") %> prohibited this radiologist from being saved:</h2>
+
+      <ul>
+      <% radiologist.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :code %>
+    <%= form.text_field :code %>
+  </div>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :xray_facility_name %>
+    <%= form.text_field :xray_facility_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :string %>
+    <%= form.text_field :string %>
+  </div>
+
+  <div class="field">
+    <%= form.label :title_id %>
+    <%= form.text_field :title_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :icno %>
+    <%= form.text_field :icno %>
+  </div>
+
+  <div class="field">
+    <%= form.label :address1 %>
+    <%= form.text_field :address1 %>
+  </div>
+
+  <div class="field">
+    <%= form.label :address2 %>
+    <%= form.text_field :address2 %>
+  </div>
+
+  <div class="field">
+    <%= form.label :address3 %>
+    <%= form.text_field :address3 %>
+  </div>
+
+  <div class="field">
+    <%= form.label :address4 %>
+    <%= form.text_field :address4 %>
+  </div>
+
+  <div class="field">
+    <%= form.label :country_id %>
+    <%= form.text_field :country_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :state_id %>
+    <%= form.text_field :state_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :town_id %>
+    <%= form.text_field :town_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :postcode %>
+    <%= form.text_field :postcode %>
+  </div>
+
+  <div class="field">
+    <%= form.label :phone %>
+    <%= form.text_field :phone %>
+  </div>
+
+  <div class="field">
+    <%= form.label :fax %>
+    <%= form.text_field :fax %>
+  </div>
+
+  <div class="field">
+    <%= form.label :mobile %>
+    <%= form.text_field :mobile %>
+  </div>
+
+  <div class="field">
+    <%= form.label :email %>
+    <%= form.text_field :email %>
+  </div>
+
+  <div class="field">
+    <%= form.label :qualification %>
+    <%= form.text_field :qualification %>
+  </div>
+
+  <div class="field">
+    <%= form.label :is_panel_xray_facility %>
+    <%= form.check_box :is_panel_xray_facility %>
+  </div>
+
+  <div class="field">
+    <%= form.label :district_health_office_id %>
+    <%= form.text_field :district_health_office_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :is_pcr %>
+    <%= form.check_box :is_pcr %>
+  </div>
+
+  <div class="field">
+    <%= form.label :apc_year %>
+    <%= form.number_field :apc_year %>
+  </div>
+
+  <div class="field">
+    <%= form.label :apc_number %>
+    <%= form.text_field :apc_number %>
+  </div>
+
+  <div class="field">
+    <%= form.label :nsr_number %>
+    <%= form.text_field :nsr_number %>
+  </div>
+
+  <div class="field">
+    <%= form.label :renewal_agreement_date %>
+    <%= form.date_select :renewal_agreement_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :comment %>
+    <%= form.text_area :comment %>
+  </div>
+
+  <div class="field">
+    <%= form.label :status %>
+    <%= form.text_field :status %>
+  </div>
+
+  <div class="field">
+    <%= form.label :status_reason %>
+    <%= form.text_field :status_reason %>
+  </div>
+
+  <div class="field">
+    <%= form.label :registration_approved_at %>
+    <%= form.datetime_select :registration_approved_at %>
+  </div>
+
+  <div class="field">
+    <%= form.label :activated_at %>
+    <%= form.datetime_select :activated_at %>
+  </div>
+
+  <div class="field">
+    <%= form.label :approval_status %>
+    <%= form.text_field :approval_status %>
+  </div>
+
+  <div class="field">
+    <%= form.label :approval_remark %>
+    <%= form.text_field :approval_remark %>
+  </div>
+
+  <div class="field">
+    <%= form.label :created_by %>
+    <%= form.text_field :created_by %>
+  </div>
+
+  <div class="field">
+    <%= form.label :updated_by %>
+    <%= form.text_field :updated_by %>
+  </div>
+
+  <div class="field">
+    <%= form.label :status_comment %>
+    <%= form.text_area :status_comment %>
+  </div>
+
+  <div class="field">
+    <%= form.label :user_id %>
+    <%= form.text_field :user_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :gender %>
+    <%= form.text_field :gender %>
+  </div>
+
+  <div class="field">
+    <%= form.label :nationality_id %>
+    <%= form.text_field :nationality_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :race_id %>
+    <%= form.text_field :race_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

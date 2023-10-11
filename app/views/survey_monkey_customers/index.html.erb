@@ -1,0 +1,113 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Survey Monkey Customers</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Respondent</th>
+      <th>Collector</th>
+      <th>Start date</th>
+      <th>End date</th>
+      <th>Ip address</th>
+      <th>Email address</th>
+      <th>First name</th>
+      <th>Last name</th>
+      <th>Custom data</th>
+      <th>What is your email address</th>
+      <th>What is your gender</th>
+      <th>What is your age</th>
+      <th>What is customer suits you</th>
+      <th>Which sector below represents</th>
+      <th>Where did you register your worker</th>
+      <th>Process emp reg</th>
+      <th>Process worker reg</th>
+      <th>Panel clinic xray facilities</th>
+      <th>Overall experience reg process</th>
+      <th>Other</th>
+      <th>Location panel clinics</th>
+      <th>Fomema medical examincation are understandable</th>
+      <th>Medical examinations are easy toobtain</th>
+      <th>Overall rate experience medical examination</th>
+      <th>Other medical</th>
+      <th>Worker status found medical unsuitable</th>
+      <th>Undergo fomema appeal process</th>
+      <th>Tell experience appeal process</th>
+      <th>Other appealprocess</th>
+      <th>Recommend fomema friend collegue</th>
+      <th>Announcement business operator</th>
+      <th>Delivering health</th>
+      <th>Aligned info moh moha</th>
+      <th>Facebook</th>
+      <th>Twitter</th>
+      <th>Instagram</th>
+      <th>Telegram</th>
+      <th>Other social</th>
+      <th>What tochange fomema socialmedia</th>
+      <th>How do you reachus</th>
+      <th>How long did you wait</th>
+      <th>Is this issue or problem</th>
+      <th>How would you rate</th>
+      <th>Overall how satisfied are you</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @survey_monkey_customers.each do |survey_monkey_customer| %>
+      <tr>
+        <td><%= survey_monkey_customer.respondent_id %></td>
+        <td><%= survey_monkey_customer.collector_id %></td>
+        <td><%= survey_monkey_customer.start_date %></td>
+        <td><%= survey_monkey_customer.end_date %></td>
+        <td><%= survey_monkey_customer.ip_address %></td>
+        <td><%= survey_monkey_customer.email_address %></td>
+        <td><%= survey_monkey_customer.first_name %></td>
+        <td><%= survey_monkey_customer.last_name %></td>
+        <td><%= survey_monkey_customer.custom_data %></td>
+        <td><%= survey_monkey_customer.what_is_your_email_address %></td>
+        <td><%= survey_monkey_customer.what_is_your_gender %></td>
+        <td><%= survey_monkey_customer.what_is_your_age %></td>
+        <td><%= survey_monkey_customer.what_is_customer_suits_you %></td>
+        <td><%= survey_monkey_customer.which_sector_below_represents %></td>
+        <td><%= survey_monkey_customer.where_did_you_register_your_worker %></td>
+        <td><%= survey_monkey_customer.process_emp_reg %></td>
+        <td><%= survey_monkey_customer.process_worker_reg %></td>
+        <td><%= survey_monkey_customer.panel_clinic_xray_facilities %></td>
+        <td><%= survey_monkey_customer.overall_experience_reg_process %></td>
+        <td><%= survey_monkey_customer.other %></td>
+        <td><%= survey_monkey_customer.location_panel_clinics %></td>
+        <td><%= survey_monkey_customer.Fomema_medical_examincation_are_understandable %></td>
+        <td><%= survey_monkey_customer.medical_Examinations_are_easy_toobtain %></td>
+        <td><%= survey_monkey_customer.Overall_rate_experience_medical_examination %></td>
+        <td><%= survey_monkey_customer.Other_medical %></td>
+        <td><%= survey_monkey_customer.worker_status_found_medical_unsuitable %></td>
+        <td><%= survey_monkey_customer.undergo_fomema_appeal_process %></td>
+        <td><%= survey_monkey_customer.tell_experience_appeal_process %></td>
+        <td><%= survey_monkey_customer.other_appealprocess %></td>
+        <td><%= survey_monkey_customer.recommend_fomema_friend_collegue %></td>
+        <td><%= survey_monkey_customer.announcement_business_operator %></td>
+        <td><%= survey_monkey_customer.delivering_health %></td>
+        <td><%= survey_monkey_customer.aligned_info_moh_MOHA %></td>
+        <td><%= survey_monkey_customer.facebook %></td>
+        <td><%= survey_monkey_customer.twitter %></td>
+        <td><%= survey_monkey_customer.instagram %></td>
+        <td><%= survey_monkey_customer.telegram %></td>
+        <td><%= survey_monkey_customer.other_social %></td>
+        <td><%= survey_monkey_customer.what_tochange_fomema_socialmedia %></td>
+        <td><%= survey_monkey_customer.how_do_you_reachus %></td>
+        <td><%= survey_monkey_customer.how_long_did_you_wait %></td>
+        <td><%= survey_monkey_customer.is_this_issue_or_problem %></td>
+        <td><%= survey_monkey_customer.how_would_you_rate %></td>
+        <td><%= survey_monkey_customer.overall_how_satisfied_are_you %></td>
+        <td><%= link_to 'Show', survey_monkey_customer %></td>
+        <td><%= link_to 'Edit', edit_survey_monkey_customer_path(survey_monkey_customer) %></td>
+        <td><%= link_to 'Destroy', survey_monkey_customer, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Survey Monkey Customer', new_survey_monkey_customer_path %>

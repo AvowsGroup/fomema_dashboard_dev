@@ -1,0 +1,41 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  respondent_id: MyString
+  collector_id: MyString
+  start_date: 2023-09-30 13:27:46
+  end_date: 2023-09-30 13:27:46
+  ip_address: MyString
+  email_address: MyString
+  first_name: MyString
+  last_name: MyString
+  custom_data: MyString
+  what_is_your_email_address: MyString
+  what_is_your_gender: MyString
+  what_is_your_age: MyString
+  what_is_customer_suits_you: MyString
+  how_do_you_reachus: MyString
+  how_long_did_you_wait: MyString
+  is_this_issue_or_problem: MyString
+  how_would_you_rate: MyString
+  overall_how_satisfied_are_you: MyString
+
+two:
+  respondent_id: MyString
+  collector_id: MyString
+  start_date: 2023-09-30 13:27:46
+  end_date: 2023-09-30 13:27:46
+  ip_address: MyString
+  email_address: MyString
+  first_name: MyString
+  last_name: MyString
+  custom_data: MyString
+  what_is_your_email_address: MyString
+  what_is_your_gender: MyString
+  what_is_your_age: MyString
+  what_is_customer_suits_you: MyString
+  how_do_you_reachus: MyString
+  how_long_did_you_wait: MyString
+  is_this_issue_or_problem: MyString
+  how_would_you_rate: MyString
+  overall_how_satisfied_are_you: MyString

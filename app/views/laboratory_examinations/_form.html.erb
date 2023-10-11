@@ -1,0 +1,92 @@
+<%= form_with(model: laboratory_examination, local: true) do |form| %>
+  <% if laboratory_examination.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(laboratory_examination.errors.count, "error") %> prohibited this laboratory_examination from being saved:</h2>
+
+      <ul>
+      <% laboratory_examination.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :transaction_id %>
+    <%= form.text_field :transaction_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :laboratory_id %>
+    <%= form.text_field :laboratory_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :laboratory_test_not_done %>
+    <%= form.text_field :laboratory_test_not_done %>
+  </div>
+
+  <div class="field">
+    <%= form.label :specimen_taken_date %>
+    <%= form.datetime_select :specimen_taken_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :specimen_received_date %>
+    <%= form.datetime_select :specimen_received_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :blood_specimen_barcode %>
+    <%= form.text_field :blood_specimen_barcode %>
+  </div>
+
+  <div class="field">
+    <%= form.label :urine_specimen_barcode %>
+    <%= form.text_field :urine_specimen_barcode %>
+  </div>
+
+  <div class="field">
+    <%= form.label :blood_group %>
+    <%= form.text_field :blood_group %>
+  </div>
+
+  <div class="field">
+    <%= form.label :blood_group_rhesus %>
+    <%= form.text_field :blood_group_rhesus %>
+  </div>
+
+  <div class="field">
+    <%= form.label :result %>
+    <%= form.text_field :result %>
+  </div>
+
+  <div class="field">
+    <%= form.label :transmitted_at %>
+    <%= form.datetime_select :transmitted_at %>
+  </div>
+
+  <div class="field">
+    <%= form.label :created_by %>
+    <%= form.text_field :created_by %>
+  </div>
+
+  <div class="field">
+    <%= form.label :updated_by %>
+    <%= form.text_field :updated_by %>
+  </div>
+
+  <div class="field">
+    <%= form.label :web_service_indicator %>
+    <%= form.check_box :web_service_indicator %>
+  </div>
+
+  <div class="field">
+    <%= form.label :deleted_at %>
+    <%= form.datetime_select :deleted_at %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

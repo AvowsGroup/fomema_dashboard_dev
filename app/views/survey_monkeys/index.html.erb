@@ -1,0 +1,61 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Survey Monkeys</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Respondent</th>
+      <th>Collector</th>
+      <th>Start date</th>
+      <th>End date</th>
+      <th>Ip address</th>
+      <th>Email address</th>
+      <th>First name</th>
+      <th>Last name</th>
+      <th>Custom data</th>
+      <th>What is your email address</th>
+      <th>What is your gender</th>
+      <th>What is your age</th>
+      <th>What is customer suits you</th>
+      <th>How do you reachus</th>
+      <th>How long did you wait</th>
+      <th>Is this issue or problem</th>
+      <th>How would you rate</th>
+      <th>Overall how satisfied are you</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @survey_monkeys.each do |survey_monkey| %>
+      <tr>
+        <td><%= survey_monkey.respondent_id %></td>
+        <td><%= survey_monkey.collector_id %></td>
+        <td><%= survey_monkey.start_date %></td>
+        <td><%= survey_monkey.end_date %></td>
+        <td><%= survey_monkey.ip_address %></td>
+        <td><%= survey_monkey.email_address %></td>
+        <td><%= survey_monkey.first_name %></td>
+        <td><%= survey_monkey.last_name %></td>
+        <td><%= survey_monkey.custom_data %></td>
+        <td><%= survey_monkey.what_is_your_email_address %></td>
+        <td><%= survey_monkey.what_is_your_gender %></td>
+        <td><%= survey_monkey.what_is_your_age %></td>
+        <td><%= survey_monkey.what_is_customer_suits_you %></td>
+        <td><%= survey_monkey.how_do_you_reachus %></td>
+        <td><%= survey_monkey.how_long_did_you_wait %></td>
+        <td><%= survey_monkey.is_this_issue_or_problem %></td>
+        <td><%= survey_monkey.how_would_you_rate %></td>
+        <td><%= survey_monkey.overall_how_satisfied_are_you %></td>
+        <td><%= link_to 'Show', survey_monkey %></td>
+        <td><%= link_to 'Edit', edit_survey_monkey_path(survey_monkey) %></td>
+        <td><%= link_to 'Destroy', survey_monkey, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Survey Monkey', new_survey_monkey_path %>

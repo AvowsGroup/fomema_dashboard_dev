@@ -1,0 +1,93 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  respondent_id: MyString
+  collector_id: MyString
+  start_date: 2023-09-30 17:41:50
+  end_date: 2023-09-30 17:41:50
+  ip_address: MyString
+  email_address: MyString
+  first_name: MyString
+  last_name: MyString
+  custom_data: MyString
+  what_is_your_email_address: MyString
+  what_is_your_gender: MyString
+  what_is_your_age: MyString
+  what_is_customer_suits_you: MyString
+  which_sector_below_represents: MyString
+  where_did_you_register_your_worker: MyString
+  process_emp_reg: MyString
+  process_worker_reg: MyString
+  panel_clinic_xray_facilities: MyString
+  overall_experience_reg_process: MyString
+  other: MyString
+  location_panel_clinics: MyString
+  Fomema_medical_examincation_are_understandable: MyString
+  medical_Examinations_are_easy_toobtain: MyString
+  Overall_rate_experience_medical_examination: MyString
+  Other_medical: MyString
+  worker_status_found_medical_unsuitable: MyString
+  undergo_fomema_appeal_process: MyString
+  tell_experience_appeal_process: MyString
+  other_appealprocess: MyString
+  recommend_fomema_friend_collegue: MyString
+  announcement_business_operator: MyString
+  delivering_health: MyString
+  aligned_info_moh_MOHA: MyString
+  facebook: MyString
+  twitter: MyString
+  instagram: MyString
+  telegram: MyString
+  other_social: MyString
+  what_tochange_fomema_socialmedia: MyString
+  how_do_you_reachus: MyString
+  how_long_did_you_wait: MyString
+  is_this_issue_or_problem: MyString
+  how_would_you_rate: MyString
+  overall_how_satisfied_are_you: MyString
+
+two:
+  respondent_id: MyString
+  collector_id: MyString
+  start_date: 2023-09-30 17:41:50
+  end_date: 2023-09-30 17:41:50
+  ip_address: MyString
+  email_address: MyString
+  first_name: MyString
+  last_name: MyString
+  custom_data: MyString
+  what_is_your_email_address: MyString
+  what_is_your_gender: MyString
+  what_is_your_age: MyString
+  what_is_customer_suits_you: MyString
+  which_sector_below_represents: MyString
+  where_did_you_register_your_worker: MyString
+  process_emp_reg: MyString
+  process_worker_reg: MyString
+  panel_clinic_xray_facilities: MyString
+  overall_experience_reg_process: MyString
+  other: MyString
+  location_panel_clinics: MyString
+  Fomema_medical_examincation_are_understandable: MyString
+  medical_Examinations_are_easy_toobtain: MyString
+  Overall_rate_experience_medical_examination: MyString
+  Other_medical: MyString
+  worker_status_found_medical_unsuitable: MyString
+  undergo_fomema_appeal_process: MyString
+  tell_experience_appeal_process: MyString
+  other_appealprocess: MyString
+  recommend_fomema_friend_collegue: MyString
+  announcement_business_operator: MyString
+  delivering_health: MyString
+  aligned_info_moh_MOHA: MyString
+  facebook: MyString
+  twitter: MyString
+  instagram: MyString
+  telegram: MyString
+  other_social: MyString
+  what_tochange_fomema_socialmedia: MyString
+  how_do_you_reachus: MyString
+  how_long_did_you_wait: MyString
+  is_this_issue_or_problem: MyString
+  how_would_you_rate: MyString
+  overall_how_satisfied_are_you: MyString

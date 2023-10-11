@@ -1,0 +1,35 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  transaction_id: 
+  laboratory_id: 
+  laboratory_test_not_done: MyString
+  specimen_taken_date: 2023-10-10 14:56:22
+  specimen_received_date: 2023-10-10 14:56:22
+  blood_specimen_barcode: MyString
+  urine_specimen_barcode: MyString
+  blood_group: MyString
+  blood_group_rhesus: MyString
+  result: MyString
+  transmitted_at: 2023-10-10 14:56:22
+  created_by: 
+  updated_by: 
+  web_service_indicator: false
+  deleted_at: 2023-10-10 14:56:22
+
+two:
+  transaction_id: 
+  laboratory_id: 
+  laboratory_test_not_done: MyString
+  specimen_taken_date: 2023-10-10 14:56:22
+  specimen_received_date: 2023-10-10 14:56:22
+  blood_specimen_barcode: MyString
+  urine_specimen_barcode: MyString
+  blood_group: MyString
+  blood_group_rhesus: MyString
+  result: MyString
+  transmitted_at: 2023-10-10 14:56:22
+  created_by: 
+  updated_by: 
+  web_service_indicator: false
+  deleted_at: 2023-10-10 14:56:22

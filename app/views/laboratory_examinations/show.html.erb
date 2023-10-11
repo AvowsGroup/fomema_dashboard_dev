@@ -1,0 +1,79 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Transaction:</strong>
+  <%= @laboratory_examination.transaction_id %>
+</p>
+
+<p>
+  <strong>Laboratory:</strong>
+  <%= @laboratory_examination.laboratory_id %>
+</p>
+
+<p>
+  <strong>Laboratory test not done:</strong>
+  <%= @laboratory_examination.laboratory_test_not_done %>
+</p>
+
+<p>
+  <strong>Specimen taken date:</strong>
+  <%= @laboratory_examination.specimen_taken_date %>
+</p>
+
+<p>
+  <strong>Specimen received date:</strong>
+  <%= @laboratory_examination.specimen_received_date %>
+</p>
+
+<p>
+  <strong>Blood specimen barcode:</strong>
+  <%= @laboratory_examination.blood_specimen_barcode %>
+</p>
+
+<p>
+  <strong>Urine specimen barcode:</strong>
+  <%= @laboratory_examination.urine_specimen_barcode %>
+</p>
+
+<p>
+  <strong>Blood group:</strong>
+  <%= @laboratory_examination.blood_group %>
+</p>
+
+<p>
+  <strong>Blood group rhesus:</strong>
+  <%= @laboratory_examination.blood_group_rhesus %>
+</p>
+
+<p>
+  <strong>Result:</strong>
+  <%= @laboratory_examination.result %>
+</p>
+
+<p>
+  <strong>Transmitted at:</strong>
+  <%= @laboratory_examination.transmitted_at %>
+</p>
+
+<p>
+  <strong>Created by:</strong>
+  <%= @laboratory_examination.created_by %>
+</p>
+
+<p>
+  <strong>Updated by:</strong>
+  <%= @laboratory_examination.updated_by %>
+</p>
+
+<p>
+  <strong>Web service indicator:</strong>
+  <%= @laboratory_examination.web_service_indicator %>
+</p>
+
+<p>
+  <strong>Deleted at:</strong>
+  <%= @laboratory_examination.deleted_at %>
+</p>
+
+<%= link_to 'Edit', edit_laboratory_examination_path(@laboratory_examination) %> |
+<%= link_to 'Back', laboratory_examinations_path %>

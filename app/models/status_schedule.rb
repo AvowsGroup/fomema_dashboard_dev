@@ -1,0 +1,2 @@
+class StatusSchedule < ApplicationRecord
+end

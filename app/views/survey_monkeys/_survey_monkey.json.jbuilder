@@ -1,0 +1,2 @@
+json.extract! survey_monkey, :id, :respondent_id, :collector_id, :start_date, :end_date, :ip_address, :email_address, :first_name, :last_name, :custom_data, :what_is_your_email_address, :what_is_your_gender, :what_is_your_age, :what_is_customer_suits_you, :how_do_you_reachus, :how_long_did_you_wait, :is_this_issue_or_problem, :how_would_you_rate, :overall_how_satisfied_are_you, :created_at, :updated_at
+json.url survey_monkey_url(survey_monkey, format: :json)

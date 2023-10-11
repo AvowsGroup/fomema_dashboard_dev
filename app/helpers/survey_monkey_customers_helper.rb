@@ -1,0 +1,2 @@
+module SurveyMonkeyCustomersHelper
+end

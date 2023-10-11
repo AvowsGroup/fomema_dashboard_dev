@@ -1,0 +1,55 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Laboratory Examinations</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Transaction</th>
+      <th>Laboratory</th>
+      <th>Laboratory test not done</th>
+      <th>Specimen taken date</th>
+      <th>Specimen received date</th>
+      <th>Blood specimen barcode</th>
+      <th>Urine specimen barcode</th>
+      <th>Blood group</th>
+      <th>Blood group rhesus</th>
+      <th>Result</th>
+      <th>Transmitted at</th>
+      <th>Created by</th>
+      <th>Updated by</th>
+      <th>Web service indicator</th>
+      <th>Deleted at</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @laboratory_examinations.each do |laboratory_examination| %>
+      <tr>
+        <td><%= laboratory_examination.transaction_id %></td>
+        <td><%= laboratory_examination.laboratory_id %></td>
+        <td><%= laboratory_examination.laboratory_test_not_done %></td>
+        <td><%= laboratory_examination.specimen_taken_date %></td>
+        <td><%= laboratory_examination.specimen_received_date %></td>
+        <td><%= laboratory_examination.blood_specimen_barcode %></td>
+        <td><%= laboratory_examination.urine_specimen_barcode %></td>
+        <td><%= laboratory_examination.blood_group %></td>
+        <td><%= laboratory_examination.blood_group_rhesus %></td>
+        <td><%= laboratory_examination.result %></td>
+        <td><%= laboratory_examination.transmitted_at %></td>
+        <td><%= laboratory_examination.created_by %></td>
+        <td><%= laboratory_examination.updated_by %></td>
+        <td><%= laboratory_examination.web_service_indicator %></td>
+        <td><%= laboratory_examination.deleted_at %></td>
+        <td><%= link_to 'Show', laboratory_examination %></td>
+        <td><%= link_to 'Edit', edit_laboratory_examination_path(laboratory_examination) %></td>
+        <td><%= link_to 'Destroy', laboratory_examination, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Laboratory Examination', new_laboratory_examination_path %>

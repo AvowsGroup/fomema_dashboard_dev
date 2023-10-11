@@ -1,0 +1,94 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Respondent:</strong>
+  <%= @customer_survey.respondent_id %>
+</p>
+
+<p>
+  <strong>Collector:</strong>
+  <%= @customer_survey.collector_id %>
+</p>
+
+<p>
+  <strong>Start date:</strong>
+  <%= @customer_survey.start_date %>
+</p>
+
+<p>
+  <strong>End date:</strong>
+  <%= @customer_survey.end_date %>
+</p>
+
+<p>
+  <strong>Ip address:</strong>
+  <%= @customer_survey.ip_address %>
+</p>
+
+<p>
+  <strong>Email address:</strong>
+  <%= @customer_survey.email_address %>
+</p>
+
+<p>
+  <strong>First name:</strong>
+  <%= @customer_survey.first_name %>
+</p>
+
+<p>
+  <strong>Last name:</strong>
+  <%= @customer_survey.last_name %>
+</p>
+
+<p>
+  <strong>Custom data:</strong>
+  <%= @customer_survey.custom_data %>
+</p>
+
+<p>
+  <strong>What is your email address:</strong>
+  <%= @customer_survey.what_is_your_email_address %>
+</p>
+
+<p>
+  <strong>What is your gender:</strong>
+  <%= @customer_survey.what_is_your_gender %>
+</p>
+
+<p>
+  <strong>What is your age:</strong>
+  <%= @customer_survey.what_is_your_age %>
+</p>
+
+<p>
+  <strong>What is customer suits you:</strong>
+  <%= @customer_survey.what_is_customer_suits_you %>
+</p>
+
+<p>
+  <strong>How do you reachus:</strong>
+  <%= @customer_survey.how_do_you_reachus %>
+</p>
+
+<p>
+  <strong>How long did you wait:</strong>
+  <%= @customer_survey.how_long_did_you_wait %>
+</p>
+
+<p>
+  <strong>Is this issue or problem:</strong>
+  <%= @customer_survey.is_this_issue_or_problem %>
+</p>
+
+<p>
+  <strong>How would you rate:</strong>
+  <%= @customer_survey.how_would_you_rate %>
+</p>
+
+<p>
+  <strong>Overall how satisfied are you:</strong>
+  <%= @customer_survey.overall_how_satisfied_are_you %>
+</p>
+
+<%= link_to 'Edit', edit_customer_survey_path(@customer_survey) %> |
+<%= link_to 'Back', customer_surveys_path %>

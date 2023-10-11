@@ -1,0 +1,105 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Radiologists</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Code</th>
+      <th>Name</th>
+      <th>Xray facility name</th>
+      <th>String</th>
+      <th>Title</th>
+      <th>Icno</th>
+      <th>Address1</th>
+      <th>Address2</th>
+      <th>Address3</th>
+      <th>Address4</th>
+      <th>Country</th>
+      <th>State</th>
+      <th>Town</th>
+      <th>Postcode</th>
+      <th>Phone</th>
+      <th>Fax</th>
+      <th>Mobile</th>
+      <th>Email</th>
+      <th>Qualification</th>
+      <th>Is panel xray facility</th>
+      <th>District health office</th>
+      <th>Is pcr</th>
+      <th>Apc year</th>
+      <th>Apc number</th>
+      <th>Nsr number</th>
+      <th>Renewal agreement date</th>
+      <th>Comment</th>
+      <th>Status</th>
+      <th>Status reason</th>
+      <th>Registration approved at</th>
+      <th>Activated at</th>
+      <th>Approval status</th>
+      <th>Approval remark</th>
+      <th>Created by</th>
+      <th>Updated by</th>
+      <th>Status comment</th>
+      <th>User</th>
+      <th>Gender</th>
+      <th>Nationality</th>
+      <th>Race</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @radiologists.each do |radiologist| %>
+      <tr>
+        <td><%= radiologist.code %></td>
+        <td><%= radiologist.name %></td>
+        <td><%= radiologist.xray_facility_name %></td>
+        <td><%= radiologist.string %></td>
+        <td><%= radiologist.title_id %></td>
+        <td><%= radiologist.icno %></td>
+        <td><%= radiologist.address1 %></td>
+        <td><%= radiologist.address2 %></td>
+        <td><%= radiologist.address3 %></td>
+        <td><%= radiologist.address4 %></td>
+        <td><%= radiologist.country_id %></td>
+        <td><%= radiologist.state_id %></td>
+        <td><%= radiologist.town_id %></td>
+        <td><%= radiologist.postcode %></td>
+        <td><%= radiologist.phone %></td>
+        <td><%= radiologist.fax %></td>
+        <td><%= radiologist.mobile %></td>
+        <td><%= radiologist.email %></td>
+        <td><%= radiologist.qualification %></td>
+        <td><%= radiologist.is_panel_xray_facility %></td>
+        <td><%= radiologist.district_health_office_id %></td>
+        <td><%= radiologist.is_pcr %></td>
+        <td><%= radiologist.apc_year %></td>
+        <td><%= radiologist.apc_number %></td>
+        <td><%= radiologist.nsr_number %></td>
+        <td><%= radiologist.renewal_agreement_date %></td>
+        <td><%= radiologist.comment %></td>
+        <td><%= radiologist.status %></td>
+        <td><%= radiologist.status_reason %></td>
+        <td><%= radiologist.registration_approved_at %></td>
+        <td><%= radiologist.activated_at %></td>
+        <td><%= radiologist.approval_status %></td>
+        <td><%= radiologist.approval_remark %></td>
+        <td><%= radiologist.created_by %></td>
+        <td><%= radiologist.updated_by %></td>
+        <td><%= radiologist.status_comment %></td>
+        <td><%= radiologist.user_id %></td>
+        <td><%= radiologist.gender %></td>
+        <td><%= radiologist.nationality_id %></td>
+        <td><%= radiologist.race_id %></td>
+        <td><%= link_to 'Show', radiologist %></td>
+        <td><%= link_to 'Edit', edit_radiologist_path(radiologist) %></td>
+        <td><%= link_to 'Destroy', radiologist, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Radiologist', new_radiologist_path %>

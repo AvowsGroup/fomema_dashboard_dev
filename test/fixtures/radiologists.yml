@@ -1,0 +1,85 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  code: MyString
+  name: MyString
+  xray_facility_name: MyString
+  string: MyString
+  title_id: 
+  icno: MyString
+  address1: MyString
+  address2: MyString
+  address3: MyString
+  address4: MyString
+  country_id: 
+  state_id: 
+  town_id: 
+  postcode: MyString
+  phone: MyString
+  fax: MyString
+  mobile: MyString
+  email: MyString
+  qualification: MyString
+  is_panel_xray_facility: false
+  district_health_office_id: 
+  is_pcr: false
+  apc_year: 1
+  apc_number: MyString
+  nsr_number: MyString
+  renewal_agreement_date: 2023-10-06
+  comment: MyText
+  status: MyString
+  status_reason: MyString
+  registration_approved_at: 2023-10-06 13:48:31
+  activated_at: 2023-10-06 13:48:31
+  approval_status: MyString
+  approval_remark: MyString
+  created_by: 
+  updated_by: 
+  status_comment: MyText
+  user_id: 
+  gender: MyString
+  nationality_id: 
+  race_id: 
+
+two:
+  code: MyString
+  name: MyString
+  xray_facility_name: MyString
+  string: MyString
+  title_id: 
+  icno: MyString
+  address1: MyString
+  address2: MyString
+  address3: MyString
+  address4: MyString
+  country_id: 
+  state_id: 
+  town_id: 
+  postcode: MyString
+  phone: MyString
+  fax: MyString
+  mobile: MyString
+  email: MyString
+  qualification: MyString
+  is_panel_xray_facility: false
+  district_health_office_id: 
+  is_pcr: false
+  apc_year: 1
+  apc_number: MyString
+  nsr_number: MyString
+  renewal_agreement_date: 2023-10-06
+  comment: MyText
+  status: MyString
+  status_reason: MyString
+  registration_approved_at: 2023-10-06 13:48:31
+  activated_at: 2023-10-06 13:48:31
+  approval_status: MyString
+  approval_remark: MyString
+  created_by: 
+  updated_by: 
+  status_comment: MyText
+  user_id: 
+  gender: MyString
+  nationality_id: 
+  race_id: 

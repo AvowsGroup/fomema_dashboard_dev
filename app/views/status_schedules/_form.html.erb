@@ -1,0 +1,77 @@
+<%= form_with(model: status_schedule, local: true) do |form| %>
+  <% if status_schedule.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(status_schedule.errors.count, "error") %> prohibited this status_schedule from being saved:</h2>
+
+      <ul>
+      <% status_schedule.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :status_scheduleable_type %>
+    <%= form.text_field :status_scheduleable_type %>
+  </div>
+
+  <div class="field">
+    <%= form.label :status_scheduleable_id %>
+    <%= form.text_field :status_scheduleable_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :from %>
+    <%= form.date_select :from %>
+  </div>
+
+  <div class="field">
+    <%= form.label :to %>
+    <%= form.date_select :to %>
+  </div>
+
+  <div class="field">
+    <%= form.label :status %>
+    <%= form.text_field :status %>
+  </div>
+
+  <div class="field">
+    <%= form.label :status_reason %>
+    <%= form.text_field :status_reason %>
+  </div>
+
+  <div class="field">
+    <%= form.label :comment %>
+    <%= form.text_area :comment %>
+  </div>
+
+  <div class="field">
+    <%= form.label :previous_status %>
+    <%= form.text_field :previous_status %>
+  </div>
+
+  <div class="field">
+    <%= form.label :previous_status_reason %>
+    <%= form.text_field :previous_status_reason %>
+  </div>
+
+  <div class="field">
+    <%= form.label :created_by %>
+    <%= form.text_field :created_by %>
+  </div>
+
+  <div class="field">
+    <%= form.label :updated_by %>
+    <%= form.text_field :updated_by %>
+  </div>
+
+  <div class="field">
+    <%= form.label :previous_comment %>
+    <%= form.text_area :previous_comment %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

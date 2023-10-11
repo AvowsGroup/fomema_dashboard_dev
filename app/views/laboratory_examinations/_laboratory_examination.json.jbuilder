@@ -1,0 +1,2 @@
+json.extract! laboratory_examination, :id, :transaction_id, :laboratory_id, :laboratory_test_not_done, :specimen_taken_date, :specimen_received_date, :blood_specimen_barcode, :urine_specimen_barcode, :blood_group, :blood_group_rhesus, :result, :transmitted_at, :created_by, :updated_by, :web_service_indicator, :deleted_at, :created_at, :updated_at
+json.url laboratory_examination_url(laboratory_examination, format: :json)
