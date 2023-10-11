@@ -132,9 +132,18 @@
             $('input[name="sectorcheck"]').click();
         });
 
+
         $('#countrycheckall').on("click", function () {
-            $('input[name="countrycheck"]').click();
+            // Toggle the state of all country checkboxes
+            $('input[name="countrycheck"]').prop('checked', function (index, value) {
+                return !value;
+            });
+
+            // Enable or disable the "Others" checkbox based on "Select All"
+            const selectAllCheckbox = $('#Country input[name="countrycheck"][value="Others"]');
+            selectAllCheckbox.prop('disabled', !selectAllCheckbox.prop('disabled'));
         });
+
 
         $('#statecheckall').on("click", function () {
             $('input[name="statecheck"]').click();
@@ -196,17 +205,12 @@
             return $(this).val();
         }).get().join(' ');
 
-        debugger;
-
         $.ajax({
             type: 'GET',
             url: '/first_dashboard/filterapply',
 
-            data: {
-                sector_id: checkedValues['Sector']
-            },
+            data: checkedValues,
             error: function (jqXHR, textStatus, errorThrown) {
-
             },
 
             success: function (data, textStatus, jqXHR) {
