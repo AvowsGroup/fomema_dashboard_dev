@@ -4,7 +4,8 @@
     <div class="dropdown-menu sidefilter">
       <ul>
         <li><a class="dropdown-item" style="    font-size: 14px;
-          padding: 4px 6px; background-color: #d9d8d8;"><input type="checkbox" class="mx-1">Select All</a></li>
+          padding: 4px 6px; background-color: #d9d8d8;">
+          <input type="checkbox" class="mx-1" id="select-all">Select All</a></li>
         <li>
           <div class="card-lifilter">
             <span>XQCC Pool </span>
@@ -120,3 +121,32 @@
     </li>
   </ul>
 </div>
+
+<script>
+    // Get the "Select All" checkbox
+    const selectAllCheckbox = document.getElementById('select-all');
+
+    // Get all checkboxes in the sections
+    const allCheckboxes = document.querySelectorAll('.card-filter input[type="checkbox"]');
+
+    // Get all section collapse elements
+    const allSections = document.querySelectorAll('.collapse');
+
+    // Function to handle the "Select All" functionality
+    function handleSelectAllClick() {
+        const isChecked = selectAllCheckbox.checked;
+
+        allCheckboxes.forEach((checkbox) => {
+            checkbox.checked = isChecked;
+        });
+
+        // Show/hide all sections based on the checkbox state
+        allSections.forEach((section) => {
+            section.style.display = isChecked ? 'block' : 'none';
+        });
+    }
+
+    // Add a click event listener to the "Select All" checkbox
+    selectAllCheckbox.addEventListener('change', handleSelectAllClick);
+</script>
+
