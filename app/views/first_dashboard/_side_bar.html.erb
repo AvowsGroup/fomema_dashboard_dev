@@ -57,13 +57,14 @@
                       </li>
                       <% @job_type.each do |job_type| %>
                         <li>
-                          <input type="checkbox" name="sectorcheck" value=<%= "#{job_type}" %>> <%= job_type.camelcase %>
+                          <input type="checkbox" name="sectorcheck" value="<%= job_type %>"> <%= job_type.camelcase %>
                         </li>
                       <% end %>
                     </ul>
                   </div>
                 </div>
               </div>
+
               <div class="card">
                 <div class="card-header" id="filter3">
                   <a href="#" class="filter-link collapsed" data-toggle="collapse" data-target="#State" aria-expanded="true" aria-controls="State">State</a>
@@ -201,15 +202,17 @@
               </div>
               <div class="card">
                 <div class="card-header" id="filter6">
-                  <a href="#" class="filter-link collapsed" data-toggle="collapse" data-target="#Registration" aria-expanded="true" aria-controls="Registration">Registration
-                    at</a>
+                  <a href="#" class="filter-link collapsed" data-toggle="collapse" data-target="#Registration" aria-expanded="true" aria-controls="Registration">Registration at</a>
                 </div>
                 <div id="Registration" class="collapse" aria-labelledby="filter6" data-parent="#filter">
                   <div class="card-body">
                     <ul class="subment-li">
+                      <li>
+                        <input type="checkbox" id="registrationcheckall" name="all_selected" value=""> Select All
+                      </li>
                       <% @organizations.each do |org| %>
                         <li>
-                          <input type="checkbox" name="<%= "#{org}" %>" value="<%= "#{org}" %>"> <%= "#{org.upcase}" %>
+                          <input type="checkbox" name="registrationcheck" value="<%= "#{org}" %>"> <%= "#{org.upcase}" %>
                         </li>
                       <% end %>
                     </ul>
@@ -350,7 +353,7 @@
         // Retrieve values from Country
         checkedValues['Country'] = [];
 
-       // Exclude the 15 individual countries when "Others" is checked
+        // Exclude the 15 individual countries when "Others" is checked
         var excludedCountries = [
             "Bangladesh", "Nepal", "Indonesia", "Myanmar", "India", "Pakistan", "Philippines", "Vietnam",
             "Sri Lanka", "Thailand", "Cambodia", "Laos", "Uzbekistan", "Turkmenistan", "Kazakhstan"
@@ -411,7 +414,6 @@
         }).get().join(' ');
 
         // Add even more divs as needed
-
 
 
         return checkedValues;

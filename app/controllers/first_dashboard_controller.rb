@@ -1,11 +1,10 @@
 class FirstDashboardController < ApplicationController
   def index
-
     # data for filter drop down 
     @countries = Country.pluck(:name).compact
-    @states = State.pluck(:name).compact
-    @job_type = JobType.pluck(:name).compact
-    @organizations = Organization.pluck(:name)
+    @states = State.pluck(:name).compact.uniq
+    @job_type = JobType.pluck(:name).compact.uniq
+    @organizations = Organization.pluck(:name).uniq
     @foregin_worker_type = Transaction.pluck(:registration_type).uniq
     
     #unfiltered data for data_pints
@@ -159,7 +158,7 @@ class FirstDashboardController < ApplicationController
         end 
       when "Registration"
         if param_value.present?
-          organization_names = Organization.pluck(:name)
+          organization_names = Organization.pluck(:name).uniq
           selected_organization_names = organization_names & param_value
           transactions = transactions.joins(:organization).where("organizations.name" => selected_organization_names)
         end 
