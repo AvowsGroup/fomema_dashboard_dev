@@ -161,39 +161,29 @@
 </div>
 
 <script>
-    // Get the "Select All" checkbox
-    const selectAllCheckboxThisFile = document.getElementById('select-all');
+    document.addEventListener('DOMContentLoaded', function () {
+        // Get a reference to the "Select All" checkbox
+        const selectAllCheckbox = document.getElementById('select-all');
 
-    // Get all checkboxes in the sections
-    const allCheckboxes = document.querySelectorAll('.card-filter input[type="checkbox"]');
+        // Get a reference to all checkboxes and sections
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const sections = document.querySelectorAll('.collapse');
 
-    // Get all section collapse elements
-    const allSections = document.querySelectorAll('.collapse');
+        // Add an event listener to the "Select All" checkbox
+        selectAllCheckbox.addEventListener('change', function () {
+            // Check or uncheck all checkboxes
+            checkboxes.forEach(function (checkbox) {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
 
-    // Function to handle the "Select All" functionality
-    function handleSelectAllClick() {
-        const isChecked = selectAllCheckboxThisFile.checked;
-
-        allCheckboxes.forEach((checkbox) => {
-            checkbox.checked = isChecked;
-        });
-
-        // Show/hide all sections based on the checkbox state
-        allSections.forEach((section) => {
-            section.style.display = isChecked ? 'block' : 'none';
-        });
-    }
-
-    // Add a click event listener to the "Select All" checkbox
-    selectAllCheckboxThisFile.addEventListener('change', handleSelectAllClick);
-
-    // Function to handle individual checkbox clicks
-    allCheckboxes.forEach((checkbox) => {
-        checkbox.addEventListener('change', () => {
-            // Show/hide the corresponding section based on the checkbox state
-            const dataTarget = checkbox.getAttribute('data-target');
-            const section = document.getElementById(dataTarget);
-            section.style.display = checkbox.checked ? 'block' : 'none';
+            // Expand or collapse all sections based on the "Select All" checkbox's state
+            sections.forEach(function (section) {
+                if (selectAllCheckbox.checked) {
+                    section.classList.add('show'); // Add 'show' class to expand sections
+                } else {
+                    section.classList.remove('show'); // Remove 'show' class to collapse sections
+                }
+            });
         });
     });
 </script>
