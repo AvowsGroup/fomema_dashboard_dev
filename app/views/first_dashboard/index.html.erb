@@ -132,16 +132,16 @@
             $('input[name="sectorcheck"]').click();
         });
 
-
         $('#countrycheckall').on("click", function () {
-            // Toggle the state of all country checkboxes
-            $('input[name="countrycheck"]').prop('checked', function (index, value) {
-                return !value;
-            });
+            // Check all country checkboxes when "Select All" is clicked
+            $('input[name="countrycheck"]').prop('checked', true);
 
-            // Enable or disable the "Others" checkbox based on "Select All"
-            const selectAllCheckboxInThisScope = $('#Country input[name="countrycheck"][value="Others"]');
-            selectAllCheckboxInThisScope.prop('disabled', !selectAllCheckboxInThisScope.prop('disabled'));
+            // Check the "Others" checkbox as well
+            $('#Country input[name="countrycheck"][value="Others"]').prop('checked', true);
+
+            // Add "Others" and all countries to the selected values
+            var allCountries = <%= @countries.to_json.html_safe %>;
+            checkedValues['Country'] = ['Others'].concat(allCountries);
         });
 
 
