@@ -123,6 +123,7 @@
 </body>
 </html>
 <script type="text/javascript">
+    var checkedValues = {};
     $(document).ready(function () {
         $('#sidebarCollapse').on('click', function () {
             $('#sidebar').toggleClass('active');
@@ -133,11 +134,11 @@
         });
 
         $('#countrycheckall').on("click", function () {
-            // Check all country checkboxes when "Select All" is clicked
-            $('input[name="countrycheck"]').prop('checked', true);
+            var countryCheckboxes = $('input[name="countrycheck"]');
+            countryCheckboxes.prop('checked', this.checked);
 
-            // Check the "Others" checkbox as well
-            $('#Country input[name="countrycheck"][value="Others"]').prop('checked', true);
+            // Check or uncheck the "Others" checkbox as well
+            $('#Country input[name="countrycheck"][value="Others"]').prop('checked', this.checked);
 
             // Add "Others" and all countries to the selected values
             var allCountries = <%= @countries.to_json.html_safe %>;
