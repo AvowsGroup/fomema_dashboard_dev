@@ -350,22 +350,36 @@
         // Retrieve values from Country
         checkedValues['Country'] = [];
 
-        // Exclude the 15 individual countries when "Others" is checked
+       // Exclude the 15 individual countries when "Others" is checked
         var excludedCountries = [
             "Bangladesh", "Nepal", "Indonesia", "Myanmar", "India", "Pakistan", "Philippines", "Vietnam",
             "Sri Lanka", "Thailand", "Cambodia", "Laos", "Uzbekistan", "Turkmenistan", "Kazakhstan"
         ];
 
+        // Function to get selected countries from checkboxes
+        function getSelectedCountries() {
+            var selectedCountries = [];
+            $('#Country input[name="countrycheck"]:checked').each(function () {
+                selectedCountries.push($(this).val());
+            });
+            return selectedCountries;
+        }
+
         if ($('#Country input[name="countrycheck"][value="Others"]').is(':checked')) {
             var allCountries = <%= @countries.to_json.html_safe %>; // Assuming you have a variable @countries in your controller
+            var selectedCountries = getSelectedCountries();
 
-            checkedValues['Country'] = allCountries.filter(country => !excludedCountries.includes(country));
+            // Combine selected countries with excluded countries
+            var combinedCountries = selectedCountries.concat(allCountries.filter(country => !excludedCountries.includes(country)));
+            checkedValues['Country'] = combinedCountries;
         } else {
-            // Fetch the selected individual countries when checkboxes are selected
-            $('#Country input[name="countrycheck"]:checked').each(function () {
-                checkedValues['Country'].push($(this).val());
-            });
+            // If "Others" is not checked, get only the selected individual countries
+            checkedValues['Country'] = getSelectedCountries();
         }
+
+        checkedValues['Country'] = checkedValues['Country'].filter(country => country !== 'Others');
+
+        // console.log('Country:', checkedValues['Country']);
 
         // Join the selected countries into a space-separated string
         checkedValues['Country'] = checkedValues['Country'].join(' ');
@@ -397,6 +411,7 @@
         }).get().join(' ');
 
         // Add even more divs as needed
+
 
 
         return checkedValues;
