@@ -140,8 +140,8 @@
             });
 
             // Enable or disable the "Others" checkbox based on "Select All"
-            const selectAllCheckbox = $('#Country input[name="countrycheck"][value="Others"]');
-            selectAllCheckbox.prop('disabled', !selectAllCheckbox.prop('disabled'));
+            const selectAllCheckboxInThisScope = $('#Country input[name="countrycheck"][value="Others"]');
+            selectAllCheckboxInThisScope.prop('disabled', !selectAllCheckboxInThisScope.prop('disabled'));
         });
 
 
@@ -181,27 +181,27 @@
             return $(this).val();
         }).get().join(' ');
 
-        checkedValues['Country'] = $('input[type="countrycheck"]:checked').map(function () {
+        checkedValues['Country'] = $('input[name="countrycheck"]:checked').map(function () {
             return $(this).val();
         }).get().join(' ');
 
-        checkedValues['State'] = $('input[type="statecheck"]:checked').map(function () {
+        checkedValues['State'] = $('input[name="statecheck"]:checked').map(function () {
             return $(this).val();
         }).get().join(' ');
 
-        checkedValues['Gender'] = $('input[type="gendercheck"]:checked').map(function () {
+        checkedValues['Gender'] = $('input[name="gendercheck"]:checked').map(function () {
             return $(this).val();
         }).get().join(' ');
 
-        checkedValues['age'] = $('input[type="agecheck"]:checked').map(function () {
+        checkedValues['age'] = $('input[name="agecheck"]:checked').map(function () {
             return $(this).val();
         }).get().join(' ');
 
-        checkedValues['ForeginWorker'] = $('input[type="foreignworkercheck"]:checked').map(function () {
+        checkedValues['ForeginWorker'] = $('input[name="foreignworkercheck"]:checked').map(function () {
             return $(this).val();
         }).get().join(' ');
 
-        checkedValues['Registration'] = $('input[type="registrationcheck"]:checked').map(function () {
+        checkedValues['Registration'] = $('input[name="registrationcheck"]:checked').map(function () {
             return $(this).val();
         }).get().join(' ');
 

@@ -109,9 +109,10 @@
   <ul class="sub-ulcard">
     <li>
       <div class="collapse" id="Radiographer">
-        <div class="sub-licard-header" id="XQCC-Pool-Received">X-Ray Review <span><%= @fw_pending_view[:xqcc_pool] rescue 0 %></span></div>
+        <div class="sub-licard-header" id="XQCC-Pool-Received">X-Ray Review
+          <span><%= @fw_pending_view[:xqcc_pool] rescue 0 %></span></div>
         <div class="sub-licard-body">
-          <span> XQCC Pool Pool </span>
+          <span> XQCC Pool </span>
           <span><%= @fw_pending_view[:xqcc_pool] rescue 0 %></span>
         </div>
       </div>
@@ -125,7 +126,9 @@
       </div>
     </li>
     <li class="collapse" id="Medicalr">
-      <div class="sub-licard-header" id="Medical-Review-Received">Medical Review <span>105,070</span></div>
+      <div class="sub-licard-header" id="Medical-Review-Received">Medical Review
+        <span>105,070</span>
+      </div>
     </li>
   </ul>
 </div>
@@ -134,7 +137,8 @@
   <ul class="sub-ulcard">
     <li>
       <div class="collapse" id="Radiographer1">
-        <div class="sub-licard-header" id="XQCC-Pool-Reviewed">X-Ray Review <span>700,009</span></div>
+        <div class="sub-licard-header" id="XQCC-Pool-Reviewed">X-Ray Review
+          <span>700,009</span></div>
         <div class="sub-licard-body">
           <span> XQCC Pool</span>
           <span>805,071</span>
@@ -150,14 +154,15 @@
       </div>
     </li>
     <li class="collapse" id="Medicalr1">
-      <div class="sub-licard-header" id="Medical-Review-Reviewed">Medical Review <span>800,079</span></div>
+      <div class="sub-licard-header" id="Medical-Review-Reviewed">Medical Review
+        <span>800,079</span></div>
     </li>
   </ul>
 </div>
 
 <script>
     // Get the "Select All" checkbox
-    const selectAllCheckbox = document.getElementById('select-all');
+    const selectAllCheckboxThisFile = document.getElementById('select-all');
 
     // Get all checkboxes in the sections
     const allCheckboxes = document.querySelectorAll('.card-filter input[type="checkbox"]');
@@ -167,7 +172,7 @@
 
     // Function to handle the "Select All" functionality
     function handleSelectAllClick() {
-        const isChecked = selectAllCheckbox.checked;
+        const isChecked = selectAllCheckboxThisFile.checked;
 
         allCheckboxes.forEach((checkbox) => {
             checkbox.checked = isChecked;
@@ -180,7 +185,7 @@
     }
 
     // Add a click event listener to the "Select All" checkbox
-    selectAllCheckbox.addEventListener('change', handleSelectAllClick);
+    selectAllCheckboxThisFile.addEventListener('change', handleSelectAllClick);
 
     // Function to handle individual checkbox clicks
     allCheckboxes.forEach((checkbox) => {
