@@ -23,7 +23,7 @@ class ThirdDashboardController < ApplicationController
       xray_quality: @task_list.select { |hash| ["Review - Normal chest X-ray", "Audit - Abnormal chest X-ray", "XQCC Amendment"].include?(hash[:task]) },
       laboratory_quality: @task_list.select { |hash| ["Laboratory"].include?(hash[:task]) },
       inspectorate: @task_list.select { |hash| ["Doctor Visit", "X-ray Visit"].include?(hash[:task]) },
-      finance_admin: @task_list.select { |hash| [ "Payment to service providers (Doctor, X-ray, Laboratory)", "Refund to Employers", "Insurance payment to Fomema Global Sdn Bhd"].include?(hash[:task]) },
+      finance_admin: @task_list.select { |hash| ["Payment to service providers (Doctor, X-ray, Laboratory)", "Refund to Employers", "Insurance payment to Fomema Global Sdn Bhd"].include?(hash[:task]) },
       medical_review: @task_list.select { |hash| ["Appeal cases", "Pending Review Cases", "TCUPI Cases", "Employer Enquiry JIVO"].include?(hash[:task]) },
       regional_office: @task_list.select { |hash| ["Change of employer (transfer)", "Amendment of Foreign worker info", "Special Renewal Approval (unfit)", "Update employer details", "Employer Registration Approval"].include?(hash[:task]) },
       human_capital: @task_list.select { |hash| ["Staff Claims Submission"].include?(hash[:task]) },
@@ -222,7 +222,8 @@ class ThirdDashboardController < ApplicationController
     if total.zero?
       0.0
     else
-      (current_count / total.to_f) * 100
+      percent = (current_count / total.to_f) * 100
+      percent.round(1)
     end
   end
 
