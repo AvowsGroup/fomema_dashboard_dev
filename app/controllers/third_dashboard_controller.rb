@@ -239,7 +239,10 @@ class ThirdDashboardController < ApplicationController
       else
         count = records.where("(#{attr_1} - #{attr_2})/86400 < ? ", tat).count
       end
-      percentage(records.count, count)
+
+      percentage_result = percentage(records.count, count)
+
+      percentage_result&.round(1)
     rescue
       0.0
     end
