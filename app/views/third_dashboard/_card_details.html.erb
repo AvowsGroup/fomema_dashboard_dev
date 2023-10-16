@@ -76,7 +76,7 @@
                           <td><%= task[:task] %></td>
                           <td><%= task[:TAT] %></td>
                           <td>><%= task[:target] %></td>
-                          <td><%= task[:KPI] %>%</td>
+                          <td><%= task[:KPI].round(1) %>%</td>
                         </tr>
                       <% end %>
                       </tbody>
@@ -168,7 +168,7 @@
                           <td><%= task[:task] %></td>
                           <td><%= task[:TAT] %></td>
                           <td>><%= task[:target] %></td>
-                          <td><%= task[:KPI] %>%</td>
+                          <td><%= task[:KPI].round(1) %>%</td>
                         </tr>
                       <% end %>
                       </tbody>
@@ -260,7 +260,7 @@
                           <td><%= task[:task] %></td>
                           <td><%= task[:TAT] %></td>
                           <td>><%= task[:target] %></td>
-                          <td><%= task[:KPI] %>%</td>
+                          <td><%= task[:KPI].round(1) %>%</td>
                         </tr>
                       <% end %>
                       </tbody>
@@ -352,7 +352,7 @@
                           <td><%= task[:task] %></td>
                           <td><%= task[:TAT] %></td>
                           <td>><%= task[:target] %></td>
-                          <td><%= task[:KPI] %>%</td>
+                          <td><%= task[:KPI].round(1) %>%</td>
                         </tr>
                       <% end %>
                       </tbody>
@@ -444,7 +444,7 @@
                           <td><%= task[:task] %></td>
                           <td><%= task[:TAT] %></td>
                           <td>><%= task[:target] %></td>
-                          <td><%= task[:KPI] %>%</td>
+                          <td><%= task[:KPI].round(1) %>%</td>
                         </tr>
                       <% end %>
                       </tbody>
@@ -536,7 +536,7 @@
                           <td><%= task[:task] %></td>
                           <td><%= task[:TAT] %></td>
                           <td>><%= task[:target] %></td>
-                          <td><%= task[:KPI] %>%</td>
+                          <td><%= task[:KPI].round(1) %>%</td>
                         </tr>
                       <% end %>
                       </tbody>
@@ -628,7 +628,7 @@
                           <td><%= task[:task] %></td>
                           <td><%= task[:TAT] %></td>
                           <td>><%= task[:target] %></td>
-                          <td><%= task[:KPI] %>%</td>
+                          <td><%= task[:KPI].round(1) %>%</td>
                         </tr>
                       <% end %>
                       </tbody>
@@ -720,7 +720,7 @@
                           <td><%= task[:task] %></td>
                           <td><%= task[:TAT] %></td>
                           <td>><%= task[:target] %></td>
-                          <td><%= task[:KPI] %>%</td>
+                          <td><%= task[:KPI].round(1) %>%</td>
                         </tr>
                       <% end %>
                       </tbody>
@@ -812,7 +812,7 @@
                           <td><%= task[:task] %></td>
                           <td><%= task[:TAT] %></td>
                           <td>><%= task[:target] %></td>
-                          <td><%= task[:KPI] %>%</td>
+                          <td><%= task[:KPI].round(1) %>%</td>
                         </tr>
                       <% end %>
                       </tbody>
@@ -904,7 +904,7 @@
                           <td><%= task[:task] %></td>
                           <td><%= task[:TAT] %></td>
                           <td>><%= task[:target] %></td>
-                          <td><%= task[:KPI] %>%</td>
+                          <td><%= task[:KPI].round(1) %>%</td>
                         </tr>
                       <% end %>
                       </tbody>
@@ -933,7 +933,7 @@
                 <span class="progress-right">
                   <span class="progress-bar"></span>
                 </span>
-                <div class="progress-value"><%= (@kpi_data[:management].map { |i| i[:KPI] }.sum) / 3 %>%</div>
+                <div class="progress-value"><%= (@kpi_data[:management].map { |i| i[:KPI] }.sum / 3).round(1) %>%</div>
               </div>
             </div>
           </div>
@@ -950,7 +950,7 @@
                 <span class="progress-right">
                   <span class="progress-bar"></span>
                 </span>
-                <div class="progress-value"><%= (@kpi_data[:human_capital].map { |i| i[:KPI] }.sum) / 1 %>%</div>
+                <div class="progress-value"><%= (@kpi_data[:human_capital].map { |i| i[:KPI] }.sum / 1).round(1) %>%</div>
               </div>
             </div>
           </div>
@@ -967,7 +967,7 @@
                 <span class="progress-right">
                   <span class="progress-bar"></span>
                 </span>
-                <div class="progress-value"><%= (@kpi_data[:inspectorate].map { |i| i[:KPI] }.sum) / 2 %>%</div>
+                <div class="progress-value"><%= (@kpi_data[:inspectorate].map { |i| i[:KPI] }.sum / 2).round(1) %>%</div>
               </div>
             </div>
           </div>
@@ -984,7 +984,7 @@
                 <span class="progress-right">
                   <span class="progress-bar"></span>
                 </span>
-                <div class="progress-value"><%= (@kpi_data[:xray_quality].map { |i| i[:KPI] }.sum) / 3 %>%</div>
+                <div class="progress-value"><%= (@kpi_data[:xray_quality].map { |i| i[:KPI] }.sum / 3).round(1) %>%</div>
               </div>
             </div>
           </div>
@@ -1001,7 +1001,8 @@
                 <span class="progress-right">
                   <span class="progress-bar"></span>
                 </span>
-                <div class="progress-value"><%= (@kpi_data[:medical_review].map { |i| i[:KPI] }.sum) / 4 %>%</div>
+                <div class="progress-value"><%= (@kpi_data[:medical_review].map { |i| i[:KPI] }.sum / 4).round(1) %>%
+                </div>
               </div>
             </div>
           </div>
@@ -1018,7 +1019,7 @@
                 <span class="progress-right">
                   <span class="progress-bar"></span>
                 </span>
-                <div class="progress-value"><%= (@kpi_data[:finance_admin].map { |i| i[:KPI] }.sum) / 3 %>%</div>
+                <div class="progress-value"><%= (@kpi_data[:finance_admin].map { |i| i[:KPI] }.sum / 3).round(1) %>%</div>
               </div>
             </div>
           </div>
@@ -1035,7 +1036,7 @@
                 <span class="progress-right">
                   <span class="progress-bar"></span>
                 </span>
-                <div class="progress-value"><%= (@kpi_data[:regional_office].map { |i| i[:KPI] }.sum) / 5 %>%</div>
+                <div class="progress-value"><%= (@kpi_data[:regional_office].map { |i| i[:KPI] }.sum / 5).round(1) %>%</div>
               </div>
             </div>
           </div>
@@ -1052,7 +1053,7 @@
                 <span class="progress-right">
                   <span class="progress-bar"></span>
                 </span>
-                <div class="progress-value"><%= (@kpi_data[:customer_service].map { |i| i[:KPI] }.sum) / 2 %>%</div>
+                <div class="progress-value"><%= (@kpi_data[:customer_service].map { |i| i[:KPI] }.sum / 2).round(1) %>%</div>
               </div>
             </div>
           </div>
@@ -1069,7 +1070,7 @@
                 <span class="progress-right">
                   <span class="progress-bar"></span>
                 </span>
-                <div class="progress-value"><%= (@kpi_data[:laboratory_quality].map { |i| i[:KPI] }.sum) / 1 %>%</div>
+                <div class="progress-value"><%= (@kpi_data[:laboratory_quality].map { |i| i[:KPI] }.sum / 1).round(1) %>%</div>
               </div>
             </div>
           </div>
@@ -1086,7 +1087,7 @@
                 <span class="progress-right">
                   <span class="progress-bar"></span>
                 </span>
-                <div class="progress-value"><%= (@kpi_data[:support_service].map { |i| i[:KPI] }.sum) / 6 %>%</div>
+                <div class="progress-value"><%= (@kpi_data[:support_service].map { |i| i[:KPI] }.sum / 6).round(1) %>%</div>
               </div>
             </div>
           </div>
