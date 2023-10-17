@@ -66,22 +66,22 @@ class FirstDashboardController < ApplicationController
       }
     end
     @fw_pending_view = {
-      xqcc_pool: XqccPool.joins(:fw_transaction)
-                         .where.not(transactions: { certification_date: nil })
-                         .where.not(created_at: nil)
-                         .count,
-      pcr_pool: PcrPool.joins(:fw_transaction, :pcr_review)
-                       .where.not(fw_transaction: { certification_date: nil })
-                       .where.not(pcr_reviews: { transmitted_at: nil })
-                       .count,
-      x_ray_pending_review: XrayPendingReview.joins(:fw_transaction, :xray_pending_review)
-                                             .where.not(fw_transaction: { certification_date: nil })
-                                             .where.not(pcr_reviews: { transmitted_at: nil })
-                                             .count,
-      x_ray_pending_decision: XrayPendingDecision.joins(:fw_transaction, :xray_pending_review)
-                                                 .where.not(fw_transaction: { certification_date: nil })
-                                                 .where.not(pcr_reviews: { transmitted_at: nil })
-                                                 .count,
+      xqcc_pool: Transaction.joins(:xray_review, :xqcc_pool)
+                            .where.not("transactions.certification_date": nil)
+                            .pluck(:created_at, 'transactions.certification_date', 'xray_reviews.transmitted_at')
+                            .count,
+      pcr_pool: Transaction.joins(:pcr_review, :pcr_pool)
+                           .where.not("transactions.certification_date": nil)
+                           .pluck(:created_at, 'transactions.certification_date', 'pcr_reviews.transmitted_at')
+                           .count,
+      x_ray_pending_review: Transaction.joins(:xray_pending_review)
+                                       .where.not("transactions.certification_date": nil)
+                                       .pluck(:created_at, 'transactions.certification_date', 'xray_pending_reviews.transmitted_at')
+                                       .count,
+      x_ray_pending_decision: Transaction.joins(:xray_pending_decision)
+                                         .where.not("transactions.certification_date": nil)
+                                         .pluck(:created_at, 'transactions.certification_date', 'xray_pending_decisions.transmitted_at')
+                                         .count,
       medical_review: MedicalReview.joins(:transaction)
                                    .where.not("transactions.certification_date IS NULL")
                                    .where.not("medical_reviews.created_at IS NULL")
@@ -89,11 +89,8 @@ class FirstDashboardController < ApplicationController
                                    .where(is_qa: true)
                                    .where.not("medical_reviews.qa_decision_at IS NULL")
                                    .count
+
     } rescue nil
-
-    # xray_pending_review: XrayPendingReview.joins(:fw_transaction).where(XrayPendingReview.arel_table[:created_at].eq(Transaction.arel_table[:certification_date]).or(XrayPendingReview.arel_table[:transmitted_at].eq(Transaction.arel_table[:certification_date]))).count
-    # pcr_pool: PcrPool.joins(:fw_transaction, :pcr_review).where.not(fw_transaction: { certification_date: nil }).where.not(pcr_reviews: { transmitted_at: nil } )
-
     respond_to do |format|
       format.html
       format.js { render layout: false } # Add this line to you respond_to block
