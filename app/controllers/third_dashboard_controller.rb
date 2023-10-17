@@ -220,7 +220,7 @@ class ThirdDashboardController < ApplicationController
   def percentage(total, current_count)
     return nil unless total.is_a?(Numeric) && current_count.is_a?(Numeric)
     if total.zero?
-      0.0
+      0
     else
       percent = (current_count / total.to_f) * 100
       percent.round(1)
@@ -244,7 +244,7 @@ class ThirdDashboardController < ApplicationController
 
       percentage_result&.round(1)
     rescue
-      0.0
+      0
     end
   end
 
