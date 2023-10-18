@@ -8,8 +8,8 @@
             <div class="filtereaccordion" id="filter">
               <div class="card">
                 <div class="card-header" id="faqhead1">
-                  <a href="#" class="filter-link" data-toggle="collapse" data-target="#time-period" aria-expanded="true" aria-controls="time-period">
-                    Time Period</a>
+                  <a href="#" class="filter-link" data-toggle="collapse" data-target="#time-period" aria-expanded="true" aria-controls="time-period">Time
+                    Period</a>
                 </div>
                 <div id="time-period" class="collapse show" aria-labelledby="faqhead1" data-parent="#filter">
                   <div class="card-body">
@@ -77,7 +77,7 @@
                       </li>
                       <% @states.each do |state| %>
                         <li>
-                          <input type="checkbox" name="statecheck" value=<%= "#{state}" %>><%= state.camelcase %>
+                          <input type="checkbox" name="statecheck" value=<%= "#{state}" %>> <%= state.camelcase %>
                         </li>
                       <% end %>
                     </ul>
@@ -202,7 +202,8 @@
               </div>
               <div class="card">
                 <div class="card-header" id="filter6">
-                  <a href="#" class="filter-link collapsed" data-toggle="collapse" data-target="#Registration" aria-expanded="true" aria-controls="Registration">Registration at</a>
+                  <a href="#" class="filter-link collapsed" data-toggle="collapse" data-target="#Registration" aria-expanded="true" aria-controls="Registration">Registration
+                    at</a>
                 </div>
                 <div id="Registration" class="collapse" aria-labelledby="filter6" data-parent="#filter">
                   <div class="card-body">
@@ -212,7 +213,7 @@
                       </li>
                       <% @organizations.each do |org| %>
                         <li>
-                          <input type="checkbox" name="registrationcheck" value="<%= "#{org}" %>"> <%= "#{org.upcase}" %>
+                          <input type="checkbox" name="registrationcheck" value="<%= "#{org}" %>"> <%= "#{org.capitalize}" %>
                         </li>
                       <% end %>
                     </ul>
@@ -228,11 +229,13 @@
                   <div class="card-body">
                     <ul class="subment-li">
                       <li>
-                        <input type="checkbox" id="foreignworkercheckall" name="all_selected" value="">Select All
+                        <input type="checkbox" id="foreignworkercheckall" name="all_selected" value="">&nbsp;Select All
                       </li>
                       <% @foregin_worker_type.each do |fw_type| %>
+                        <% display_name = fw_type == "new_registration" ? "New" : fw_type == "renewal" ? "Renewal" : fw_type %>
                         <li>
-                          <input type="checkbox" name="foreignworkercheck" value=<%= "#{fw_type}" %>><%= "#{fw_type.upcase}" %>
+                          <input type="checkbox" name="foreignworkercheck" value="<%= fw_type %>">&nbsp;<%= display_name %>
+
                         </li>
                       <% end %>
                     </ul>
@@ -240,11 +243,16 @@
                 </div>
               </div>
               <div class="filter-btn">
-                <button id="applyFilter" class="btn-apply" data-toggle="collapse" data-target="#tag_demo" onclick="apply_filter()">
-                  Apply
-                </button>
+                <button id="applyFilter" class="btn-apply" data-toggle="collapse" data-target="#tag_demo" onclick="apply_filter()">Apply</button>
                 <button class="btn-clear" onclick="clear_filter()" id="sidebarCollapse">Clear</button>
               </div>
+              <style>
+                  .filter-btn {
+                      position: sticky;
+                      bottom: 0;
+                      z-index: 999; /* Ensure it's on top of other content */
+                  }
+              </style>
             </div>
           </div>
           <div id="result"></div>
@@ -413,6 +421,7 @@
             return $(this).val();
         }).get().join(' ');
 
+        console.log('Registration:', checkedValues['Registration']);
         // Add even more divs as needed
 
 
