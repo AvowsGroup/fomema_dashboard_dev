@@ -171,6 +171,9 @@
                                 if (value < 7) {
                                     options.pieSliceTextStyle.fontSize = 6; // Decrease font size for values less than 5
                                 }
+                                if (value<3){
+                                    options.pieSliceTextStyle.fontSize = 4;
+                                }
                             }
 
                             var chart = new google.visualization.PieChart(document.getElementById('piechart'));
