@@ -110,39 +110,36 @@
                         google.charts.setOnLoadCallback(drawStacked);
 
                         function drawStacked() {
-                            var chartData = <%= @fw_reg_by_states.to_json.html_safe %>;
+                            var chartData = <%= @fw_reg_by_states.nil? ? [] : @fw_reg_by_states.to_json.html_safe %>;
 
-                            // Check if chartData is empty
-                            if (chartData.length === 0) {
-                                // Use dummy data
-                                chartData = [
-                                    ['No Data Available', 0]
-                                    // Add more dummy data as needed
-                                ];
-                            }
 
-                            var data = new google.visualization.DataTable();
-                            data.addColumn('string', 'Total ');
-                            data.addColumn('number', 'Total');
-                            data.addRows(chartData);
+                            if (!chartData.length) {
+                                var placeholderDiv = document.getElementById('columnchart_values');
+                                placeholderDiv.innerHTML = '<div class="center-message">No Data to Display</div>';
+                            } else {
+                                var data = new google.visualization.DataTable();
+                                data.addColumn('string', 'Total ');
+                                data.addColumn('number', 'Total');
+                                data.addRows(chartData);
 
-                            var options = {
-                                hAxis: {
-                                    title: 'States',
-                                    titleTextStyle: {
-                                        color: '#000000',
+                                var options = {
+                                    hAxis: {
+                                        title: 'States',
+                                        titleTextStyle: {
+                                            color: '#000000',
+                                        },
+                                        slantedText: true,
+                                        slantedTextAngle: 45,
                                     },
-                                    slantedText: true,
-                                    slantedTextAngle: 45,
-                                },
-                                vAxis: {
-                                    title: 'Kits'
-                                },
-                                'chartArea': {'width': '100%'},
-                            };
+                                    vAxis: {
+                                        title: 'Kits'
+                                    },
+                                    'chartArea': {'width': '100%'},
+                                };
 
-                            var chart = new google.visualization.ColumnChart(document.getElementById('columnchart_values'));
-                            chart.draw(data, options);
+                                var chart = new google.visualization.ColumnChart(document.getElementById('columnchart_values'));
+                                chart.draw(data, options);
+                            }
                         }
                     </script>
                     <div id="columnchart_values" style="width: 100%; height:100%;"></div>
@@ -163,12 +160,11 @@
                         google.charts.setOnLoadCallback(drawChart);
 
                         function drawChart() {
-                            var chartData = <%= @pi_chart_data.to_json.html_safe %>;
+                            var chartData = <%= @pi_chart_data.nil? ? [] : @pi_chart_data.to_json.html_safe %>;
 
-                            if (chartData.length === 0) {
-                                // If there is no data, display a message or placeholder here
+                            if (!chartData.length) {
                                 var placeholderDiv = document.getElementById('piechart');
-                                placeholderDiv.innerHTML = "No Data to Display";
+                                placeholderDiv.innerHTML = '<div class="center-message">No Data to Display</div>';
                             } else {
                                 var data = google.visualization.arrayToDataTable(chartData);
 
@@ -225,37 +221,36 @@
                         google.charts.setOnLoadCallback(drawStacked);
 
                         function drawStacked() {
-                            var chartData = <%= @fw_Reg_by_countries.to_json.html_safe %>;
+                            var chartData = <%= @fw_Reg_by_countries.nil? ? [] : @fw_Reg_by_countries.to_json.html_safe %>;
 
-                            if (chartData.length === 0) {
-                                // If there is no data, create a placeholder data point with the message
-                                chartData = [
-                                    ['No Data', 0],
-                                ];
-                            }
+                            if (!chartData.length) {
+                                var placeholderDiv = document.getElementById('columnchart_values1');
+                                placeholderDiv.innerHTML = '<div class="center-message">No Data to Display</div>';
+                            } else {
 
-                            var data = new google.visualization.DataTable();
-                            data.addColumn('string', 'Total');
-                            data.addColumn('number', 'Total');
-                            data.addRows(chartData);
+                                var data = new google.visualization.DataTable();
+                                data.addColumn('string', 'Total');
+                                data.addColumn('number', 'Total');
+                                data.addRows(chartData);
 
-                            var options = {
-                                hAxis: {
-                                    title: 'Countries',
-                                    titleTextStyle: {
-                                        color: '#000000',
+                                var options = {
+                                    hAxis: {
+                                        title: 'Countries',
+                                        titleTextStyle: {
+                                            color: '#000000',
+                                        },
+                                        slantedText: true,
+                                        slantedTextAngle: 45,
                                     },
-                                    slantedText: true,
-                                    slantedTextAngle: 45,
-                                },
-                                vAxis: {
-                                    title: 'Kits'
-                                },
-                                'chartArea': {'width': '100%'},
-                            };
+                                    vAxis: {
+                                        title: 'Kits'
+                                    },
+                                    'chartArea': {'width': '100%'},
+                                };
 
-                            var chart = new google.visualization.ColumnChart(document.getElementById('columnchart_values1'));
-                            chart.draw(data, options);
+                                var chart = new google.visualization.ColumnChart(document.getElementById('columnchart_values1'));
+                                chart.draw(data, options);
+                            }
                         }
                     </script>
 
@@ -334,6 +329,9 @@
                     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
                     <canvas id="canvas"></canvas>
                     <!-- <button id="randomizeData">Randomize Data</button> -->
+                    <div id="linechart-container" style="width: 100%; height: 100%; position: relative;">
+                      <canvas id="canvas" style="display: block; width: 100%; height: 100%;" class="chartjs-render-monitor"></canvas>
+                    </div>
                     <script>
                         var yearLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -438,6 +436,16 @@
 </div>
 </div>
 </div>
+
+<style>
+    .center-message {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        height: 100%;
+        padding-left: 18px; /* Adjust the padding as needed */
+    }
+</style>
 
 <script type="text/javascript">
     function excel_generate() {
