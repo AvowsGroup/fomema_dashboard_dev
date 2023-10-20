@@ -155,11 +155,22 @@ class FirstDashboardController < ApplicationController
         end
       when "age"
         if param_value.present?
-          age_ranges = param_value.map { |age_range| age_range.split("-").map(&:to_i) }
+          age_ranges = param_value.map do |age_range|
+            if age_range == "65+"
+              [65, nil] # Represent "65+" as [65, nil]
+            else
+              age_range.split("-").map(&:to_i)
+            end
+          end
 
           birth_years = age_ranges.map do |min_age, max_age|
-            birth_year_min = Date.today.year - max_age - 1
-            birth_year_max = Date.today.year - min_age
+            if max_age.nil?
+              birth_year_min = Date.today.year - 65
+              birth_year_max = nil # Handle "65+" case with no maximum age
+            else
+              birth_year_min = Date.today.year - max_age - 1
+              birth_year_max = Date.today.year - min_age
+            end
             [birth_year_min, birth_year_max]
           end
 
@@ -169,6 +180,7 @@ class FirstDashboardController < ApplicationController
 
           transactions = transactions.where(fw_date_of_birth: Date.new(overall_birth_year_min)..Date.new(overall_birth_year_max))
         end
+
       when "ForeginWorker"
         if param_value.present?
           transactions = transactions.where(registration_type: param_value)
@@ -183,7 +195,10 @@ class FirstDashboardController < ApplicationController
       end
     end
     transactions
+
   end
+
+  # binding.pry
 
   def displayed_status(status)
     resp_status = {

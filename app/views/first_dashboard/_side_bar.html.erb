@@ -174,7 +174,7 @@
                         <input type="checkbox" name="agecheck" value="55-64"> 55-64
                       </li>
                       <li>
-                        <input type="checkbox" name="agecheck" value="More than 65">65+
+                        <input type="checkbox" name="agecheck" value="65-nil">65+
                       </li>
                     </ul>
                   </div>
@@ -325,6 +325,7 @@
     // app/assets/javascripts/filter.js
     function apply_filter() {
         var selectedValues = JSON.stringify(getCheckedValues());
+        console.log('selected:', selectedValues)
         $.ajax({
             type: 'GET',
             url: '/first_dashboard/index.js', // Replace with your Rails route
@@ -452,6 +453,7 @@
 
 
         return checkedValues;
+        console.log('checkedValues:', checkedValues)
     }
 
 </script>
