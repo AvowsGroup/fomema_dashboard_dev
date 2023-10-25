@@ -6,7 +6,6 @@ class FirstDashboardController < ApplicationController
     @job_type = JobType.pluck(:name).compact.uniq
     @organizations = Organization.pluck(:name).uniq
     @foregin_worker_type = Transaction.pluck(:registration_type).uniq
-
     # unfiltered data for data_pints
     @current_year = Date.today.year
     @transactions = Transaction.where("extract(year from created_at) = ?", @current_year)
@@ -55,7 +54,7 @@ class FirstDashboardController < ApplicationController
       @fw_reg_by_states = State.joins(doctors: :transactions).group('states.name').count.to_a
       @fw_Reg_by_countries = Transaction.joins(:country).group('countries.name').count.to_a
     end
-
+    # binding.pry
     if @transaction_line_cahrt == {} || @transaction_line_cahrt.nil?
       @transaction_line_cahrt = {
         2019 => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -97,13 +96,13 @@ class FirstDashboardController < ApplicationController
     end
   end
 
+
   def excel_generate
-    @data = Transaction.find(params.keys[0].split(",")) rescue Transaction.all # Fetch data from your model
+    @data = Transaction.order(created_at: :desc).limit(10000)
     respond_to do |format|
       format.xlsx do
         response.headers['Content-Disposition'] = 'attachment; filename="your_file.xlsx"'
-        # Set other headers if necessary
-        render xlsx: 'excel_generate', filename: 'your_file.xlsx'
+        render xlsx: 'excel_generate', filename: 'transaction.xlsx'
       end
     end
   end

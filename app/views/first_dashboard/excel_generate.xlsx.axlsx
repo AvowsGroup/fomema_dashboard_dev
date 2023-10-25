@@ -1,9 +1,9 @@
 wb = xlsx_package.workbook
-wb.add_worksheet(name: 'YourModel Data') do |sheet|
+wb.add_worksheet(name: 'Transaction Data') do |sheet|
   # Add headers
   sheet.add_row [
-    'Transaction ID', 'Code', 'Doctor ID', 'Medical Exam Date', 'Certification Date', 'FW Gender', 'FW Country ID', 'FW Job Type ID',
-    'Created At', 'Updated At'
+    'Transaction ID', 'Code', 'Doctor ID', 'Medical Exam Date', 'Certification Date',
+    'FW Gender', 'FW Country ID', 'FW Job Type ID', 'Created At', 'Updated At'
   ]
 
   # Add data
