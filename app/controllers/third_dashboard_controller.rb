@@ -35,13 +35,13 @@ class ThirdDashboardController < ApplicationController
     @params ||= {}
     [
       {
-        KPI: 0, # as there is no table menthioned in the doc
+        KPI: 0, # as there is no table mentioned in the doc
         task: 'Email',
         TAT: 'First response time within 24 business hours',
         target: '80%'
       },
       {
-        KPI: 0, # as there is no table menthioned in the doc so pasting 0 in value
+        KPI: 0, # as there is no table mentioned in the doc so pasting 0 in value
         task: 'Chat',
         TAT: 'First response time within 24 business hours ',
         target: '80%'
@@ -59,9 +59,9 @@ class ThirdDashboardController < ApplicationController
         target: '80%'
       },
       {
-        KPI: kpi_percentage("Agency", 2),
-        task: 'Employer Registration',
-        TAT: '2wd',
+        KPI: kpi_percentage("Agency", 14),
+        task: 'Agency Registration',
+        TAT: '14wd',
         target: '80%'
       },
       {
@@ -89,13 +89,13 @@ class ThirdDashboardController < ApplicationController
         target: '80%'
       },
       {
-        KPI: 0,
+        KPI: review_xray,
         task: 'Review - Normal chest X-ray',
         TAT: '72 hours from the date of certification',
         target: '80%'
       },
       {
-        KPI: 0,
+        KPI: pcr_xray,
         task: 'Audit - Abnormal chest X-ray',
         TAT: '48 hours from the date of certification',
         target: '80%'
@@ -145,19 +145,19 @@ class ThirdDashboardController < ApplicationController
       {
         KPI: 0,
         task: 'Appeal cases',
-        TAT: '28 Days',
+        TAT: '28wd',
         target: '90%'
       },
       {
         KPI: 0,
         task: 'Pending Review Cases',
-        TAT: '3 Working days',
+        TAT: '3wd',
         target: '90%'
       },
       {
         KPI: 0,
         task: 'TCUPI Cases',
-        TAT: '28 Days',
+        TAT: '28wd',
         target: '90%'
       },
       {
@@ -169,31 +169,31 @@ class ThirdDashboardController < ApplicationController
       {
         KPI: kpi_percentage("FwChangeEmployer", 3),
         task: 'Change of employer (transfer)',
-        TAT: '3 WD',
+        TAT: '3wd',
         target: '80%'
       },
       {
         KPI: kpi_percentage("ApprovalRequest", 3),
         task: 'Amendment of Foreign worker info',
-        TAT: '3 WD',
+        TAT: '3wd',
         target: '80%'
       },
       {
         KPI: kpi_percentage("ApprovalRequest", 3),
         task: 'Special Renewal Approval (unfit)',
-        TAT: '3 WD',
+        TAT: '3wd',
         target: '80%'
       },
       {
         KPI: kpi_percentage("ApprovalRequest", 3),
         task: 'Update employer details',
-        TAT: '3 WD',
+        TAT: '3wd',
         target: '80%'
       },
       {
         KPI: kpi_percentage("ApprovalRequest", 3),
         task: 'Employer Registration Approval',
-        TAT: '2 WD',
+        TAT: '2wd',
         target: '80%'
       },
       {
@@ -205,13 +205,13 @@ class ThirdDashboardController < ApplicationController
       {
         KPI: 0,
         task: 'Approval for registration of service provider',
-        TAT: '14 working days',
+        TAT: '14wd',
         target: '80%'
       },
       {
         KPI: 0,
         task: 'Activating new service provider',
-        TAT: '10 working days',
+        TAT: '10wd',
         target: '80%'
       }
     ]
@@ -229,7 +229,7 @@ class ThirdDashboardController < ApplicationController
     when "Agencies"
       achieved_count = Agency.where("created_at <= registration_approved_at + interval '? days'", tat).count
       not_achieved_count = Agency.where("created_at > registration_approved_at + interval '? days'", tat).count
-      
+
     when "ApprovalRequest"
       achieved_count = ApprovalRequest.where("approved_at <= requested_at + interval '? days'", tat).count
       not_achieved_count = ApprovalRequest.where("approved_at > requested_at + interval '? days'", tat).count
@@ -241,41 +241,48 @@ class ThirdDashboardController < ApplicationController
     end
 
     total_count = achieved_count + not_achieved_count
-    # kpi_percentage = (achieved_count.to_f / total_count) * 100
     kpi_percentage = total_count > 0 ? (achieved_count.to_f / total_count) * 100 : 0
     kpi_percentage.round(1) # Round to one decimal place
   end
 
-  # def review_xray
-  #   total_count = Transaction
-  #                   .joins("JOIN xray_reviews xr ON xr.id = transactions.xray_review_id")
-  #                   .where("transactions.transaction_date BETWEEN ? AND ?", '2023-01-01', '2023-12-31')
-  #                   .count
-  #
-  #   achieved_count = Transaction
-  #                      .joins("JOIN xray_reviews xr ON xr.id = transactions.xray_review_id")
-  #                      .where("xr.transmitted_at AT TIME ZONE 'UTC' <= transactions.certification_date AT TIME ZONE 'UTC' + interval '3' day")
-  #                      .where("transactions.transaction_date BETWEEN ? AND ?", '2023-01-01', '2023-12-31')
-  #                      .count
-  #
-  #   kpi_percentage = (achieved_count.to_f / total_count) * 100
-  #   kpi_percentage.round(1) # Round to one decimal place
-  # end
+  def review_xray
+    achieved_count = 0
+    not_achieved_count = 0
+
+    achieved_count = Transaction.joins("INNER JOIN xray_reviews ON xray_reviews.id = transactions.xray_review_id")
+                                .where("xray_reviews.transmitted_at <= transactions.certification_date + INTERVAL '3' DAY")
+                                .where("transactions.transaction_date BETWEEN ? AND ?", '2023-01-01', '2023-12-31')
+                                .count
+
+    not_achieved_count = Transaction.joins("INNER JOIN xray_reviews ON xray_reviews.id = transactions.xray_review_id")
+                                    .where("xray_reviews.transmitted_at > transactions.certification_date + INTERVAL '3' DAY")
+                                    .where("transactions.transaction_date BETWEEN ? AND ?", '2023-01-01', '2023-12-31')
+                                    .count
+
+    total_count = achieved_count + not_achieved_count
+    kpi_percentage = total_count > 0 ? (achieved_count.to_f / total_count) * 100 : 0
+    kpi_percentage.round(1) # Round to one decimal place
+
+  end
 
   def pcr_xray
-    total_count = Transaction
-                    .joins("JOIN pcr_reviews pr ON pr.id = transactions.pcr_review_id")
-                    .where("transactions.transaction_date BETWEEN ? AND ?", '2023-01-01', '2023-12-31')
-                    .count
+    achieved_count = 0
+    not_achieved_count = 0
 
-    achieved_count = Transaction
-                       .joins("JOIN pcr_reviews pr ON pr.id = transactions.pcr_review_id")
-                       .where("pr.transmitted_at <= transactions.certification_date + interval '2' day")
-                       .where("transactions.transaction_date BETWEEN ? AND ?", '2023-01-01', '2023-12-31')
-                       .count
+    achieved_count = PcrReview.joins("INNER JOIN transactions ON transactions.pcr_review_id = pcr_reviews.id")
+                              .where("pcr_reviews.transmitted_at <= (transactions.certification_date + INTERVAL '2 days') AT TIME ZONE 'UTC'")
+                              .where(transactions: { transaction_date: '2023-01-01'..'2023-12-31' })
+                              .count
 
-    kpi_percentage = (achieved_count.to_f / total_count) * 100
+    not_achieved_count = PcrReview.joins("INNER JOIN transactions ON transactions.pcr_review_id = pcr_reviews.id")
+                                  .where("pcr_reviews.transmitted_at > (transactions.certification_date + INTERVAL '2 days') AT TIME ZONE 'UTC'")
+                                  .where(transactions: { transaction_date: '2023-01-01'..'2023-12-31' })
+                                  .count
+
+    total_count = achieved_count + not_achieved_count
+    kpi_percentage = total_count > 0 ? (achieved_count.to_f / total_count) * 100 : 0
     kpi_percentage.round(1) # Round to one decimal place
+
   end
 
 end
