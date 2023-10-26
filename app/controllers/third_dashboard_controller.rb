@@ -223,13 +223,13 @@ class ThirdDashboardController < ApplicationController
 
     case model_name
     when "Employer"
-      achieved_count = Employer.where("date_trunc('day', registration_approved_at) - date_trunc('day', created_at) >= interval '? days'", tat).count
-      not_achieved_count = Employer.where("date_trunc('day', registration_approved_at) - date_trunc('day', created_at) < interval '? days'", tat).count
+      achieved_count = Employer.where("created_at <= registration_approved_at + interval '? days'", tat).count
+      not_achieved_count = Employer.where("created_at > registration_approved_at + interval '? days'", tat).count
 
     when "Agencies"
-      achieved_count = Agency.where("date_trunc('day', registration_approved_at) - date_trunc('day', created_at) >= interval '? days'", tat).count
-      not_achieved_count = Agency.where("date_trunc('day', registration_approved_at) - date_trunc('day', created_at) < interval '? days'", tat).count
-
+      achieved_count = Agency.where("created_at <= registration_approved_at + interval '? days'", tat).count
+      not_achieved_count = Agency.where("created_at > registration_approved_at + interval '? days'", tat).count
+      
     when "ApprovalRequest"
       achieved_count = ApprovalRequest.where("approved_at <= requested_at + interval '? days'", tat).count
       not_achieved_count = ApprovalRequest.where("approved_at > requested_at + interval '? days'", tat).count
