@@ -272,7 +272,7 @@ class ThirdDashboardController < ApplicationController
                        .where("pr.transmitted_at <= transactions.certification_date + interval '2' day")
                        .where("transactions.transaction_date BETWEEN ? AND ?", '2023-01-01', '2023-12-31')
                        .count
-    t
+
     kpi_percentage = (achieved_count.to_f / total_count) * 100
     kpi_percentage.round(1) # Round to one decimal place
   end
