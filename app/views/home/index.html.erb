@@ -45,10 +45,10 @@
 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in m-0 p-0" aria-labelledby="userDropdown">
     <ul class="li-profile">
      <li  style="border-bottom: dotted 1px #c2c2c2; font-size: 12px;">
-                      <a class="dropdown-item" onclick="five_min_reload()"> 5 Min </a>
+                      <a class="dropdown-item" onclick="setReloadInterval(5*60)"> 5 Min </a>
                     </li>
                     <li style="border-bottom: dotted 1px #c2c2c2; font-size: 12px;">
-                      <a class="dropdown-item" onclick="ten_min_reload()" >10 Min</a>
+                      <a class="dropdown-item" onclick="setReloadInterval(10*60)" >10 Min</a>
                     </li>
   
   </ul>
@@ -4354,16 +4354,7 @@ $('select[name="state"]').change(function () {
        });
    
   });
-  function five_min_reload(){
-    setTimeout(function() {
-      location.reload();
-    }, 300000); 
-}  
-function ten_min_reload(){
-    setTimeout(function() {
-      location.reload();
-    }, 600000); 
-}  
+
 var statename;
 function fn_redirect_district(stateid,statename){
   debugger;
