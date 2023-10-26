@@ -89,19 +89,19 @@ class ThirdDashboardController < ApplicationController
         target: '80%'
       },
       {
-        KPI: review_xray,
+        KPI: 0,
         task: 'Review - Normal chest X-ray',
         TAT: '72 hours from the date of certification',
         target: '80%'
       },
       {
-        KPI: pcr_xray(),
+        KPI: 0,
         task: 'Audit - Abnormal chest X-ray',
         TAT: '48 hours from the date of certification',
         target: '80%'
       },
       {
-        KPI: xqcc_Amd(),
+        KPI: 0,
         task: 'XQCC Amendment',
         TAT: 'Four (4) weeks from the date of confirmation',
         target: '80%'
@@ -241,25 +241,26 @@ class ThirdDashboardController < ApplicationController
     end
 
     total_count = achieved_count + not_achieved_count
-    kpi_percentage = (achieved_count.to_f / total_count) * 100
+    # kpi_percentage = (achieved_count.to_f / total_count) * 100
+    kpi_percentage = total_count > 0 ? (achieved_count.to_f / total_count) * 100 : 0
     kpi_percentage.round(1) # Round to one decimal place
   end
 
-  def review_xray
-    total_count = Transaction
-                    .joins("JOIN xray_reviews xr ON xr.id = transactions.xray_review_id")
-                    .where("transactions.transaction_date BETWEEN ? AND ?", '2023-01-01', '2023-12-31')
-                    .count
-
-    achieved_count = Transaction
-                       .joins("JOIN xray_reviews xr ON xr.id = transactions.xray_review_id")
-                       .where("xr.transmitted_at <= transactions.certification_date + interval '3' day")
-                       .where("transactions.transaction_date BETWEEN ? AND ?", '2023-01-01', '2023-12-31')
-                       .count
-
-    kpi_percentage = (achieved_count.to_f / total_count) * 100
-    kpi_percentage.round(1) # Round to one decimal place
-  end
+  # def review_xray
+  #   total_count = Transaction
+  #                   .joins("JOIN xray_reviews xr ON xr.id = transactions.xray_review_id")
+  #                   .where("transactions.transaction_date BETWEEN ? AND ?", '2023-01-01', '2023-12-31')
+  #                   .count
+  #
+  #   achieved_count = Transaction
+  #                      .joins("JOIN xray_reviews xr ON xr.id = transactions.xray_review_id")
+  #                      .where("xr.transmitted_at AT TIME ZONE 'UTC' <= transactions.certification_date AT TIME ZONE 'UTC' + interval '3' day")
+  #                      .where("transactions.transaction_date BETWEEN ? AND ?", '2023-01-01', '2023-12-31')
+  #                      .count
+  #
+  #   kpi_percentage = (achieved_count.to_f / total_count) * 100
+  #   kpi_percentage.round(1) # Round to one decimal place
+  # end
 
   def pcr_xray
     total_count = Transaction
