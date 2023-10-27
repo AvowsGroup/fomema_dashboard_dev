@@ -299,16 +299,16 @@ class ThirdDashboardController < ApplicationController
       end_date = @end_of_year
     end
 
-    #
-    # achieved_count = Transaction.joins("INNER JOIN xray_reviews ON xray_reviews.id = transactions.xray_review_id")
-    #                             .where("xray_reviews.transmitted_at <= transactions.certification_date + INTERVAL '3' DAY")
-    #                             .where(transactions: { transaction_date: start_date..end_date })
-    #                             .count
-    #
-    # not_achieved_count = Transaction.joins("INNER JOIN xray_reviews ON xray_reviews.id = transactions.xray_review_id")
-    #                                 .where("xray_reviews.transmitted_at > transactions.certification_date + INTERVAL '3' DAY")
-    #                                 .where(transactions: { transaction_date: start_date..end_date })
-    #                                 .count
+
+    achieved_count = Transaction.joins("INNER JOIN xray_reviews ON xray_reviews.id = transactions.xray_review_id")
+                                .where("xray_reviews.transmitted_at <= transactions.certification_date + INTERVAL '3' DAY")
+                                .where(transactions: { transaction_date: start_date..end_date })
+                                .count
+
+    not_achieved_count = Transaction.joins("INNER JOIN xray_reviews ON xray_reviews.id = transactions.xray_review_id")
+                                    .where("xray_reviews.transmitted_at > transactions.certification_date + INTERVAL '3' DAY")
+                                    .where(transactions: { transaction_date: start_date..end_date })
+                                    .count
 
     total_count = achieved_count + not_achieved_count
     kpi_percentage = total_count > 0 ? (achieved_count.to_f / total_count) * 100 : 0
