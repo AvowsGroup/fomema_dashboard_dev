@@ -65,29 +65,23 @@ class FirstDashboardController < ApplicationController
       }
     end
     @fw_pending_view = {
-      xqcc_pool: Transaction.joins(:xray_review, :xqcc_pool)
-                            .where.not("transactions.certification_date": nil)
-                            .pluck(:created_at, 'transactions.certification_date', 'xray_reviews.transmitted_at')
-                            .count,
-      pcr_pool: Transaction.joins(:pcr_review, :pcr_pool)
-                           .where.not("transactions.certification_date": nil)
-                           .pluck(:created_at, 'transactions.certification_date', 'pcr_reviews.transmitted_at')
-                           .count,
-      x_ray_pending_review: Transaction.joins(:xray_pending_review)
-                                       .where.not("transactions.certification_date": nil)
-                                       .pluck(:created_at, 'transactions.certification_date', 'xray_pending_reviews.transmitted_at')
-                                       .count,
-      x_ray_pending_decision: Transaction.joins(:xray_pending_decision)
-                                         .where.not("transactions.certification_date": nil)
-                                         .pluck(:created_at, 'transactions.certification_date', 'xray_pending_decisions.transmitted_at')
-                                         .count,
-      medical_review: MedicalReview.joins(:transaction)
-                                   .where.not("transactions.certification_date IS NULL")
-                                   .where.not("medical_reviews.created_at IS NULL")
-                                   .where.not("medical_reviews.medical_mle1_decision_at IS NULL")
-                                   .where(is_qa: true)
-                                   .where.not("medical_reviews.qa_decision_at IS NULL")
-                                   .count
+      xqcc_pool: Transaction.joins("JOIN xray_reviews ON xray_reviews.transaction_id = transactions.id")
+                            .joins("JOIN xqcc_pools ON xqcc_pools.transaction_id = transactions.id").where("transactions.certification_date IS NOT NULL")
+                            .pluck('transactions.certification_date, xray_reviews.transmitted_at, xqcc_pools.created_at').uniq.count,
+
+      pcr_pool: Transaction.joins("JOIN pcr_reviews ON pcr_reviews.transaction_id = transactions.id")
+                           .joins("JOIN pcr_pools ON pcr_pools.transaction_id = transactions.id").where("transactions.certification_date IS NOT NULL")
+                           .pluck('transactions.certification_date, pcr_reviews.transmitted_at, pcr_pools.created_at').uniq.count,
+
+      x_ray_pending_review: Transaction.joins("JOIN xray_pending_reviews ON xray_pending_reviews.transaction_id = transactions.id").where("transactions.certification_date IS NOT NULL")
+                                       .pluck('transactions.certification_date, xray_pending_reviews.transmitted_at, xray_pending_reviews.created_at').uniq.count,
+
+      x_ray_pending_decision: Transaction.joins("JOIN xray_pending_decisions ON xray_pending_decisions.transaction_id = transactions.id").where("transactions.certification_date IS NOT NULL")
+                                         .pluck('transactions.certification_date, xray_pending_decisions.transmitted_at, xray_pending_decisions.created_at').uniq.count,
+
+      medical_review: MedicalReview.joins("JOIN medical_reviews ON medical_reviews.transaction_id = transactions.id")
+                                   .where("medical_reviews.created_at IS NOT NULL AND medical_reviews.medical_mle1_decision_at IS NOT NULL AND medical_reviews.qa_decision_at IS NOT NULL AND is_qa = ?", true)
+                                   .pluck('transactions.certification_date, medical_reviews.created_at, medical_reviews.medical_mle1_decision_at, medical_reviews.is_qa, medical_reviews.qa_decision_at').uniq.count
 
     } rescue nil
     respond_to do |format|
@@ -96,6 +90,7 @@ class FirstDashboardController < ApplicationController
     end
   end
 
+  binding.pry
 
   def excel_generate
     @data = Transaction.order(created_at: :desc).limit(10000)
