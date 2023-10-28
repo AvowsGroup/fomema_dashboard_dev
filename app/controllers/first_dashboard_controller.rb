@@ -54,7 +54,7 @@ class FirstDashboardController < ApplicationController
       @fw_reg_by_states = State.joins(doctors: :transactions).group('states.name').count.to_a
       @fw_Reg_by_countries = Transaction.joins(:country).group('countries.name').count.to_a
     end
-    # binding.pry
+
     if @transaction_line_cahrt == {} || @transaction_line_cahrt.nil?
       @transaction_line_cahrt = {
         2019 => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -89,8 +89,7 @@ class FirstDashboardController < ApplicationController
       format.js { render layout: false } # Add this line to you respond_to block
     end
   end
-
-  binding.pry
+  x
 
   def excel_generate
     @data = Transaction.order(created_at: :desc).limit(10000)
@@ -192,7 +191,6 @@ class FirstDashboardController < ApplicationController
 
   end
 
-  # binding.pry
 
   def displayed_status(status)
     resp_status = {
