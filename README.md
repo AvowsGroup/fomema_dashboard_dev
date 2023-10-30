@@ -12,4 +12,4 @@ then
 then 
 
 # rails s 
-# open browser http://localhost:3000/first_dashboard/index
+# open browser http://localhost:3000/fw_information/index

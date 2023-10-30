@@ -446,23 +446,3 @@
         padding-left: 18px; /* Adjust the padding as needed */
     }
 </style>
-
-<script type="text/javascript">
-    function excel_generate() {
-        let ids =
-        <%= @transactions.ids%>
-        var jsonData = JSON.stringify(ids);
-        $.ajax({
-            type: 'POST',
-            url: '/first_dashboard/excel_generate',
-            data: jsonData,
-            success: function (data) {
-                var iframe = $('<iframe>', {
-                    src: '/first_dashboard/excel_generate', // Use the same URL as the Ajax request
-                    style: 'display: none'
-                });
-                $('body').append(iframe);
-            }
-        })
-    };
-</script>

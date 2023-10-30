@@ -1,3 +1,8 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+
 <div id="sidebar">
   <div class="filter_row">
     <div class="filter_div">
@@ -266,8 +271,6 @@
                   }
               }
           </script>
-          <!-- <ul class="list"><li>
-                     Time Period</li><li>Sector</li><li>State</li><li>Country</li><li>Age</li><li>Gender</li><li>Registration at</li><li>Foregin Worker Type</li></ul> -->
         </div>
       </div>
       <div class="filter d-none">
@@ -302,64 +305,7 @@
     </div>
   </div>
 </div>
-
-<style>
-    #sidebar {
-        height: 600px; /* Adjust the height as needed */
-    }
-
-    /* Maintain proper alignment for filter and buttons */
-    .filter-btn {
-        position: sticky;
-        bottom: 0;
-        z-index: 999;
-    }
-
-    .collapse.show {
-        margin-bottom: 0; /* Adjust as needed */
-    }
-</style>
-
-
 <script type="text/javascript">
-    // app/assets/javascripts/filter.js
-    function apply_filter() {
-        var selectedValues = JSON.stringify(getCheckedValues());
-        console.log('selected:', selectedValues)
-        $.ajax({
-            type: 'GET',
-            url: '/first_dashboard/index.js', // Replace with your Rails route
-            data: selectedValues
-        });
-    }
-
-    function clear_filter() {
-        var selectedValues = JSON.stringify({value: false});
-        clearAllInputs();
-        $.ajax({
-            type: 'GET',
-            url: '/first_dashboard/index.js', // Replace with your Rails route
-            data: selectedValues
-        });
-    }
-
-
-    function clearAllInputs() {
-        // Clear checkboxes
-        $('input[type="checkbox"]').prop('checked', false);
-
-        // Clear input fields
-        $('input[type="text"]').val('');
-
-        // Clear date range picker (if you're using a library like 'daterangepicker')
-        $('#date-range').val('');
-    }
-
-    // Call the clearAllInputs function when needed, e.g., when the "Clear" button is clicked
-    $('#clearButton').on('click', function () {
-        clearAllInputs();
-    });
-
 
     function getCheckedValues() {
         var checkedValues = {
@@ -376,12 +322,13 @@
 
         checkedValues['DateRange'] = $('#date-range').val();
 
+
+
         // Retrieve values from Sector
         checkedValues['Sector'] = $('#Sector input[type="checkbox"]:checked').map(function () {
             return $(this).val();
         }).get().join(' ');
 
-        // console.log('Sector:', checkedValues['Sector'])
 
         // Retrieve values from Country
         checkedValues['Country'] = [];
@@ -415,7 +362,6 @@
 
         checkedValues['Country'] = checkedValues['Country'].filter(country => country !== 'Others');
 
-        // console.log('Country:', checkedValues['Country']);
 
         // Join the selected countries into a space-separated string
         checkedValues['Country'] = checkedValues['Country'].join(' ');
@@ -426,34 +372,73 @@
             return $(this).val();
         }).get().join(' ');
 
-        // console.log('State:', checkedValues['State'])
 
         // Retrieve values from Gender
         checkedValues['Gender'] = $('#Gender input[type="checkbox"]:checked').map(function () {
             return $(this).val();
         }).get().join(' ');
 
+
         // Retrieve values from age
         checkedValues['age'] = $('#age input[type="checkbox"]:checked').map(function () {
             return $(this).val();
         }).get().join(' ');
+
 
         // Retrieve values from ForeginWorker
         checkedValues['ForeginWorker'] = $('#ForeginWorker input[type="checkbox"]:checked').map(function () {
             return $(this).val();
         }).get().join(' ');
 
+
         // Retrieve values from Registration
         checkedValues['Registration'] = $('#Registration input[type="checkbox"]:checked').map(function () {
             return $(this).val();
         }).get().join(' ');
-
-        // console.log('Registration:', checkedValues['Registration']);
-        // Add even more divs as needed
-
+        
 
         return checkedValues;
-        console.log('checkedValues:', checkedValues)
+
+
     }
 
 </script>
+
+<script type="text/javascript">
+    function apply_filter() {
+        var selectedValues = JSON.stringify(getCheckedValues());
+
+        $.ajax({
+            type: 'GET',
+            url: '/dashboards/fw_information/index.js', // Replace with your Rails route
+            data: selectedValues
+        });
+    }
+
+    function clear_filter() {
+        var selectedValues = JSON.stringify({value: false});
+        clearAllInputs();
+        $.ajax({
+            type: 'GET',
+            url: '/dashboards/fw_information/index.js', // Replace with your Rails route
+            data: selectedValues
+        });
+    }
+
+    function clearAllInputs() {
+        // Clear checkboxes
+        $('input[type="checkbox"]').prop('checked', false);
+
+        // Clear input fields
+        $('input[type="text"]').val('');
+
+        // Clear date range picker (if you're using a library like 'daterangepicker')
+        $('#date-range').val('');
+    }
+
+    // Call the clearAllInputs function when needed, e.g., when the "Clear" button is clicked
+    $('#clearButton').on('click', function () {
+        clearAllInputs();
+    });
+</script>
+</html>

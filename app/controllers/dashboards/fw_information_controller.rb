@@ -1,4 +1,4 @@
-class FirstDashboardController < ApplicationController
+class Dashboards::FwInformationController < ApplicationController
   def index
     # data for filter drop down 
     @countries = Country.pluck(:name).compact
@@ -89,7 +89,6 @@ class FirstDashboardController < ApplicationController
       format.js { render layout: false } # Add this line to you respond_to block
     end
   end
-  x
 
   def excel_generate
     @data = Transaction.order(created_at: :desc).limit(10000)
@@ -190,7 +189,6 @@ class FirstDashboardController < ApplicationController
     transactions
 
   end
-
 
   def displayed_status(status)
     resp_status = {

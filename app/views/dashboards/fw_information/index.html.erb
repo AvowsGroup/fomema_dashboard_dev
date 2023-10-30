@@ -33,7 +33,7 @@
 <div class="header">
   <nav class="navbar navbar-expand-md bg-light navbar-dark">
     <div class="admin-logo">
-      <img src="../logo.png">
+      <img src="/assets/logo.png">
     </div>
     <!-- Topbar Search -->
     <div class="nav-title">
@@ -97,7 +97,7 @@
         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in m-0 p-0" aria-labelledby="userDropdown">
           <ul class="li-profile">
             <li style="border-bottom: dotted 1px #c2c2c2; font-size: 12px;">
-              <a class="dropdown-item" href="/first_dashboard/index">
+              <a class="dropdown-item" href="/dashboards/fw_information/index">
                 <i class="fa fa-dashboard mx-2"></i>Dashboard 1 </a>
             </li>
             <li style="border-bottom: dotted 1px #c2c2c2; font-size: 12px;">
@@ -185,6 +185,7 @@
         $('#foreignworkercheckall').on("click", function () {
             $('input[name="foreignworkercheck"]').click();
         });
+
     });
 
     function filtervalues() {
@@ -194,6 +195,8 @@
             return $(this).val();
         }).get().join(' ');
 
+        // console.log('checkedValues:', checkedValues['Sector'])
+
         checkedValues['Country'] = $('input[name="countrycheck"]:checked').map(function () {
             return $(this).val();
         }).get().join(' ');
@@ -201,6 +204,8 @@
         checkedValues['State'] = $('input[name="statecheck"]:checked').map(function () {
             return $(this).val();
         }).get().join(' ');
+
+        console.log('checkedValues:', checkedValues['State'])
 
         checkedValues['Gender'] = $('input[name="gendercheck"]:checked').map(function () {
             return $(this).val();
@@ -210,17 +215,24 @@
             return $(this).val();
         }).get().join(' ');
 
+        console.log('checkedValues:', checkedValues['age'])
+
         checkedValues['ForeginWorker'] = $('input[name="foreignworkercheck"]:checked').map(function () {
             return $(this).val();
         }).get().join(' ');
+
+        console.log('checkedValues:', checkedValues['ForeginWorker'])
 
         checkedValues['Registration'] = $('input[name="registrationcheck"]:checked').map(function () {
             return $(this).val();
         }).get().join(' ');
 
+        console.log('checkedValues:', checkedValues['Registration'])
+
+
         $.ajax({
             type: 'GET',
-            url: '/first_dashboard/filterapply',
+            url: '/dashboards/fw_information/filterapply',
 
             data: checkedValues,
             error: function (jqXHR, textStatus, errorThrown) {
@@ -232,7 +244,7 @@
 
         });
 
-
+        console.log('checkedValues:', checkedValues)
     }
 
     function clear_filter() {
@@ -240,8 +252,6 @@
     }
 
 </script>
-
-
 
 
 <script type="text/javascript">
@@ -254,20 +264,21 @@
 
         $.ajax({
             type: 'POST',
-            url: '/first_dashboard/excel_generate',
+            url: '/dashboards/fw_information/excel_generate', // Updated URL to match the Rails route
             data: {transaction_ids: jsonData}, // Send data as an object
             headers: {
                 'X-CSRF-Token': csrfToken
             },
             success: function (data) {
                 var iframe = $('<iframe>', {
-                    src: '/first_dashboard/excel_generate',
+                    src: '/dashboards/fw_information/excel_generate', // Updated URL for the iframe source
                     style: 'display: none'
                 });
                 $('body').append(iframe);
             }
         });
     }
+
 
 </script>
 
