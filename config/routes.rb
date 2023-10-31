@@ -5,19 +5,33 @@ Rails.application.routes.draw do
   resources :survey_monkey_customers
   resources :survey_monkeys
   resources :customer_surveys
-  get 'third_dashboard/index'
-  get 'third_dashboard/third_db_data'
-  get 'second_dashboard/index'
-  get 'customer_satisfication/index'
   get 'home/index'
-  get 'second_dashboard/towns'
-  get 'second_dashboard/filter'
-  get 'customer_satisfication/filterapply'
-  get 'service_provider/index'
+  get 'geographical/towns'
+  get 'geographical/filter'
+  get 'customer_satisfaction/filterapply'
 
   namespace :dashboards do
     get 'fw_information/index', to: 'fw_information#index'
-
+    get 'geographical', to: 'geographical#index'
+    namespace :geographical do
+      get 'index'
+      get 'towns'
+      get 'filter'
+    end
+    get 'dep_information', to: 'dep_information#index'
+    namespace :dep_information do
+      get 'third_db_data'
+      get 'index'
+    end
+    get 'customer_satisfaction', to: 'customer_satisfaction#index'
+    namespace :customer_satisfaction do
+      get 'filterapply'
+      get 'index'
+    end
+    get 'service_provider', to: 'service_provider#index'
+    namespace :service_provider do
+      get 'index'
+    end
     resources :fw_information, only: [:index] do
       collection do
         match 'excel_generate', to: 'fw_information#excel_generate', via: [:get, :post], defaults: { format: :xlsx }
