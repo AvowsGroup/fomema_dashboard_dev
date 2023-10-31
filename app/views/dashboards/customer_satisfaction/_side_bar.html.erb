@@ -165,11 +165,12 @@
 </div>
 <script>
     function apply_filter() {
-        debugger;
         var selectedValues = JSON.stringify(getCheckedValues());
+        const url = '/dashboards/customer_satisfaction/index.js';
+
         $.ajax({
             type: 'GET',
-            url: '/customer_satisfication/index.js',//ReplacewithyourRails route
+            url: url,
             data: selectedValues
         });
     }
@@ -189,9 +190,10 @@
     function clear_filter() {
         var selectedValues = JSON.stringify({value: false});
         clearAllInputs();
+        const url = '/dashboards/customer_satisfaction/index.js';
         $.ajax({
             type: 'GET',
-            url: '/fw_information/index.js', // Replace with your Rails route
+            url: url, // Replace with your Rails route
             data: selectedValues
         });
     }

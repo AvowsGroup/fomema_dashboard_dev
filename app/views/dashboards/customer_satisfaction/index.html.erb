@@ -132,11 +132,12 @@
         checkedValues['agegroup'] = $('input[name="agecheck"]:checked').map(function () {
             return $(this).val();
         }).get().join(',');
-        debugger;
+
+        const url = '/dashboards/customer_satisfaction/filterapply';
 
         $.ajax({
             type: 'GET',
-            url: '/customer_satisfication/filterapply',
+            url: url,
 
             data: {
                 sector_id: checkedValues['Sector']

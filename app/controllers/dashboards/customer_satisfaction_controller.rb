@@ -1,4 +1,4 @@
-class CustomerSatisficationController < ApplicationController
+class Dashboards::CustomerSatisfactionController < ApplicationController
 	def index
 	    @job_type = JobType.all
 	    @gendermale=SurveyMonkeyCustomer.where(what_is_your_gender:'Male').pluck(:what_is_your_gender).count

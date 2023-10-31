@@ -62,7 +62,7 @@
                 <i class="fa fa-dashboard mx-2"></i>Dashboard 2 </a>
             </li>
             <li style="border-bottom: dotted 1px #c2c2c2; font-size: 12px;">
-              <a class="dropdown-item" href="/third_dashboard/index">
+              <a class="dropdown-item" href="/dep_information/index">
                 <i class="fa fa-dashboard mx-2"></i>Dashboard 3 </a>
             </li>
             <li style="border-bottom: dotted 1px #c2c2c2; font-size: 12px;">
@@ -144,6 +144,7 @@
                   autoclose: true,
                   format: "dd/mm/yyyy"
               });
+
           });
       </script>
       <script>
@@ -185,29 +186,48 @@
 
     function filter_date(boolean) {
         const selectedWeek = $('#week').val();
-        // Collect data from the date range input
         const dateRange = $('input[name="daterange"]').val();
-        // Collect data from the district dropdown
         const selectedMonth = $('#month').val();
-        // Create a JSON object
+
         const formData = {
             week: selectedWeek,
             dateRange: dateRange,
             month: selectedMonth,
             boolean: boolean
         };
-        data = JSON.stringify(formData)
+
+        const data = JSON.stringify(formData);
+
+
+        const url = '/dashboards/dep_information/third_db_data.js';
+
+
+
         $.ajax({
-            url: 'third_db_data.js',
+            url: url,
             type: "GET",
-            data: data
-        })
+            data: data,
+            success: function (response) {
+                // Handle the response or execute any necessary actions
+            },
+            error: function (xhr, status, error) {
+                // Handle error
+            }
+        });
     }
+
+    $('.btn-apply').on('click', function () {
+        filter_date(true);
+    });
+
 
 
     function cancel_filter() {
+
+        const url =  '/dashboards/dep_information/index.js';
+
         $.ajax({
-            url: 'index.js',
+            url: url,
             type: "GET",
             data: ""
         })
@@ -287,10 +307,15 @@
             controlsActive = true; // Re-enable control
         }
 
-        function cancel_filter() {
-            resetFilterControls();
-        }
     });
 
+</script>
+
+<script>
+    function getBaseUrl() {
+        return window.location.origin;
+    }
+
+    console.log('Base URL:', getBaseUrl());
 </script>
 

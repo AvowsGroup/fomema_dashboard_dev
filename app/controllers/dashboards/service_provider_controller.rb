@@ -1,4 +1,4 @@
-class ServiceProviderController < ApplicationController
+class Dashboards::ServiceProviderController < ApplicationController
 	def index
 		@doctorsactive=Doctor.where(status:'ACTIVE').count
 		@laboratoriesactive=Laboratory.where(status:'ACTIVE').count
