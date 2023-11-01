@@ -256,27 +256,14 @@
 
 <script type="text/javascript">
     function excel_generate() {
-        let ids = <%= @transactions.ids.to_json %>;
-        var jsonData = JSON.stringify(ids);
-
-        // Retrieve the CSRF token from the meta tag
         var csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
-        $.ajax({
-            type: 'POST',
-            url: '/dashboards/fw_information/excel_generate', // Updated URL to match the Rails route
-            data: {transaction_ids: jsonData}, // Send data as an object
-            headers: {
-                'X-CSRF-Token': csrfToken
-            },
-            success: function (data) {
-                var iframe = $('<iframe>', {
-                    src: '/dashboards/fw_information/excel_generate', // Updated URL for the iframe source
-                    style: 'display: none'
-                });
-                $('body').append(iframe);
-            }
-        });
+        var form = $('<form action="/dashboards/fw_information/excel_generate" method="post"></form>');
+        $('body').append(form);
+
+        form.append('<input type="hidden" name="authenticity_token" value="' + csrfToken + '">');
+        form.submit();
+        form.remove();
     }
 
 

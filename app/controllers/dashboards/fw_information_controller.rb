@@ -64,6 +64,7 @@ class Dashboards::FwInformationController < ApplicationController
         2023 => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
       }
     end
+
     @fw_pending_view = {
       xqcc_pool: Transaction.joins("JOIN xray_reviews ON xray_reviews.transaction_id = transactions.id")
                             .joins("JOIN xqcc_pools ON xqcc_pools.transaction_id = transactions.id").where("transactions.certification_date IS NOT NULL")
@@ -91,12 +92,73 @@ class Dashboards::FwInformationController < ApplicationController
   end
 
   def excel_generate
-    @data = Transaction.order(created_at: :desc).limit(10000)
+    xlsx_package = Axlsx::Package.new
+    @sheet_data = {
+      'FW Reg. by Country' => [
+        'FW Registration by Country',
+        ['FW Registration by Country', 'Total FW Registration', 'FW went for medical examination', 'Certification', 'XQCC Pool (Film Received)','XQCC Pool (Film Reviewed)', 'PCR Pool (Film Received)', 'PCR Pool (Film Reviewed)', 'X-Ray Pending Review (Film Received)','X-Ray Pending Review (Film Reviewed)', 'X-Ray Pending Decision (Film Received)', 'X-Ray Pending Decision (Film Reviewed)', 'Medical Review (Received)', 'Medical Review (Reviewed)', 'Final Result Released', 'Result Transmitted to Immigration', 'Blocked FW', 'Appeal', 'FW Insured'],
+        ['Example data 1', 'Example data 2', 'Example data 3', 'Example data 4', 'Example data 5', 'Example data 6', 'Example data 7', 'Example data 8', 'Example data 9', 'Example data 10', 'Example data 11', 'Example data 12', 'Example data 13', 'Example data 14', 'Example data 15', 'Example data 16','Example data 17','Example data 18','Example data 19']
+      ],
+      'FW Reg. by State' =>[
+        'FW Registration by State',
+        ['FW Registration by State', 'Total FW Registration', 'FW went for medical examination', 'Certification', 'XQCC Pool (Film Received)','XQCC Pool (Film Reviewed)', 'PCR Pool (Film Received)', 'PCR Pool (Film Reviewed)', 'X-Ray Pending Review (Film Received)','X-Ray Pending Review (Film Reviewed)', 'X-Ray Pending Decision (Film Received)', 'X-Ray Pending Decision (Film Reviewed)', 'Medical Review (Received)', 'Medical Review (Reviewed)', 'Final Result Released', 'Result Transmitted to Immigration', 'Blocked FW', 'Appeal', 'FW Insured'],
+        ['Example data 1', 'Example data 2', 'Example data 3', 'Example data 4', 'Example data 5', 'Example data 6', 'Example data 7', 'Example data 8', 'Example data 9', 'Example data 10', 'Example data 11', 'Example data 12', 'Example data 13', 'Example data 14', 'Example data 15', 'Example data 16','Example data 17','Example data 18','Example data 19']
+      ],
+      'FW Reg. by Sector' => [
+        'FW Registration by Sector',
+        ['FW Registration by Sector', 'Total FW Registration', 'FW went for medical examination', 'Certification', 'XQCC Pool (Film Received)','XQCC Pool (Film Reviewed)', 'PCR Pool (Film Received)', 'PCR Pool (Film Reviewed)', 'X-Ray Pending Review (Film Received)','X-Ray Pending Review (Film Reviewed)', 'X-Ray Pending Decision (Film Received)', 'X-Ray Pending Decision (Film Reviewed)', 'Medical Review (Received)', 'Medical Review (Reviewed)', 'Final Result Released', 'Result Transmitted to Immigration', 'Blocked FW', 'Appeal', 'FW Insured'],
+        ['Example data 1', 'Example data 2', 'Example data 3', 'Example data 4', 'Example data 5', 'Example data 6', 'Example data 7', 'Example data 8', 'Example data 9', 'Example data 10', 'Example data 11', 'Example data 12', 'Example data 13', 'Example data 14', 'Example data 15', 'Example data 16','Example data 17','Example data 18','Example data 19']
+      ],
+      'FW Reg. by Gender' => [
+        'FW Registration by Gender',
+        ['FW Registration by Gender', 'Total FW Registration', 'FW went for medical examination', 'Certification', 'XQCC Pool (Film Received)','XQCC Pool (Film Reviewed)', 'PCR Pool (Film Received)', 'PCR Pool (Film Reviewed)', 'X-Ray Pending Review (Film Received)','X-Ray Pending Review (Film Reviewed)', 'X-Ray Pending Decision (Film Received)', 'X-Ray Pending Decision (Film Reviewed)', 'Medical Review (Received)', 'Medical Review (Reviewed)', 'Final Result Released', 'Result Transmitted to Immigration', 'Blocked FW', 'Appeal', 'FW Insured'],
+        ['Example data 1', 'Example data 2', 'Example data 3', 'Example data 4', 'Example data 5', 'Example data 6', 'Example data 7', 'Example data 8', 'Example data 9', 'Example data 10', 'Example data 11', 'Example data 12', 'Example data 13', 'Example data 14', 'Example data 15', 'Example data 16','Example data 17','Example data 18','Example data 19']
+      ],
+      'FW Reg. by Registration at' =>[
+        'FW Registration by Registration at',
+        ['FW Registration by Sector', 'Total FW Registration', 'FW went for medical examination', 'Certification', 'XQCC Pool (Film Received)','XQCC Pool (Film Reviewed)', 'PCR Pool (Film Received)', 'PCR Pool (Film Reviewed)', 'X-Ray Pending Review (Film Received)','X-Ray Pending Review (Film Reviewed)', 'X-Ray Pending Decision (Film Received)', 'X-Ray Pending Decision (Film Reviewed)', 'Medical Review (Received)', 'Medical Review (Reviewed)', 'Final Result Released', 'Result Transmitted to Immigration', 'Blocked FW', 'Appeal', 'FW Insured'],
+        ['Example data 1', 'Example data 2', 'Example data 3', 'Example data 4', 'Example data 5', 'Example data 6', 'Example data 7', 'Example data 8', 'Example data 9', 'Example data 10', 'Example data 11', 'Example data 12', 'Example data 13', 'Example data 14', 'Example data 15', 'Example data 16','Example data 17','Example data 18','Example data 19']
+      ],
+      'FW Reg. by FW Type' => [
+        'FW Registration by FW Type',
+        ['FW Registration by FW Type', 'Total FW Registration', 'FW went for medical examination', 'Certification', 'XQCC Pool (Film Received)','XQCC Pool (Film Reviewed)', 'PCR Pool (Film Received)', 'PCR Pool (Film Reviewed)', 'X-Ray Pending Review (Film Received)','X-Ray Pending Review (Film Reviewed)', 'X-Ray Pending Decision (Film Received)', 'X-Ray Pending Decision (Film Reviewed)', 'Medical Review (Received)', 'Medical Review (Reviewed)', 'Final Result Released', 'Result Transmitted to Immigration', 'Blocked FW', 'Appeal', 'FW Insured'],
+        ['Example data 1', 'Example data 2', 'Example data 3', 'Example data 4', 'Example data 5', 'Example data 6', 'Example data 7', 'Example data 8', 'Example data 9', 'Example data 10', 'Example data 11', 'Example data 12', 'Example data 13', 'Example data 14', 'Example data 15', 'Example data 16','Example data 17','Example data 18','Example data 19']
+      ],
+      'Trend of FW Reg. by year' =>  [
+        'Trend of FW registration by Year',
+        ['Transaction date by Month', 'Transaction date by Day', '2019', '2020', '2021', '2022', '2023', 'Count'],
+        ['Example data 1', 'Example data 2', 'Example data 3', 'Example data 4', 'Example data 5', 'Example data 6', 'Example data 7','Example data 8']
+      ],
+      'Raw Data 2023' =>[
+        'Data 2023',
+        ['Transaction Date (Month)', 'Medical Examination Date (Month)', 'Certification Date (Month)', 'State', 'Country','Age', 'Gender', 'Registration at', 'Foreign Worker Type','XQCC Pool (Film Received)','XQCC Pool (Film Reviewed)', 'PCR Pool (Film Received)', 'PCR Pool (Film Reviewed)', 'X-Ray Pending Review (Film Received)','X-Ray Pending Review (Film Reviewed)', 'X-Ray Pending Decision (Film Received)', 'X-Ray Pending Decision (Film Reviewed)', 'Medical Review (Received)', 'Medical Review (Reviewed)', 'Final Result Released', 'Result Transmitted to Immigration', 'Blocked FW', 'Appeal', 'FW Insured'],
+        ['Example data 1', 'Example data 2', 'Example data 3', 'Example data 4', 'Example data 5', 'Example data 6', 'Example data 7', 'Example data 8', 'Example data 9', 'Example data 10', 'Example data 11', 'Example data 12', 'Example data 13', 'Example data 14', 'Example data 15', 'Example data 16','Example data 17','Example data 18','Example data 19', 'Example data 20','Example data 21','Example data 22','Example data 23','Example data 24']
+      ],
+      'Raw Data 2022' =>[
+        'Data 2022',
+        ['Transaction Date (Month)', 'Medical Examination Date (Month)', 'Certification Date (Month)', 'State', 'Country','Age', 'Gender', 'Registration at', 'Foreign Worker Type','XQCC Pool (Film Received)','XQCC Pool (Film Reviewed)', 'PCR Pool (Film Received)', 'PCR Pool (Film Reviewed)', 'X-Ray Pending Review (Film Received)','X-Ray Pending Review (Film Reviewed)', 'X-Ray Pending Decision (Film Received)', 'X-Ray Pending Decision (Film Reviewed)', 'Medical Review (Received)', 'Medical Review (Reviewed)', 'Final Result Released', 'Result Transmitted to Immigration', 'Blocked FW', 'Appeal', 'FW Insured'],
+        ['Example data 1', 'Example data 2', 'Example data 3', 'Example data 4', 'Example data 5', 'Example data 6', 'Example data 7', 'Example data 8', 'Example data 9', 'Example data 10', 'Example data 11', 'Example data 12', 'Example data 13', 'Example data 14', 'Example data 15', 'Example data 16','Example data 17','Example data 18','Example data 19', 'Example data 20','Example data 21','Example data 22','Example data 23','Example data 24']
+      ],
+      'Raw Data 2021' => [
+        'Data 2021',
+        ['Transaction Date (Month)', 'Medical Examination Date (Month)', 'Certification Date (Month)', 'State', 'Country','Age', 'Gender', 'Registration at', 'Foreign Worker Type','XQCC Pool (Film Received)','XQCC Pool (Film Reviewed)', 'PCR Pool (Film Received)', 'PCR Pool (Film Reviewed)', 'X-Ray Pending Review (Film Received)','X-Ray Pending Review (Film Reviewed)', 'X-Ray Pending Decision (Film Received)', 'X-Ray Pending Decision (Film Reviewed)', 'Medical Review (Received)', 'Medical Review (Reviewed)', 'Final Result Released', 'Result Transmitted to Immigration', 'Blocked FW', 'Appeal', 'FW Insured'],
+        ['Example data 1', 'Example data 2', 'Example data 3', 'Example data 4', 'Example data 5', 'Example data 6', 'Example data 7', 'Example data 8', 'Example data 9', 'Example data 10', 'Example data 11', 'Example data 12', 'Example data 13', 'Example data 14', 'Example data 15', 'Example data 16','Example data 17','Example data 18','Example data 19', 'Example data 20','Example data 21','Example data 22','Example data 23','Example data 24']
+      ],
+      'Raw Data 2020' =>[
+        'Data 2020',
+        ['Transaction Date (Month)', 'Medical Examination Date (Month)', 'Certification Date (Month)', 'State', 'Country','Age', 'Gender', 'Registration at', 'Foreign Worker Type','XQCC Pool (Film Received)','XQCC Pool (Film Reviewed)', 'PCR Pool (Film Received)', 'PCR Pool (Film Reviewed)', 'X-Ray Pending Review (Film Received)','X-Ray Pending Review (Film Reviewed)', 'X-Ray Pending Decision (Film Received)', 'X-Ray Pending Decision (Film Reviewed)', 'Medical Review (Received)', 'Medical Review (Reviewed)', 'Final Result Released', 'Result Transmitted to Immigration', 'Blocked FW', 'Appeal', 'FW Insured'],
+        ['Example data 1', 'Example data 2', 'Example data 3', 'Example data 4', 'Example data 5', 'Example data 6', 'Example data 7', 'Example data 8', 'Example data 9', 'Example data 10', 'Example data 11', 'Example data 12', 'Example data 13', 'Example data 14', 'Example data 15', 'Example data 16','Example data 17','Example data 18','Example data 19', 'Example data 20','Example data 21','Example data 22','Example data 23','Example data 24']
+      ],
+      'Raw Data 2019' =>[
+        'Data 2019',
+        ['Transaction Date (Month)', 'Medical Examination Date (Month)', 'Certification Date (Month)', 'State', 'Country','Age', 'Gender', 'Registration at', 'Foreign Worker Type','XQCC Pool (Film Received)','XQCC Pool (Film Reviewed)', 'PCR Pool (Film Received)', 'PCR Pool (Film Reviewed)', 'X-Ray Pending Review (Film Received)','X-Ray Pending Review (Film Reviewed)', 'X-Ray Pending Decision (Film Received)', 'X-Ray Pending Decision (Film Reviewed)', 'Medical Review (Received)', 'Medical Review (Reviewed)', 'Final Result Released', 'Result Transmitted to Immigration', 'Blocked FW', 'Appeal', 'FW Insured'],
+        ['Example data 1', 'Example data 2', 'Example data 3', 'Example data 4', 'Example data 5', 'Example data 6', 'Example data 7', 'Example data 8', 'Example data 9', 'Example data 10', 'Example data 11', 'Example data 12', 'Example data 13', 'Example data 14', 'Example data 15', 'Example data 16','Example data 17','Example data 18','Example data 19', 'Example data 20','Example data 21','Example data 22','Example data 23','Example data 24']
+      ]
+    }
+
+
     respond_to do |format|
-      format.xlsx do
-        response.headers['Content-Disposition'] = 'attachment; filename="your_file.xlsx"'
-        render xlsx: 'excel_generate', filename: 'transaction.xlsx'
-      end
+      format.xlsx { render xlsx: 'excel_generate', filename: 'Report.xlsx' }
     end
   end
 
