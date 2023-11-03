@@ -24,7 +24,7 @@ class Dashboards::FwInformationController < ApplicationController
         # chart 2 and chart 4
         @pi_chart_data = [['Task', 'Hours per Day']]
         @transactions = Transaction.where(id: @transactions.ids)
-        @transaction_line_cahrt = @transactions.transaction_data_last_5_years rescue {}
+        @transaction_line_chart = @transactions.transaction_data_last_5_years rescue {}
 
         # filtered data for data_pints
         @passed_examination_count = @transactions.where("EXTRACT(YEAR FROM medical_examination_date) = ? AND medical_examination_date < ?", @current_year, Date.current).count
@@ -47,23 +47,24 @@ class Dashboards::FwInformationController < ApplicationController
     else
       @block_fw = Transaction.joins(:myimms_transactions).pluck('myimms_transactions.status').map { |i| displayed_status(i) }.group_by { |status| status }.transform_values(&:count)
       @fw_insured = fw_insured(@transactions)
-      @transaction_line_cahrt = Transaction.transaction_data_last_5_years
       @side_bar_medical_appeals = Transaction.includes(:medical_appeals).find(@transactions.ids).count
       @pi_chart_data = [['Task', 'Hours per Day']]
       Transaction.joins(:job_type).group('job_types.name').count.to_a.map { |i| @pi_chart_data << i }
       @fw_reg_by_states = State.joins(doctors: :transactions).group('states.name').count.to_a
       @fw_Reg_by_countries = Transaction.joins(:country).group('countries.name').count.to_a
+      @transaction_line_chart = Transaction.transaction_data_last_5_years
     end
 
-    if @transaction_line_cahrt == {} || @transaction_line_cahrt.nil?
-      @transaction_line_cahrt = {
-        2019 => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        2020 => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        2021 => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        2022 => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        2023 => [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-      }
+
+    if @transaction_line_chart == {} || @transaction_line_chart.nil?
+      current_year = Time.now.year
+      last_five_years = (current_year - 4..current_year)
+
+      @transaction_line_chart = last_five_years.each_with_object({}) do |year, chart_data|
+        chart_data[year] = [0] * 12  # Initialize an array of zeros for each month
+      end
     end
+
     # binding.pry
     @fw_pending_view = {
       xqcc_pool_received: Transaction.joins("JOIN xqcc_pools ON xqcc_pools.transaction_id = transactions.id") .order('transactions.created_at DESC')
