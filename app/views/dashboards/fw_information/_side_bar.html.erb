@@ -395,7 +395,7 @@
         checkedValues['Registration'] = $('#Registration input[type="checkbox"]:checked').map(function () {
             return $(this).val();
         }).get().join(' ');
-        
+
 
         return checkedValues;
 
@@ -406,7 +406,27 @@
 
 <script type="text/javascript">
     function apply_filter() {
-        var selectedValues = JSON.stringify(getCheckedValues());
+        const selectedValues = JSON.stringify(getCheckedValues());
+
+        // handling line chart with year range of filters
+        const selectedDateRange = $('#date-range').val();
+        let [startDate, endDate] = selectedDateRange.split(' - ');
+        let startYear = parseInt(startDate.split('-')[0]);
+        let endYear = parseInt(endDate.split('-')[0]);
+
+        let yearRange = [];
+
+        if (startYear === endYear) {
+            yearRange.push(startYear);
+        } else {
+            for (let year = startYear; year <= endYear; year++) {
+                yearRange.push(year);
+            }
+        }
+
+
+        updateChartByYearRange(yearRange);
+
 
         $.ajax({
             type: 'GET',
