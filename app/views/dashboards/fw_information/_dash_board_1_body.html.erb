@@ -307,26 +307,29 @@
                     <script>
                         var yearLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
                         var fixedColors = ['#FF5733', '#33FF57', '#5733FF', '#33FFFF', '#FFFF33'];
-                        var yearData = {};
-                        var myLine;
 
+                        var yearData = {};
                         <% @transaction_line_chart.each do |year, data| %>
                         yearData[<%= year %>] = <%= data.to_json.html_safe %>;
                         <% end %>
 
-                        function initializeChart(emptyData) {
+                        var myLine;
+
+                        function initializeChart() {
+                            // Define an array of fixed colors
+                            var fixedColors = ['#FF5733', '#33FF57', '#5733FF', '#33FFFF', '#FFFF33'];
+
                             var datasets = Object.keys(yearData).map(function (year, index) {
-                                var chartData = emptyData ? new Array(12).fill(0) : yearData[year];
                                 return {
                                     label: 'Year ' + year,
                                     backgroundColor: fixedColors[index % fixedColors.length],
                                     borderColor: fixedColors[index % fixedColors.length],
                                     fill: false,
-                                    data: chartData
+                                    data: yearData[year]
                                 };
                             });
 
-                            var chartConfig = {
+                            var config = {
                                 type: 'line',
                                 data: {
                                     labels: yearLabels,
@@ -364,12 +367,14 @@
                             };
 
                             var ctx = document.getElementById('canvas').getContext('2d');
-                            window.myLine = new Chart(ctx, chartConfig);
+                            window.myLine = new Chart(ctx, config);
                         }
 
-                        initializeChart(true);
+                        // Call the initialization function
+                        initializeChart();
 
                         function updateChartByYearRange(selectedYearRange) {
+
                             if (myLine) {
                                 myLine.destroy();
                             }
@@ -427,6 +432,7 @@
                             var ctx = document.getElementById('canvas').getContext('2d');
                             myLine = new Chart(ctx, chartConfig);
                         }
+
 
                     </script>
 
