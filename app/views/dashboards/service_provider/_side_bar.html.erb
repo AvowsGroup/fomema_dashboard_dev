@@ -1,11 +1,9 @@
 <div id="sidebar">
-
   <div class="filter_row">
     <div class="filter_div mt-0">
       <div class="filter">
         <div class="filter-title">
           Filter By
-
         </div>
         <div class="filter-body">
           <div id="main">
@@ -16,11 +14,8 @@
                      aria-expanded="true" aria-controls="time-period">
                     Time Period</a>
                 </div>
-
                 <div id="time-period" class="collapse show" aria-labelledby="faqhead1" data-parent="#filter">
                   <div class="card-body">
-
-
                     <script>
                         $(document).ready(function () {
                             $('#date-range').daterangepicker({
@@ -45,15 +40,12 @@
                     <div class="input-group date-range">
                       <input type="text" class="form-control date-range" id="date-range" placeholder="Select Date Range">
                       <div class="input-group-append">
-                                         <span class="input-group-text">
-                                           <i class="fa fa-calendar"></i>
-                                         </span>
+                                    <span class="input-group-text">
+                                    <i class="fa fa-calendar"></i>
+                                    </span>
                       </div>
                     </div>
-
-
                   </div>
-
                 </div>
               </div>
               <div class="card">
@@ -61,7 +53,6 @@
                   <a href="#" class="filter-link collapsed" data-toggle="collapse" data-target="#doctorcode" aria-expanded="true" aria-controls="doctorcode">Doctor
                     Code</a>
                 </div>
-
                 <div id="doctorcode" class="collapse" aria-labelledby="filter2" data-parent="#filter">
                   <div class="card-body">
                     <ul class="subment-li">
@@ -77,7 +68,6 @@
                   <a href="#" class="filter-link collapsed" data-toggle="collapse" data-target="#xray" aria-expanded="true" aria-controls="xray">X-ray
                     Facility Code</a>
                 </div>
-
                 <div id="xray" class="collapse" aria-labelledby="filter3" data-parent="#filter">
                   <div class="card-body">
                     <ul class="subment-li">
@@ -93,7 +83,6 @@
                   <a href="#" class="filter-link collapsed" data-toggle="collapse" data-target="#laboratory" aria-expanded="true" aria-controls="laboratory">Laboratory
                     Code</a>
                 </div>
-
                 <div id="laboratory" class="collapse" aria-labelledby="filter4" data-parent="#filter">
                   <div class="card-body">
                     <ul class="subment-li">
@@ -110,31 +99,19 @@
               </div>
             </div>
           </div>
-          <!-- <ul class="list">
-            <li>
-              Time Period</li>
-      <li>Sector</li>
-      <li>State</li>
-      <li>Country</li>
-      <li>Age</li>
-      <li>Gender</li>
-      <li>Registration at</li>
-      <li>Foregin Worker Type</li>
-          </ul> -->
         </div>
-
       </div>
-
       <div>
       </div>
     </div>
-
   </div>
-
-
 </div>
 <script type="text/javascript">
+
     function clearAllInputs() {
+        // Clear checkboxes
+        $('input[type="checkbox"]').prop('checked', false);
+
 
         // Clear input fields
         $('input[type="text"]').val('');
@@ -144,36 +121,82 @@
 
     }
 
+    function closeSidebar() {
+        // Close the sidebar by removing the 'active' class
+        $('#sidebar').removeClass('active');
+    }
+
     function clear_filter() {
         var selectedValues = JSON.stringify({value: false});
-        const url = '/dashboards/customer_satisfaction/index.js';
         clearAllInputs();
+        const url = '/dashboards/service_provider/index.js';
         $.ajax({
             type: 'GET',
             url: url, // Replace with your Rails route
-            data: selectedValues
+            data: selectedValues,
+            success: function () {
+                closeSidebar();
+            }
         });
     }
 
+
     function getCheckedValues() {
         var checkedValues = {};
-
         // Retrieve values from Sector
         checkedValues['DateRange'] = $('#date-range').val();
         checkedValues['doctor'] = $('#txtdoctor').val();
         checkedValues['xray'] = $('#txtxray').val();
         checkedValues['lab'] = $('#txtlab').val();
-
         return checkedValues;
     }
 
     function apply_filter() {
+
+        if ($('#txtdoctor').val() != "") {
+            $('#divcertdoctor').css("display", "block");
+            $('#divdoctortransm').css("display", "block");
+            $('#divlabtrans').css("display", "none");
+            $('#divxrayquality').css("display", "none");
+            $('#divxraytrans').css("display", "none");
+        } else if ($('#txtxray').val() != "") {
+            $('#divcertdoctor').css("display", "none");
+            $('#divdoctortransm').css("display", "none");
+            $('#divlabtrans').css("display", "none");
+            $('#divxrayquality').css("display", "block");
+            $('#divxraytrans').css("display", "block");
+        } else if ($('#txtlab').val() != "") {
+            $('#divcertdoctor').css("display", "none");
+            $('#divdoctortransm').css("display", "none");
+            $('#divlabtrans').css("display", "block");
+            $('#divxrayquality').css("display", "none");
+            $('#divxraytrans').css("display", "none");
+        }
+        if ($('#txtdoctor').val() != "" && $('#txtxray').val() != "") {
+            $('#divcertdoctor').css("display", "block");
+            $('#divdoctortransm').css("display", "block");
+            $('#divlabtrans').css("display", "none");
+            $('#divxrayquality').css("display", "block");
+            $('#divxraytrans').css("display", "block");
+        }
+        if ($('#txtdoctor').val() != "" && $('#txtxray').val() != "" && $('#txtlab').val() != "") {
+            $('#divcertdoctor').css("display", "block");
+            $('#divdoctortransm').css("display", "block");
+            $('#divlabtrans').css("display", "block");
+            $('#divxrayquality').css("display", "block");
+            $('#divxraytrans').css("display", "block");
+        }
         var selectedValues = JSON.stringify(getCheckedValues());
-        const url = '/dashboards/customer_satisfaction/index.js';
+        const url = '/dashboards/service_provider/index.js';
         $.ajax({
             type: 'GET',
-            url: url,//ReplacewithyourRails route
-            data: selectedValues
+            url: url,
+            data: selectedValues,
+            success: function () {
+                closeSidebar();
+            }
         });
+        closeSidebar();
     }
+
 </script>
