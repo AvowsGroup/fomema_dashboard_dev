@@ -1,4 +1,5 @@
 class Dashboards::ServiceProviderController < ApplicationController
+
   def index
     @doctorsactive = Doctor.where(status: 'ACTIVE').count
     @laboratoriesactive = Laboratory.where(status: 'ACTIVE').count
@@ -79,9 +80,9 @@ class Dashboards::ServiceProviderController < ApplicationController
       # calling filter from here
       @filtervalues = apply_filter(@filters)
     end
+
   end
 
-  # binding.pry
   def apply_filter(filter_params)
     @filtervalues = Doctor.all
     @current_year = Date.today.year
@@ -201,6 +202,7 @@ class Dashboards::ServiceProviderController < ApplicationController
       end
     end
     @filtervalues
+
   end
 
   def convert_values_to_arrays(hash)
@@ -215,6 +217,27 @@ class Dashboards::ServiceProviderController < ApplicationController
     converted_hash
   end
 
+  def calculate_grades(filter_params)
+    ceritifydoctorperyestotal = filter_params[:ceritifydoctorperyestotal] || 0
+    doctoraccuracytransmissiontotal = filter_params[:doctoraccuracytransmissiontotal] || 0
+    xraytransmissionpercentagetotal = filter_params[:xraytransmissionpercentagetotal] || 0
+    xrayqualitycompliance = filter_params[:xrayqualitycompliance] || 0
+    laboratorydonutwithin48 = filter_params[:laboratorydonutwithin48] || 0
+    laboratorydonutbeyond48 = filter_params[:laboratorydonutbeyond48] || 0
+
+    doctor_performance_total = (ceritifydoctorperyestotal + doctoraccuracytransmissiontotal)
+    doctor_performance_percentage = (doctor_performance_total.to_f / 200) * 100
+    @doctor_grade = calculate_grade(doctor_performance_percentage)
+
+    xray_performance_total = (xraytransmissionpercentagetotal + xrayqualitycompliance)
+    xray_performance_percentage = (xray_performance_total.to_f / 200) * 100
+    @xray_grade = calculate_grade(xray_performance_percentage)
+    laboratory_performance_total = (laboratorydonutwithin48 + laboratorydonutbeyond48)
+    laboratory_performance_percentage = (laboratory_performance_total.to_f / 200) * 100
+    @laboratory_grade = calculate_grade(laboratory_performance_percentage)
+
+  end
+
   def calculate_grade(value)
     case value
     when 80..100
@@ -225,24 +248,11 @@ class Dashboards::ServiceProviderController < ApplicationController
       'C'
     when 50..59
       'D'
-    else
+    when 0..49
       'E'
+    else
+      'NA'
     end
   end
-
-  # Calculate grades for Doctors
-  doctor_performance_total = (@ceritifydoctorperyestotal + @doctoraccuracytransmissiontotal)
-  doctor_performance_percentage = (doctor_performance_total.to_f / 200) * 100
-  @doctor_grade = calculate_grade(doctor_performance_percentage)
-
-  # Calculate grades for X-ray facilities
-  xray_performance_total = (@xraytransmissionpercentagetotal + @xrayqualitycompliance)
-  xray_performance_percentage = (xray_performance_total.to_f / 200) * 100
-  @xray_grade = calculate_grade(xray_performance_percentage)
-
-  # Calculate grades for Laboratories
-  laboratory_performance_total = (@laboratorydonutwithin48 + @laboratorydonutbeyond48)
-  laboratory_performance_percentage = (laboratory_performance_total.to_f / 200) * 100
-  @laboratory_grade = calculate_grade(laboratory_performance_percentage)
 
 end
