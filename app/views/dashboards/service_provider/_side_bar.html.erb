@@ -148,7 +148,9 @@
         checkedValues['doctor'] = $('#txtdoctor').val();
         checkedValues['xray'] = $('#txtxray').val();
         checkedValues['lab'] = $('#txtlab').val();
+        updateDisplayedValues(checkedValues);
         return checkedValues;
+
     }
 
     function apply_filter() {
@@ -187,6 +189,7 @@
             $('#divxraytrans').css("display", "block");
         }
         var selectedValues = JSON.stringify(getCheckedValues());
+        console.log(selectedValues);
         const url = '/dashboards/service_provider/index.js';
         $.ajax({
             type: 'GET',
