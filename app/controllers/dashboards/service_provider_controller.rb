@@ -226,14 +226,14 @@ class Dashboards::ServiceProviderController < ApplicationController
     laboratorydonutbeyond48 = filter_params[:laboratorydonutbeyond48] || 0
 
     doctor_performance_total = (ceritifydoctorperyestotal + doctoraccuracytransmissiontotal)
-    doctor_performance_percentage = (doctor_performance_total.to_f / 200) * 100
+    doctor_performance_percentage = ((doctor_performance_total.to_f / 200) * 100).round
     @doctor_grade = calculate_grade(doctor_performance_percentage)
 
     xray_performance_total = (xraytransmissionpercentagetotal + xrayqualitycompliance)
-    xray_performance_percentage = (xray_performance_total.to_f / 200) * 100
+    xray_performance_percentage = ((xray_performance_total.to_f / 200) * 100).round
     @xray_grade = calculate_grade(xray_performance_percentage)
     laboratory_performance_total = (laboratorydonutwithin48 + laboratorydonutbeyond48)
-    laboratory_performance_percentage = (laboratory_performance_total.to_f / 200) * 100
+    laboratory_performance_percentage = ((laboratory_performance_total.to_f / 200) * 100).round
     @laboratory_grade = calculate_grade(laboratory_performance_percentage)
 
   end
