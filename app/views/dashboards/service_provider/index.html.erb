@@ -67,7 +67,24 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-12">
-      <div class="tags-wraper">
+      <div class="tag-responsive">
+        <div class="tags collapse" id="tag_demo">
+          <div class="allcode_tag">
+            <div class="doctorBlock">
+                <span class="allcode_tagright"><b id="doctorValue">Initial Value</b><i>Doctor Code</i></span>
+                <span class="allcode_tagleft"><img class="doctorImage" src="img/grade.jpg"></span>
+            </div>
+            <div class="xrayBlock">
+                <span class="allcode_tagright"><b id="xrayValue">Initial Value</b><i>Xray Code</i></span>
+                <span class="allcode_tagleft"><img class="xrayImage" src="img/grade.jpg"></span>
+            </div>
+            <div class="laboratoryBlock">
+                  <span class="allcode_tagright"><b id="laboratoryValue">Initial Value</b><i>Laboratory Code</i></span>
+                  <span class="allcode_tagleft"><img class="labImage" src="img/grade.jpg"></span>
+            </div>
+          </div>
+          <a class="close" data-toggle="collapse" data-target="#tag_demo" style="font-size: 18px;">&times;</a>
+        </div>
 
       </div>
     </div>
@@ -96,4 +113,33 @@
             $('#sidebar').toggleClass('active');
         });
     });
+
+    function updateDisplayedValues(checkedValues) {
+        // Doctor Value
+        if (checkedValues['doctor']) {
+            $('#doctorValue').text(checkedValues['doctor']);
+            $('.doctorBlock').show(); // Show the entire Doctor block
+            $('.doctorImage').show(); // Show the Doctor image
+        } else {
+            $('.doctorBlock').hide(); // Hide the entire Doctor block
+        }
+
+        if (checkedValues['xray']) {
+            $('#xrayValue').text(checkedValues['xray']);
+            $('.xrayBlock').show(); // Show the entire Doctor block
+            $('.xrayImage').show(); // Show the Doctor image
+        } else {
+            $('.xrayBlock').hide(); // Hide the entire Doctor block
+        }
+        // Laboratory Value
+        if (checkedValues['lab']) {
+            $('#laboratoryValue').text(checkedValues['lab']);
+            $('.laboratoryBlock').show(); // Show the entire Laboratory block
+            $('.laboratoryImage').show(); // Show the Laboratory image
+        } else {
+            $('.laboratoryBlock').hide(); // Hide the entire Laboratory block
+        }
+    }
+
+
 </script>
