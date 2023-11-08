@@ -1056,9 +1056,10 @@
                 if (document.getElementById('districtssvg') != null) {
                     var districtElements = document.getElementById('districtssvg').childNodes;
                     var districtCount = districtElements.length;
-
+                    debugger;
                     for (var i = 0; i < districtCount; i++) {
                         districtElements[i].onclick = function () {
+                            debugger;
                             alert('You clicked on ' + this.getAttribute('data-id'));
                         }
                     }
