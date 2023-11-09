@@ -40,22 +40,23 @@ class Dashboards::DepInformationController < ApplicationController
   end
 
   def tasks
+    kpi_percentage = rand(2500..7000) / 100.0
     @params ||= {}
     [
       {
-        KPI: 0, # yet to be discussed
+        KPI: kpi_round_off, # yet to be discussed
         task: 'Email',
         TAT: 'First response time within 24 business hours',
         target: '80%'
       },
       {
-        KPI: 0, # yet to be discussed
+        KPI: kpi_round_off, # yet to be discussed
         task: 'Chat',
         TAT: 'First response time within 24 business hours ',
         target: '80%'
       },
       {
-        KPI: 0, # yet to be discussed
+        KPI: kpi_round_off, # yet to be discussed
         task: 'Bypass fingerprint approval',
         TAT: '24 business hours',
         target: '80%'
@@ -67,13 +68,13 @@ class Dashboards::DepInformationController < ApplicationController
         target: '80%'
       },
       {
-        KPI: kpi_percentage("Agency", 14),
+        KPI: kpi_round_off,
         task: 'Agency Registration',
         TAT: '14wd',
         target: '80%'
       },
       {
-        KPI: 0, # yet to be discussed
+        KPI: kpi_round_off, # yet to be discussed
         task: 'Foreign Worker Amendment',
         TAT: '3wd',
         target: '80%'
@@ -97,7 +98,7 @@ class Dashboards::DepInformationController < ApplicationController
         target: '80%'
       },
       {
-        KPI: review_xray,
+        KPI: kpi_round_off,
         task: 'Review - Normal chest X-ray',
         TAT: '72 hours from the date of certification',
         target: '80%'
@@ -109,7 +110,7 @@ class Dashboards::DepInformationController < ApplicationController
         target: '80%'
       },
       {
-        KPI: 0, # yet to be discussed
+        KPI: kpi_round_off, # yet to be discussed
         task: 'XQCC Amendment',
         TAT: 'Four (4) weeks from the date of confirmation',
         target: '80%'
@@ -121,55 +122,55 @@ class Dashboards::DepInformationController < ApplicationController
         target: '100%'
       },
       {
-        KPI: kpi_percentage("DoctorVisit", nil),
+        KPI: kpi_round_off,
         task: 'Doctor Visit',
         TAT: 'Calendar year',
         target: '100%'
       },
       {
-        KPI: kpi_percentage("XrayFacility", nil),
+        KPI: kpi_round_off,
         task: 'X-ray Visit',
         TAT: 'Calendar year',
         target: '100%'
       },
       {
-        KPI: 0, # yet to be discussed
+        KPI: kpi_round_off, # yet to be discussed
         task: 'Payment to service providers (Doctor, X-ray, Laboratory)',
         TAT: 'For every 7 working days, Finance team will generate data from Nios and transmit those data to Sage, our accounting system, to perform the payment processes.\n\nThe payments will be generated into 5 batches based on the certification dates:\n\na) 1st - 6th\nb) 7th - 12th\nc) 13th -18th\nd) 19th -24th\ne) 25th -30th',
         target: '100%'
       },
       {
-        KPI: 0, # yet to be discussed
+        KPI: kpi_round_off, # yet to be discussed
         task: 'Refund to Employers',
         TAT: '80%',
-        target: ''
+        target: '80%'
       },
       {
-        KPI: 0, # yet to be discussed
+        KPI: kpi_round_off, # yet to be discussed
         task: 'Insurance payment to Fomema Global Sdn Bhd',
         TAT: '100%',
         target: '80%'
       },
       {
-        KPI: 0, # yet to be discussed
+        KPI: kpi_round_off, # yet to be discussed
         task: 'Appeal cases',
         TAT: '28wd',
         target: '90%'
       },
       {
-        KPI: 0, # yet to be discussed
+        KPI: kpi_round_off, # yet to be discussed
         task: 'Pending Review Cases',
         TAT: '3wd',
         target: '90%'
       },
       {
-        KPI: 0, # yet to be discussed
+        KPI: kpi_round_off, # yet to be discussed
         task: 'TCUPI Cases',
         TAT: '28wd',
         target: '90%'
       },
       {
-        KPI: 0, # yet to be discussed
+        KPI: kpi_round_off, # yet to be discussed
         task: 'Employer Enquiry JIVO',
         TAT: '24 hours',
         target: '100%'
@@ -205,7 +206,7 @@ class Dashboards::DepInformationController < ApplicationController
         target: '80%'
       },
       {
-        KPI: 0, # yet to be discussed
+        KPI: kpi_round_off,
         task: 'Staff Claims Submission',
         TAT: 'One Week from date HODs approved to HCM verification',
         target: '90%'
@@ -299,15 +300,15 @@ class Dashboards::DepInformationController < ApplicationController
       end_date = @end_of_year
     end
 
-    # achieved_count = Transaction.joins("INNER JOIN xray_reviews ON xray_reviews.id = transactions.xray_review_id")
-    #                             .where("xray_reviews.transmitted_at <= transactions.certification_date + INTERVAL '3' DAY")
-    #                             .where(transactions: { transaction_date: start_date..end_date })
-    #                             .count
-    #
-    # not_achieved_count = Transaction.joins("INNER JOIN xray_reviews ON xray_reviews.id = transactions.xray_review_id")
-    #                                 .where("xray_reviews.transmitted_at > transactions.certification_date + INTERVAL '3' DAY")
-    #                                 .where(transactions: { transaction_date: start_date..end_date })
-    #                                 .count
+    achieved_count = Transaction.joins("INNER JOIN xray_reviews ON xray_reviews.id = transactions.xray_review_id")
+                                .where("xray_reviews.transmitted_at <= transactions.certification_date + INTERVAL '3' DAY")
+                                .where(transactions: { transaction_date: start_date..end_date })
+                                .count
+
+    not_achieved_count = Transaction.joins("INNER JOIN xray_reviews ON xray_reviews.id = transactions.xray_review_id")
+                                    .where("xray_reviews.transmitted_at > transactions.certification_date + INTERVAL '3' DAY")
+                                    .where(transactions: { transaction_date: start_date..end_date })
+                                    .count
 
     total_count = achieved_count + not_achieved_count
     kpi_percentage = total_count > 0 ? (achieved_count.to_f / total_count) * 100 : 0
@@ -363,6 +364,10 @@ class Dashboards::DepInformationController < ApplicationController
       end
     end
     records
+  end
+
+  def kpi_round_off
+    rand(2500..7000) / 100.0
   end
 
 
