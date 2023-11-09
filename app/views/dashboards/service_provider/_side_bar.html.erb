@@ -129,6 +129,7 @@
     function clear_filter() {
         var selectedValues = JSON.stringify({value: false});
         clearAllInputs();
+        location.reload();
         const url = '/dashboards/service_provider/index.js';
         $.ajax({
             type: 'GET',
