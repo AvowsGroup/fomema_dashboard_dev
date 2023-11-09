@@ -238,6 +238,8 @@ class Dashboards::ServiceProviderController < ApplicationController
 
   end
 
+
+
   def calculate_grade(value)
     case value
     when 80..100
@@ -248,7 +250,7 @@ class Dashboards::ServiceProviderController < ApplicationController
       'C'
     when 50..59
       'D'
-    when 0..49
+    when 0..50
       'E'
     else
       'NA'
