@@ -218,7 +218,6 @@
             <div class="card-body p-1 card-height">
               <div class="row">
                 <div class="col-6 col-sm-12 col-md-4">
-
                   <div class="custompie-cardone" id="divcertdoctor">
                     <div class="card">
                       <div class="card-header">Certification by
@@ -253,113 +252,6 @@
                   </div>
                 </div>
 
-
-                <div class="col-6 col-sm-12 col-md-4" id="divlabtrans">
-                  <div class="custompie-cardone">
-                    <div class="card">
-                      <div class="card-header">Laboratory Result Transmission
-                        <i class="fa fa-ellipsis-h" aria-hidden="true"></i></div>
-                      <div class="card-body p-0">
-                        <script type="text/javascript">
-                            google.charts.load("current", {packages: ["corechart"]});
-                            google.charts.setOnLoadCallback(drawChart);
-
-                            function drawChart() {
-                                var data = google.visualization.arrayToDataTable([
-                                    ['Task', 'Hours per Day'],
-                                    ['', <%=@laboratorydonutwithin48%>],
-                                    ['', <%=@laboratorydonutbeyond48%>]
-                                ]);
-
-                                var options = {
-                                    title: 'Lab Submit Results Within TAT',
-                                    legend: 'none',
-
-                                    colors: ['#0e7dc1', '#99bed6'],
-                                    pieHole: 0.4,
-                                };
-
-                                var chart = new google.visualization.PieChart(document.getElementById('donutchart2'));
-                                chart.draw(data, options);
-                            }
-                        </script>
-
-                        <div id="donutchart2"></div>
-
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-6 col-sm-12 col-md-4" id="divxraytrans">
-                  <div class="custompie-cardone">
-                    <div class="card">
-                      <div class="card-header">X-Ray Transmission <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
-                      </div>
-                      <div class="card-body p-0">
-                        <script type="text/javascript">
-                            google.charts.load("current", {packages: ["corechart"]});
-                            google.charts.setOnLoadCallback(drawChart);
-
-                            function drawChart() {
-                                var data = google.visualization.arrayToDataTable([
-                                    ['Task', 'Hours per Day'],
-                                    ['', 6],
-                                    ['', 4]
-                                ]);
-
-                                var options = {
-                                    title: 'X-Ray Submit Results Within TAT',
-                                    legend: 'none',
-                                    colors: ['#0e7dc1', '#99bed6'],
-                                    pieHole: 0.4,
-                                };
-
-                                var chart = new google.visualization.PieChart(document.getElementById('donutchart3'));
-                                chart.draw(data, options);
-                            }
-                        </script>
-                        <div id="donutchart3"></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-6 col-sm-12 col-md-4" id="divxrayquality">
-                  <div class="custompie-cardone">
-                    <div class="card">
-                      <div class="card-header">X-Ray Quality Compliance
-                        <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
-
-                      </div>
-                      <div class="card-body p-0">
-                        <div id="donutchart"></div>
-                        <script type="text/javascript">
-                            google.charts.load("current", {packages: ["corechart"]});
-                            google.charts.setOnLoadCallback(drawChart);
-
-                            function drawChart() {
-                                var data = google.visualization.arrayToDataTable([
-                                    ['Task', 'Hours per Day'],
-                                    [' ', 7],
-                                    ['', 2]
-                                ]);
-
-                                var options = {
-                                    title: 'X-ray Facility Achieve Quality Compliance',
-                                    pieHole: 0.4,
-                                    legend: 'none',
-                                    colors: ['#0e7dc1', '#99bed6'],
-
-                                };
-
-                                var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
-                                chart.draw(data, options);
-                            }
-                        </script>
-
-                      </div>
-                    </div>
-                  </div>
-                </div>
                 <div class="col-6 col-sm-12 col-md-4" id="divdoctortransm">
                   <div class="custompie-cardone">
                     <div class="card">
@@ -398,6 +290,136 @@
                   </div>
                 </div>
 
+
+
+                <div class="col-6 col-sm-12 col-md-4" id="divlabtrans">
+                  <div class="custompie-cardone">
+                    <div class="card">
+                      <div class="card-header">Laboratory Result Transmission
+                        <i class="fa fa-ellipsis-h" aria-hidden="true"></i></div>
+                      <div class="card-body p-0">
+                        <script type="text/javascript">
+                            google.charts.load("current", {packages: ["corechart"]});
+                            google.charts.setOnLoadCallback(drawChart);
+
+                            function drawChart() {
+                                var data = google.visualization.arrayToDataTable([
+                                    ['Task', 'Hours per Day'],
+                                    ['', <%=@laboratorydonutwithin48%>],
+                                    ['', <%=@laboratorydonutbeyond48%>]
+                                ]);
+
+                                var options = {
+                                    title: 'Lab Submit Results Within TAT',
+                                    legend: 'none',
+
+                                    colors: ['#0e7dc1', '#99bed6'],
+                                    pieHole: 0.4,
+                                };
+
+                                var chart = new google.visualization.PieChart(document.getElementById('donutchart2'));
+                                chart.draw(data, options);
+                            }
+                        </script>
+
+                        <div id="donutchart2"></div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-6 col-sm-12 col-md-4" id="divxrayquality">
+                  <div class="custompie-cardone">
+                    <div class="card">
+                      <div class="card-header">X-Ray Quality Compliance
+                        <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+
+                      </div>
+                      <div class="card-body p-0">
+                        <div id="donutchart"></div>
+                        <script type="text/javascript">
+                            google.charts.load("current", {packages: ["corechart"]});
+                            google.charts.setOnLoadCallback(drawChart);
+
+                            function drawChart() {
+                                var data = google.visualization.arrayToDataTable([
+                                    ['Task', 'Hours per Day'],
+                                    [' ', 7],
+                                    ['', 2]
+                                ]);
+
+                                var options = {
+                                    title: 'X-ray Facility Achieve Quality Compliance',
+                                    pieHole: 0.4,
+                                    legend: 'none',
+                                    colors: ['#0e7dc1', '#99bed6'],
+
+                                };
+
+                                var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
+                                chart.draw(data, options);
+                            }
+                        </script>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-6 col-sm-12 col-md-4" id="divxraytrans">
+                  <div class="custompie-cardone">
+                    <div class="card">
+                      <div class="card-header pr-0">
+                        X-rayTransmission
+                      </div>
+                      <div class="card-body p-0">
+                        <script type="text/javascript">
+                            google.charts.load("current", {packages: ["corechart"]});
+                            google.charts.setOnLoadCallback(drawChart);
+
+                            function drawChart() {
+                                var data = google.visualization.arrayToDataTable([
+                                    ['Task', 'Hours per Day'],
+                                    ['', 10],
+                                    ['', 10]
+                                ]);
+
+                                var options = {
+                                    title: 'X-Ray Submit Results Within TAT',
+                                    legend: 'none',
+
+                                    colors: ['#0e7dc1', '#99bed6'],
+                                    pieHole: 0.4,
+                                };
+
+                                var chart = new google.visualization.PieChart(document.getElementById('div_self'));
+                                chart.draw(data, options);
+                            }
+                        </script>
+                        <div class="w-100" style="float: left;height: 250px;">
+                          <div id="div_self"></div>
+                        </div>
+                        <div class="progressbar_wrap">
+                          <div class="progressbar_div">
+                            <label> Self Reporting</label>
+                            <div class="newprogress w-100 float-left">
+                              <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 85%;" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100">85%</div>
+                            </div>
+                          </div>
+                          <div class="progressbar_div">
+                            <label> Radiologist Reporting</label>
+                            <div class="newprogress w-100 float-left">
+                              <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 15%;" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100">15%</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
               </div>
             </div>
           </div>
@@ -408,3 +430,44 @@
     </div>
   </div>
 </div>
+
+<style>
+    .progressbar_wrap {
+        width: 100%;
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        margin: 6px;
+        padding: 14px 14px 2px 14px;
+    }
+
+    .progressbar_div {
+        margin-bottom: 5px;
+    }
+
+    .progressbar_div > label {
+        margin: 0px;
+        color: #626262;
+    }
+
+    .progressbar_div, .progressbar_div > label {
+        font-size: 11px;
+        float: left;
+        width: 100%;
+    }
+
+    .newprogress {
+        background-color: #ececec;
+        border-radius: 10px;
+    }
+
+    .newprogress > .progress-bar {
+        border-radius: 10px 0px 0px 10px;
+    }
+
+    .svg-font > tspan, .svg-font {
+        font-family: 'Roboto', sans-serif;
+        font-weight: 600;
+        cursor: pointer;
+    }
+</style>
