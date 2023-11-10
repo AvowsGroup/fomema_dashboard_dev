@@ -2,19 +2,56 @@
   <div class="filter_row">
     <div class="filter_div mt-0">
       <div class="filter">
-        <div class="filter-title">
-          Filter By
-
-        </div>
+        <div class="filter-title">Filter By</div>
         <div class="filter-body">
           <div id="main">
             <div class="filtereaccordion" id="filter">
+
+              <div class="card">
+                <div class="card-header" id="faqhead1">
+                  <a href="#" class="filter-link collapsed" data-toggle="collapse" data-target="#time-period" aria-expanded="false" aria-controls="time-period">Time
+                    Period</a>
+                </div>
+                <div id="time-period" class="collapse" aria-labelledby="faqhead1" data-parent="#filter">
+                  <div class="card-body">
+                    <script>
+                        $(document).ready(function () {
+                            $('#date-range').daterangepicker({
+                                "startDate": "2023/01/01",
+                                "endDate": "2023/12/31",
+                                opens: 'left',
+                                drops: 'down',
+                                autoApply: true,
+                                locale: {
+                                    format: 'YYYY-MM-DD',
+                                    separator: ' - ',
+                                    applyLabel: 'Apply',
+                                    cancelLabel: 'Cancel',
+                                    fromLabel: 'From',
+                                    toLabel: 'To',
+                                    customRangeLabel: 'Custom',
+                                    daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+                                    monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                                    firstDay: 0
+                                }
+                            });
+                        });
+                    </script>
+                    <div class="input-group date-range">
+                      <input type="text" class="form-control date-range" id="date-range" placeholder="Select Date Range">
+                      <div class="input-group-append">
+                        <span class="input-group-text">
+                          <i class="fa fa-calendar"></i>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
               <div class="card">
                 <div class="card-header" id="faqhead1">
                   <a href="#" class="filter-link" data-toggle="collapse" data-target="#Sector"
-                     aria-expanded="true" aria-controls="Sector">
-
-                    Sector</a>
+                     aria-expanded="true" aria-controls="Sector">Sector</a>
                 </div>
 
                 <div id="Sector" class="collapse show" aria-labelledby="faqhead1" data-parent="#filter">
@@ -25,7 +62,8 @@
                       </li>
                       <% @job_type.each do |job_type| %>
                         <li>
-                          <input type="checkbox" name="sectorcheck" value=<%= job_type.id %>> <%= job_type.name %>
+                          <input type="checkbox" name="sectorcheck" value="<%= job_type %>">
+                          <%= job_type %>
                         </li>
                       <% end %>
                     </ul>
@@ -165,6 +203,7 @@
 </div>
 <script>
     function apply_filter() {
+        $('#sidebar').toggleClass('active');
         var selectedValues = JSON.stringify(getCheckedValues());
         const url = '/dashboards/customer_satisfaction/index.js';
 
@@ -202,10 +241,17 @@
         var checkedValues = {};
 
 
+        checkedValues['DateRange'] = $('#date-range').val();
+
+
         // Retrieve values from Sector
         checkedValues['Sector'] = $('#Sector input[type="checkbox"]:checked').map(function () {
-            return parseInt($(this).val());
+            return $(this).val();
         }).get().join(',');
+
+        // Encode the Sector value to handle "/" characters in the URL
+        checkedValues['Sector'] = encodeURIComponent(checkedValues['Sector']);
+
         checkedValues['customer_type'] = $('#customer input[type="checkbox"]:checked').map(function () {
             return $(this).val();
         }).get().join(',');
@@ -222,7 +268,7 @@
 
 
         // Add even more divs as needed
-
+    console.log('checked',checkedValues)
         return checkedValues;
     }
 </script>
