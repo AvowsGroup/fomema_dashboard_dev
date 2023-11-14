@@ -55,55 +55,53 @@ class Dashboards::FwInformationController < ApplicationController
       @transaction_line_chart = Transaction.transaction_data_last_5_years
     end
 
-
     if @transaction_line_chart == {} || @transaction_line_chart.nil?
       current_year = Time.now.year
       last_five_years = (current_year - 4..current_year)
 
       @transaction_line_chart = last_five_years.each_with_object({}) do |year, chart_data|
-        chart_data[year] = [0] * 12  # Initialize an array of zeros for each month
+        chart_data[year] = [0] * 12 # Initialize an array of zeros for each month
       end
     end
-
+    # binding.pry
     @fw_pending_view = {
-      xqcc_pool_received: Transaction.joins("JOIN xqcc_pools ON xqcc_pools.transaction_id = transactions.id") .order('transactions.created_at DESC')
-                                      .limit(50)
-                                      .group('xqcc_pools.created_at, transactions.certification_date, transactions.created_at')
-                                      .count,
+      xqcc_pool_received: Transaction.joins("JOIN xqcc_pools ON xqcc_pools.transaction_id = transactions.id").order('transactions.created_at DESC')
+                                     .limit(50)
+                                     .group('xqcc_pools.created_at, transactions.certification_date, transactions.created_at')
+                                     .count,
 
-      xqcc_pool_reviewed: Transaction.joins("JOIN xray_reviews ON xray_reviews.transaction_id = transactions.id") .order('transactions.created_at DESC')
+      xqcc_pool_reviewed: Transaction.joins("JOIN xray_reviews ON xray_reviews.transaction_id = transactions.id").order('transactions.created_at DESC')
                                      .limit(50)
                                      .group('xray_reviews.transmitted_at, transactions.certification_date, transactions.created_at')
                                      .count,
-      pcr_pool_received: Transaction.joins("JOIN pcr_pools ON pcr_pools.transaction_id = transactions.id") .order('transactions.created_at DESC')
+      pcr_pool_received: Transaction.joins("JOIN pcr_pools ON pcr_pools.transaction_id = transactions.id").order('transactions.created_at DESC')
                                     .limit(50)
                                     .group('pcr_pools.created_at, transactions.certification_date, transactions.created_at')
                                     .count,
-      pcr_pool_reviewed: Transaction.joins("JOIN pcr_reviews ON pcr_reviews.transaction_id = transactions.id") .order('transactions.created_at DESC')
-                                   .limit(50)
-                                   .group('pcr_reviews.transmitted_at, transactions.certification_date, transactions.created_at')
-                                   .count,
+      pcr_pool_reviewed: Transaction.joins("JOIN pcr_reviews ON pcr_reviews.transaction_id = transactions.id").order('transactions.created_at DESC')
+                                    .limit(50)
+                                    .group('pcr_reviews.created_at,transactions.certification_date, transactions.created_at')
+                                    .count.values,
 
-      xray_pending_review_received: Transaction.joins("JOIN xray_pending_reviews ON xray_pending_reviews.transaction_id = transactions.id") .order('transactions.created_at DESC')
+      xray_pending_review_received: Transaction.joins("JOIN xray_pending_reviews ON xray_pending_reviews.transaction_id = transactions.id").order('transactions.created_at DESC')
                                                .limit(50)
                                                .group('xray_pending_reviews.created_at, transactions.certification_date, transactions.created_at')
                                                .count,
 
-      xray_pending_review_reviewed: Transaction.joins("JOIN xray_pending_reviews ON xray_pending_reviews.transaction_id = transactions.id") .order('transactions.created_at DESC')
+      xray_pending_review_reviewed: Transaction.joins("JOIN xray_pending_reviews ON xray_pending_reviews.transaction_id = transactions.id").order('transactions.created_at DESC')
                                                .limit(50)
                                                .group('xray_pending_reviews.transmitted_at, transactions.certification_date, transactions.created_at')
                                                .count,
 
-      xray_pending_decision_received: Transaction.joins("JOIN xray_pending_decisions ON xray_pending_decisions.transaction_id = transactions.id") .order('transactions.created_at DESC')
+      xray_pending_decision_received: Transaction.joins("JOIN xray_pending_decisions ON xray_pending_decisions.transaction_id = transactions.id").order('transactions.created_at DESC')
                                                  .limit(50)
                                                  .group('xray_pending_decisions.created_at, transactions.certification_date, transactions.created_at')
                                                  .count,
 
-
-      xray_pending_decision_reviewed:  Transaction.joins("JOIN xray_pending_decisions ON xray_pending_decisions.transaction_id = transactions.id") .order('transactions.created_at DESC')
-                                                  .limit(50)
-                                                  .group('xray_pending_decisions.transmitted_at, transactions.certification_date, transactions.created_at')
-                                                  .count,
+      xray_pending_decision_reviewed: Transaction.joins("JOIN xray_pending_decisions ON xray_pending_decisions.transaction_id = transactions.id").order('transactions.created_at DESC')
+                                                 .limit(50)
+                                                 .group('xray_pending_decisions.transmitted_at, transactions.certification_date, transactions.created_at')
+                                                 .count,
       medical_review: MedicalReview.joins("JOIN medical_reviews ON medical_reviews.transaction_id = transactions.id")
                                    .where("medical_reviews.created_at IS NOT NULL AND medical_reviews.medical_mle1_decision_at IS NOT NULL AND medical_reviews.qa_decision_at IS NOT NULL AND is_qa = ?", true)
                                    .pluck('transactions.certification_date, medical_reviews.created_at, medical_reviews.medical_mle1_decision_at, medical_reviews.is_qa, medical_reviews.qa_decision_at').uniq.count
@@ -118,19 +116,20 @@ class Dashboards::FwInformationController < ApplicationController
   # binding.pry
 
   def excel_generate
-    @countries = Country.pluck(:name).compact.uniq
-    countries_with_ids = Country.where(name: @countries).pluck(:name, :id).to_h
     @total_fw_registration = {}
     @examination_count = {}
     @certification_count = {}
     @xqcc_pool_received = {}
     @xqcc_pool_reviewed = {}
     @pcr_pool_received = {}
-    @pcr_pool_reviewed ={}
+    @pcr_pool_reviewed = {}
     @xray_pending_review_received = {}
     @xray_pending_review_reviewed = {}
     @xray_pending_decision_received = {}
     @xray_pending_decision_reviewed = {}
+
+    @countries = Country.pluck(:name).compact.uniq
+    countries_with_ids = Country.where(name: @countries).pluck(:name, :id).to_h
     @countries.each do |country|
       country_id = countries_with_ids[country]
 
@@ -140,11 +139,11 @@ class Dashboards::FwInformationController < ApplicationController
                                                .count
       @total_fw_registration[country] = total_fw_registration_count
 
-      examination_count =  Transaction.where(fw_country_id: country_id)
-                                      .where("EXTRACT(YEAR FROM medical_examination_date) = ? AND medical_examination_date < ?", Date.current.year, Date.current)
-                                      .order(created_at: :desc)
-                                      .limit(50)
-                                      .count
+      examination_count = Transaction.where(fw_country_id: country_id)
+                                     .where("EXTRACT(YEAR FROM medical_examination_date) = ? AND medical_examination_date < ?", Date.current.year, Date.current)
+                                     .order(created_at: :desc)
+                                     .limit(50)
+                                     .count
       @examination_count[country] = examination_count
 
       certification_count = Transaction.where(fw_country_id: country_id)
@@ -154,59 +153,382 @@ class Dashboards::FwInformationController < ApplicationController
                                        .count
       @certification_count[country] = certification_count
 
-      xqcc_pool_received = Transaction.joins("JOIN xqcc_pools ON xqcc_pools.transaction_id = transactions.id") .order('transactions.created_at DESC')
+      xqcc_pool_received = Transaction.joins("JOIN xqcc_pools ON xqcc_pools.transaction_id = transactions.id").order('transactions.created_at DESC')
                                       .limit(50)
                                       .group('xqcc_pools.created_at, transactions.certification_date, transactions.created_at')
                                       .count
       @xqcc_pool_received[country] = xqcc_pool_received
 
-      xqcc_pool_reviewed = Transaction.joins("JOIN xray_reviews ON xray_reviews.transaction_id = transactions.id") .order('transactions.created_at DESC')
+      xqcc_pool_reviewed = Transaction.joins("JOIN xray_reviews ON xray_reviews.transaction_id = transactions.id").order('transactions.created_at DESC')
                                       .limit(50)
                                       .group('xray_reviews.transmitted_at, transactions.certification_date, transactions.created_at')
                                       .count
       @xqcc_pool_reviewed[country] = xqcc_pool_reviewed
 
-      pcr_pool_received = Transaction.joins("JOIN pcr_pools ON pcr_pools.transaction_id = transactions.id") .order('transactions.created_at DESC')
-                                      .limit(50)
-                                      .group('pcr_pools.created_at, transactions.certification_date, transactions.created_at')
-                                      .count
+      pcr_pool_received = Transaction.joins("JOIN pcr_pools ON pcr_pools.transaction_id = transactions.id").order('transactions.created_at DESC')
+                                     .limit(50)
+                                     .group('pcr_pools.created_at, transactions.certification_date, transactions.created_at')
+                                     .count
       @pcr_pool_received[country] = pcr_pool_received
 
-      pcr_pool_reviewed = Transaction.joins("JOIN pcr_reviews ON pcr_reviews.transaction_id = transactions.id") .order('transactions.created_at DESC')
-                                      .limit(50)
-                                      .group('pcr_reviews.transmitted_at, transactions.certification_date, transactions.created_at')
-                                      .count
+      pcr_pool_reviewed = Transaction.joins("JOIN pcr_reviews ON pcr_reviews.transaction_id = transactions.id").order('transactions.created_at DESC')
+                                     .limit(50)
+                                     .group('pcr_reviews.created_at,transactions.certification_date, transactions.created_at')
+                                     .count.values
       @pcr_pool_reviewed[country] = pcr_pool_reviewed
 
-      xray_pending_review_received = Transaction.joins("JOIN xray_pending_reviews ON xray_pending_reviews.transaction_id = transactions.id") .order('transactions.created_at DESC')
-                                     .limit(50)
-                                     .group('xray_pending_reviews.created_at, transactions.certification_date, transactions.created_at')
-                                     .count
+      xray_pending_review_received = Transaction.joins("JOIN xray_pending_reviews ON xray_pending_reviews.transaction_id = transactions.id").order('transactions.created_at DESC')
+                                                .limit(50)
+                                                .group('xray_pending_reviews.created_at, transactions.certification_date, transactions.created_at')
+                                                .count
       @xray_pending_review_received[country] = xray_pending_review_received
 
-      xray_pending_review_reviewed = Transaction.joins("JOIN xray_pending_reviews ON xray_pending_reviews.transaction_id = transactions.id") .order('transactions.created_at DESC')
+      xray_pending_review_reviewed = Transaction.joins("JOIN xray_pending_reviews ON xray_pending_reviews.transaction_id = transactions.id").order('transactions.created_at DESC')
                                                 .limit(50)
                                                 .group('xray_pending_reviews.transmitted_at, transactions.certification_date, transactions.created_at')
                                                 .count
       @xray_pending_review_reviewed[country] = xray_pending_review_reviewed
 
-      xray_pending_decision_received = Transaction.joins("JOIN xray_pending_decisions ON xray_pending_decisions.transaction_id = transactions.id") .order('transactions.created_at DESC')
-                                               .limit(50)
-                                               .group('xray_pending_decisions.created_at, transactions.certification_date, transactions.created_at')
-                                               .count
+      xray_pending_decision_received = Transaction.joins("JOIN xray_pending_decisions ON xray_pending_decisions.transaction_id = transactions.id").order('transactions.created_at DESC')
+                                                  .limit(50)
+                                                  .group('xray_pending_decisions.created_at, transactions.certification_date, transactions.created_at')
+                                                  .count
       @xray_pending_decision_received[country] = xray_pending_decision_received
 
-      xray_pending_decision_reviewed = Transaction.joins("JOIN xray_pending_decisions ON xray_pending_decisions.transaction_id = transactions.id") .order('transactions.created_at DESC')
-                                               .limit(50)
-                                               .group('xray_pending_decisions.transmitted_at, transactions.certification_date, transactions.created_at')
-                                               .count
+      xray_pending_decision_reviewed = Transaction.joins("JOIN xray_pending_decisions ON xray_pending_decisions.transaction_id = transactions.id").order('transactions.created_at DESC')
+                                                  .limit(50)
+                                                  .group('xray_pending_decisions.transmitted_at, transactions.certification_date, transactions.created_at')
+                                                  .count
       @xray_pending_decision_reviewed[country] = xray_pending_decision_reviewed
 
     end
+
     @states = State.pluck(:name).compact.uniq
+    states_with_ids = State.where(name: @states).pluck(:name, :id).to_h
+
+    @states.each do |state|
+      doctor_ids = Doctor.where(state_id: states_with_ids[state]).pluck(:id)
+
+      total_fw_registration_count = Transaction.where(doctor_id: doctor_ids)
+                                               .order(created_at: :desc)
+                                               .limit(50)
+                                               .count
+      @total_fw_registration[state] = total_fw_registration_count
+
+      examination_count = Transaction.where(doctor_id: doctor_ids)
+                                     .where("EXTRACT(YEAR FROM medical_examination_date) = ? AND medical_examination_date < ?", Date.current.year, Date.current)
+                                     .order(created_at: :desc)
+                                     .limit(50)
+                                     .count
+      @examination_count[state] = examination_count
+
+      certification_count = Transaction.where(doctor_id: doctor_ids)
+                                       .where("EXTRACT(YEAR FROM medical_examination_date) = ? AND medical_examination_date < ?", Date.current.year, Date.current)
+                                       .order(created_at: :desc)
+                                       .limit(50)
+                                       .count
+      @certification_count[state] = certification_count
+
+      xqcc_pool_received = Transaction.joins("JOIN xqcc_pools ON xqcc_pools.transaction_id = transactions.id").order('transactions.created_at DESC')
+                                      .limit(50)
+                                      .group('xqcc_pools.created_at, transactions.certification_date, transactions.created_at')
+                                      .count
+      @xqcc_pool_received[state] = xqcc_pool_received
+
+      xqcc_pool_reviewed = Transaction.joins("JOIN xray_reviews ON xray_reviews.transaction_id = transactions.id").order('transactions.created_at DESC')
+                                      .limit(50)
+                                      .group('xray_reviews.transmitted_at, transactions.certification_date, transactions.created_at')
+                                      .count
+      @xqcc_pool_reviewed[state] = xqcc_pool_reviewed
+
+      pcr_pool_received = Transaction.joins("JOIN pcr_pools ON pcr_pools.transaction_id = transactions.id").order('transactions.created_at DESC')
+                                     .limit(50)
+                                     .group('pcr_pools.created_at, transactions.certification_date, transactions.created_at')
+                                     .count
+      @pcr_pool_received[state] = pcr_pool_received
+
+      pcr_pool_reviewed = Transaction.joins("JOIN pcr_reviews ON pcr_reviews.transaction_id = transactions.id").order('transactions.created_at DESC')
+                                     .limit(50)
+                                     .group('pcr_reviews.created_at,transactions.certification_date, transactions.created_at')
+                                     .count.values
+      @pcr_pool_reviewed[state] = pcr_pool_reviewed
+
+      xray_pending_review_received = Transaction.joins("JOIN xray_pending_reviews ON xray_pending_reviews.transaction_id = transactions.id").order('transactions.created_at DESC')
+                                                .limit(50)
+                                                .group('xray_pending_reviews.created_at, transactions.certification_date, transactions.created_at')
+                                                .count
+      @xray_pending_review_received[state] = xray_pending_review_received
+
+      xray_pending_review_reviewed = Transaction.joins("JOIN xray_pending_reviews ON xray_pending_reviews.transaction_id = transactions.id").order('transactions.created_at DESC')
+                                                .limit(50)
+                                                .group('xray_pending_reviews.transmitted_at, transactions.certification_date, transactions.created_at')
+                                                .count
+      @xray_pending_review_reviewed[state] = xray_pending_review_reviewed
+
+      xray_pending_decision_received = Transaction.joins("JOIN xray_pending_decisions ON xray_pending_decisions.transaction_id = transactions.id").order('transactions.created_at DESC')
+                                                  .limit(50)
+                                                  .group('xray_pending_decisions.created_at, transactions.certification_date, transactions.created_at')
+                                                  .count
+      @xray_pending_decision_received[state] = xray_pending_decision_received
+
+      xray_pending_decision_reviewed = Transaction.joins("JOIN xray_pending_decisions ON xray_pending_decisions.transaction_id = transactions.id").order('transactions.created_at DESC')
+                                                  .limit(50)
+                                                  .group('xray_pending_decisions.transmitted_at, transactions.certification_date, transactions.created_at')
+                                                  .count
+      @xray_pending_decision_reviewed[state] = xray_pending_decision_reviewed
+
+    end
 
     @job_type = JobType.pluck(:name).compact.uniq
+    job_type_with_ids = JobType.where(name: @job_type).pluck(:name, :id).to_h
+    @job_type.each do |job|
+      job_id = job_type_with_ids[job]
+
+      total_fw_registration_count = Transaction.where(fw_job_type_id: job_id)
+                                               .order(created_at: :desc)
+                                               .limit(50)
+                                               .count
+      @total_fw_registration[job] = total_fw_registration_count
+
+      examination_count = Transaction.where(fw_job_type_id: job_id)
+                                     .where("EXTRACT(YEAR FROM medical_examination_date) = ? AND medical_examination_date < ?", Date.current.year, Date.current)
+                                     .order(created_at: :desc)
+                                     .limit(50)
+                                     .count
+      @examination_count[job] = examination_count
+
+      certification_count = Transaction.where(fw_job_type_id: job_id)
+                                       .where("EXTRACT(YEAR FROM medical_examination_date) = ? AND medical_examination_date < ?", Date.current.year, Date.current)
+                                       .order(created_at: :desc)
+                                       .limit(50)
+                                       .count
+      @certification_count[job] = certification_count
+
+      xqcc_pool_received = Transaction.joins("JOIN xqcc_pools ON xqcc_pools.transaction_id = transactions.id").order('transactions.created_at DESC')
+                                      .limit(50)
+                                      .group('xqcc_pools.created_at, transactions.certification_date, transactions.created_at')
+                                      .count
+      @xqcc_pool_received[job] = xqcc_pool_received
+
+      xqcc_pool_reviewed = Transaction.joins("JOIN xray_reviews ON xray_reviews.transaction_id = transactions.id").order('transactions.created_at DESC')
+                                      .limit(50)
+                                      .group('xray_reviews.transmitted_at, transactions.certification_date, transactions.created_at')
+                                      .count
+      @xqcc_pool_reviewed[job] = xqcc_pool_reviewed
+
+      pcr_pool_received = Transaction.joins("JOIN pcr_pools ON pcr_pools.transaction_id = transactions.id").order('transactions.created_at DESC')
+                                     .limit(50)
+                                     .group('pcr_pools.created_at, transactions.certification_date, transactions.created_at')
+                                     .count
+      @pcr_pool_received[job] = pcr_pool_received
+
+      pcr_pool_reviewed = Transaction.joins("JOIN pcr_reviews ON pcr_reviews.transaction_id = transactions.id").order('transactions.created_at DESC')
+                                     .limit(50)
+                                     .group('pcr_reviews.created_at,transactions.certification_date, transactions.created_at')
+                                     .count.values
+      @pcr_pool_reviewed[job] = pcr_pool_reviewed
+
+      xray_pending_review_received = Transaction.joins("JOIN xray_pending_reviews ON xray_pending_reviews.transaction_id = transactions.id").order('transactions.created_at DESC')
+                                                .limit(50)
+                                                .group('xray_pending_reviews.created_at, transactions.certification_date, transactions.created_at')
+                                                .count
+      @xray_pending_review_received[job] = xray_pending_review_received
+
+      xray_pending_review_reviewed = Transaction.joins("JOIN xray_pending_reviews ON xray_pending_reviews.transaction_id = transactions.id").order('transactions.created_at DESC')
+                                                .limit(50)
+                                                .group('xray_pending_reviews.transmitted_at, transactions.certification_date, transactions.created_at')
+                                                .count
+      @xray_pending_review_reviewed[job] = xray_pending_review_reviewed
+
+      xray_pending_decision_received = Transaction.joins("JOIN xray_pending_decisions ON xray_pending_decisions.transaction_id = transactions.id").order('transactions.created_at DESC')
+                                                  .limit(50)
+                                                  .group('xray_pending_decisions.created_at, transactions.certification_date, transactions.created_at')
+                                                  .count
+      @xray_pending_decision_received[job] = xray_pending_decision_received
+
+      xray_pending_decision_reviewed = Transaction.joins("JOIN xray_pending_decisions ON xray_pending_decisions.transaction_id = transactions.id").order('transactions.created_at DESC')
+                                                  .limit(50)
+                                                  .group('xray_pending_decisions.transmitted_at, transactions.certification_date, transactions.created_at')
+                                                  .count
+      @xray_pending_decision_reviewed[job] = xray_pending_decision_reviewed
+
+    end
+
+    @male_count = Transaction.where(fw_gender: 'M')
+                             .order(created_at: :desc)
+                             .limit(50)
+                             .count
+
+    @female_count = Transaction.where(fw_gender: 'F')
+                               .order(created_at: :desc)
+                               .limit(50)
+                               .count
+
+    @male_examination_count = Transaction.where(fw_gender: 'M')
+                                         .where("EXTRACT(YEAR FROM medical_examination_date) = ? AND medical_examination_date < ?", Date.current.year, Date.current)
+                                         .order(created_at: :desc)
+                                         .limit(50)
+                                         .count
+
+    @female_examination_count = Transaction.where(fw_gender: 'F')
+                                           .where("EXTRACT(YEAR FROM medical_examination_date) = ? AND medical_examination_date < ?", Date.current.year, Date.current)
+                                           .order(created_at: :desc)
+                                           .limit(50)
+                                           .count
+
+    @male_certification_count = Transaction.where(fw_gender: 'M')
+                                           .where("EXTRACT(YEAR FROM medical_examination_date) = ? AND medical_examination_date < ?", Date.current.year, Date.current)
+                                           .order(created_at: :desc)
+                                           .limit(50)
+                                           .count
+
+    @female_certification_count = Transaction.where(fw_gender: 'F')
+                                             .where("EXTRACT(YEAR FROM medical_examination_date) = ? AND medical_examination_date < ?", Date.current.year, Date.current)
+                                             .order(created_at: :desc)
+                                             .limit(50)
+                                             .count
+
     @organizations = Organization.pluck(:name).uniq
+    organization_with_ids = Organization.where(name: @organizations).pluck(:name, :id).to_h
+    @organizations.each do |organization|
+      organization_id = organization_with_ids[organization]
+
+      total_fw_registration_count = Transaction.where(organization_id: organization_id)
+                                               .order(created_at: :desc)
+                                               .limit(50)
+                                               .count
+      @total_fw_registration[organization] = total_fw_registration_count
+
+      examination_count = Transaction.where(organization_id: organization_id)
+                                     .where("EXTRACT(YEAR FROM medical_examination_date) = ? AND medical_examination_date < ?", Date.current.year, Date.current)
+                                     .order(created_at: :desc)
+                                     .limit(50)
+                                     .count
+      @examination_count[organization] = examination_count
+
+      certification_count = Transaction.where(organization_id: organization_id)
+                                       .where("EXTRACT(YEAR FROM medical_examination_date) = ? AND medical_examination_date < ?", Date.current.year, Date.current)
+                                       .order(created_at: :desc)
+                                       .limit(50)
+                                       .count
+      @certification_count[organization] = certification_count
+
+      xqcc_pool_received = Transaction.joins("JOIN xqcc_pools ON xqcc_pools.transaction_id = transactions.id").order('transactions.created_at DESC')
+                                      .limit(50)
+                                      .group('xqcc_pools.created_at, transactions.certification_date, transactions.created_at')
+                                      .count
+      @xqcc_pool_received[organization] = xqcc_pool_received
+
+      xqcc_pool_reviewed = Transaction.joins("JOIN xray_reviews ON xray_reviews.transaction_id = transactions.id").order('transactions.created_at DESC')
+                                      .limit(50)
+                                      .group('xray_reviews.transmitted_at, transactions.certification_date, transactions.created_at')
+                                      .count
+      @xqcc_pool_reviewed[organization] = xqcc_pool_reviewed
+
+      pcr_pool_received = Transaction.joins("JOIN pcr_pools ON pcr_pools.transaction_id = transactions.id").order('transactions.created_at DESC')
+                                     .limit(50)
+                                     .group('pcr_pools.created_at, transactions.certification_date, transactions.created_at')
+                                     .count
+      @pcr_pool_received[organization] = pcr_pool_received
+
+      pcr_pool_reviewed = Transaction.joins("JOIN pcr_reviews ON pcr_reviews.transaction_id = transactions.id").order('transactions.created_at DESC')
+                                     .limit(50)
+                                     .group('pcr_reviews.created_at,transactions.certification_date, transactions.created_at')
+                                     .count.values
+      @pcr_pool_reviewed[organization] = pcr_pool_reviewed
+
+      xray_pending_review_received = Transaction.joins("JOIN xray_pending_reviews ON xray_pending_reviews.transaction_id = transactions.id").order('transactions.created_at DESC')
+                                                .limit(50)
+                                                .group('xray_pending_reviews.created_at, transactions.certification_date, transactions.created_at')
+                                                .count
+      @xray_pending_review_received[organization] = xray_pending_review_received
+
+      xray_pending_review_reviewed = Transaction.joins("JOIN xray_pending_reviews ON xray_pending_reviews.transaction_id = transactions.id").order('transactions.created_at DESC')
+                                                .limit(50)
+                                                .group('xray_pending_reviews.transmitted_at, transactions.certification_date, transactions.created_at')
+                                                .count
+      @xray_pending_review_reviewed[organization] = xray_pending_review_reviewed
+
+      xray_pending_decision_received = Transaction.joins("JOIN xray_pending_decisions ON xray_pending_decisions.transaction_id = transactions.id").order('transactions.created_at DESC')
+                                                  .limit(50)
+                                                  .group('xray_pending_decisions.created_at, transactions.certification_date, transactions.created_at')
+                                                  .count
+      @xray_pending_decision_received[organization] = xray_pending_decision_received
+
+      xray_pending_decision_reviewed = Transaction.joins("JOIN xray_pending_decisions ON xray_pending_decisions.transaction_id = transactions.id").order('transactions.created_at DESC')
+                                                  .limit(50)
+                                                  .group('xray_pending_decisions.transmitted_at, transactions.certification_date, transactions.created_at')
+                                                  .count
+      @xray_pending_decision_reviewed[organization] = xray_pending_decision_reviewed
+
+    end
+
+    @new_count = Transaction.where(registration_type: 0)
+                            .order(created_at: :desc)
+                            .limit(50)
+                            .count
+
+    @renewal_count = Transaction.where(registration_type: 1)
+                                .order(created_at: :desc)
+                                .limit(50)
+                                .count
+
+    @new_examination_count = Transaction.where(registration_type: 0)
+                                        .where("EXTRACT(YEAR FROM medical_examination_date) = ? AND medical_examination_date < ?", Date.current.year, Date.current)
+                                        .order(created_at: :desc)
+                                        .limit(50)
+                                        .count
+
+    @renewal_examination_count = Transaction.where(registration_type: 1)
+                                            .where("EXTRACT(YEAR FROM medical_examination_date) = ? AND medical_examination_date < ?", Date.current.year, Date.current)
+                                            .order(created_at: :desc)
+                                            .limit(50)
+                                            .count
+
+    @new_certification_count = Transaction.where(registration_type: 0)
+                                          .where("EXTRACT(YEAR FROM medical_examination_date) = ? AND medical_examination_date < ?", Date.current.year, Date.current)
+                                          .order(created_at: :desc)
+                                          .limit(50)
+                                          .count
+
+    @renewal_certification_count = Transaction.where(registration_type: 1)
+                                              .where("EXTRACT(YEAR FROM medical_examination_date) = ? AND medical_examination_date < ?", Date.current.year, Date.current)
+                                              .order(created_at: :desc)
+                                              .limit(50)
+                                              .count
+
+    @latest_transactions = Transaction.order(created_at: :desc).limit(50).pluck(:created_at).map { |date| date.strftime("%Y-%m-%d %H:%M:%S") }
+
+    @raw_data_2023 = Transaction.where(created_at: (Time.new(2023, 1, 1)..Time.new(2023, 12, 31, 23, 59, 59)))
+                                .order(created_at: :desc)
+                                .limit(50)
+                                .pluck(:created_at, :medical_examination_date, :certification_date)
+                                .map { |record| record.map { |date| date&.strftime("%Y-%m-%d %H:%M:%S") } }
+
+    @raw_data_2022 = Transaction.where(created_at: (Time.new(2022, 1, 1)..Time.new(2022, 12, 31, 23, 59, 59)))
+                                .order(created_at: :desc)
+                                .limit(50)
+                                .pluck(:created_at, :medical_examination_date, :certification_date)
+                                .map { |record| record.map { |date| date&.strftime("%Y-%m-%d %H:%M:%S") } }
+
+    @raw_data_2021 = Transaction.where(created_at: (Time.new(2021, 1, 1)..Time.new(2021, 12, 31, 23, 59, 59)))
+                                .order(created_at: :desc)
+                                .limit(50)
+                                .pluck(:created_at, :medical_examination_date, :certification_date)
+                                .map { |record| record.map { |date| date&.strftime("%Y-%m-%d %H:%M:%S") } }
+
+    @raw_data_2020 = Transaction.where(created_at: (Time.new(2020, 1, 1)..Time.new(2020, 12, 31, 23, 59, 59)))
+                                .order(created_at: :desc)
+                                .limit(50)
+                                .pluck(:created_at, :medical_examination_date, :certification_date)
+                                .map { |record| record.map { |date| date&.strftime("%Y-%m-%d %H:%M:%S") } }
+
+    @raw_data_2019 = Transaction.where(created_at: (Time.new(2019, 1, 1)..Time.new(2019, 12, 31, 23, 59, 59)))
+                                .order(created_at: :desc)
+                                .limit(50)
+                                .pluck(:created_at, :medical_examination_date, :certification_date)
+                                .map { |record| record.map { |date| date&.strftime("%Y-%m-%d %H:%M:%S") } }
+
     @sheet_data = {
       'FW Reg. by Country' => [
         'FW Registration by Country',
@@ -369,11 +691,11 @@ class Dashboards::FwInformationController < ApplicationController
     insurance_purchase_counts = {}
     transactions.ids.each do |transaction_id|
       transaction = Transaction.find_by(id: transaction_id)
-      if transaction
-        insurance_purchase_counts[transaction_id] = transaction.foreign_worker.insurance_purchases.count
-      else
-        insurance_purchase_counts[transaction_id] = 0
-      end
+      # if transaction
+      #   insurance_purchase_counts[transaction_id] = transaction.foreign_worker.insurance_purchases.count
+      # else
+      #   insurance_purchase_counts[transaction_id] = 0
+      # end
     end
     insurance_purchase_counts.values.sum
   end
