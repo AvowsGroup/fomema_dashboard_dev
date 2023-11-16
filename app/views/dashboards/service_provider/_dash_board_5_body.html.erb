@@ -179,15 +179,15 @@
                   {
 
                       chart.column([
-                          ['< 1 ', '<%=@doctorquotausagezero%>'],
-                          ['1 - 100', '<%=@doctorquotausage1to100%>'],
-                          ['101 - 200', '<%=@doctorquotausage101to200%>'],
-                          ['201 - 300', '<%=@doctorquotausage201to300%>'],
-                          ['301 - 400', '<%=@doctorquotausage301to400%>'],
-                          ['401 - 500', '<%=@doctorquotausage401to500%>'],
-                          ['501 - 600', '<%=@doctorquotausage501to600%>'],
-                          ['601 - 700', '<%=@doctorquotausage601to700%>'],
-                          ['701 - 800', '<%=@doctorquotausage701to800%>']
+                          ['< 1 ', doctorQuotaUsageZero],
+                          ['1 - 100', doctorQuotaUsage1to100],
+                          ['101 - 200', doctorQuotaUsage101to200],
+                          ['201 - 300', doctorQuotaUsage201to300],
+                          ['301 - 400', doctorQuotaUsage301to400],
+                          ['401 - 500', doctorQuotaUsage401to500],
+                          ['501 - 600', doctorQuotaUsage501to600],
+                          ['601 - 700', doctorQuotaUsage601to700],
+                          ['701 - 800', doctorQuotaUsage701to800]
                       ]);
 
                       chart
@@ -262,7 +262,7 @@
                                   var chart = new google.visualization.PieChart(document.getElementById('donutchart1'));
                                   chart.draw(data, options);
                               } else {
-                                  document.getElementById('donutchart1').innerHTML = '<div>No data to display </div>';
+                                  document.getElementById('donutchart1').innerHTML = '<div style="display: flex; justify-content: center; align-items: center; height: 100%;">No data to display</div>';
                               }
                           }
                       </script>
