@@ -68,6 +68,18 @@ class Dashboards::ServiceProviderController < ApplicationController
     @Xrayfacilitywithinhours24 = Transaction.joins("join xray_facilities on xray_facilities.id=transactions.xray_facility_id").joins("join xray_examinations on xray_examinations.transaction_id=transactions.id").where("xray_facilities.radiologist_operated='TRUE' and transactions.radiologist_id is null and xray_facilities.radiologist_operated='FALSE' and xray_examinations.xray_taken_date is not null and transactions.status not IN('CANCELLED','REJECTED') and DATE_PART('Day',transmitted_at - xray_taken_date) < 1").count
     @Xrayfacilitywithinhours48 = Transaction.joins("join xray_facilities on xray_facilities.id=transactions.xray_facility_id").joins("join xray_examinations on xray_examinations.transaction_id=transactions.id").where("xray_facilities.radiologist_operated='TRUE' and transactions.radiologist_id is not null and xray_facilities.radiologist_operated='FALSE' and xray_examinations.xray_taken_date is not null and transactions.status not IN('CANCELLED','REJECTED') and DATE_PART('Day',transmitted_at - xray_taken_date) < 2").count
 
+    @total_self_reporting = Transaction.joins("JOIN xray_facilities ON transactions.xray_facility_id = xray_facilities.id")
+                                       .where("transactions.xray_transmit_date IS NOT NULL AND transactions.radiologist_id IS NULL AND transactions.status NOT IN ('CANCELLED', 'REJECTED') AND xray_facilities.radiologist_operated IN ('TRUE','FALSE')").count
+
+    @total_radiologist_reporting = Transaction.joins("JOIN xray_facilities ON transactions.xray_facility_id = xray_facilities.id")
+                                              .where("transactions.xray_transmit_date IS NOT NULL AND transactions.radiologist_id IS NOT NULL AND transactions.status NOT IN ('CANCELLED', 'REJECTED') AND xray_facilities.radiologist_operated IN ('TRUE', 'FALSE')").count
+
+    @total_xray_report = @total_self_reporting + @total_radiologist_reporting
+
+    @self_reporting_percent = ((@total_self_reporting.to_f / @total_xray_report)).round(1) * 100
+
+    @radiologist_rep_percent = ((@total_radiologist_reporting.to_f / @total_xray_report)).round(1) * 100
+
     @xraytransmissionpercentage = @Xrayfacilitywithinhours24 + @Xrayfacilitywithinhours48
     @xraytransmissionpercentagetotal = @xraytransmissionpercentage / 2
 
@@ -80,7 +92,6 @@ class Dashboards::ServiceProviderController < ApplicationController
       # calling filter from here
       @filtervalues = apply_filter(@filters)
     end
-
   end
 
   def apply_filter(filter_params)
@@ -187,6 +198,18 @@ class Dashboards::ServiceProviderController < ApplicationController
           @xraytransmissionpercentage = @Xrayfacilitywithinhours24 + @Xrayfacilitywithinhours48
           @xraytransmissionpercentagetotal = @xraytransmissionpercentage / 2
           @xrayqualitycompliance = Transaction.joins(:xray_review).joins(:xray_facility).where("xray_reviews.transmitted_at is not null and transactions.status not IN('CANCELLED') and transactions.xray_film_type IN ('DIGITAL') and xray_facilities.code IN(?)", param_value).group("xray_facilities.code").count
+          @total_self_reporting = Transaction.joins("JOIN xray_facilities ON transactions.xray_facility_id = xray_facilities.id")
+                                             .where("transactions.xray_transmit_date IS NOT NULL AND transactions.radiologist_id IS NULL AND transactions.status NOT IN ('CANCELLED', 'REJECTED') AND xray_facilities.radiologist_operated IN ('TRUE','FALSE')", param_value).count
+
+          @total_radiologist_reporting = Transaction.joins("JOIN xray_facilities ON transactions.xray_facility_id = xray_facilities.id")
+                                                    .where("transactions.xray_transmit_date IS NOT NULL AND transactions.radiologist_id IS NOT NULL AND transactions.status NOT IN ('CANCELLED', 'REJECTED') AND xray_facilities.radiologist_operated IN ('TRUE', 'FALSE')", param_value).count
+
+          @total_xray_report = @total_self_reporting + @total_radiologist_reporting
+
+          @self_reporting_percent = ((@total_self_reporting.to_f / @total_xray_report)).round(1) * 100
+
+          @radiologist_rep_percent = ((@total_radiologist_reporting.to_f / @total_xray_report)).round(1) * 100
+
         end
       when 'lab'
         if param_value.present?
@@ -237,8 +260,6 @@ class Dashboards::ServiceProviderController < ApplicationController
     @laboratory_grade = calculate_grade(laboratory_performance_percentage)
 
   end
-
-
 
   def calculate_grade(value)
     case value
