@@ -158,54 +158,66 @@
 
 
           <script>
-
+              var doctorQuotaUsageZero = <%= @doctorquotausagezero %>;
+              var doctorQuotaUsage1to100 = <%= @doctorquotausage1to100 %>;
+              var doctorQuotaUsage101to200 = <%=@doctorquotausage101to200%>
+              var doctorQuotaUsage201to300 = <%=@doctorquotausage201to300%>
+              var doctorQuotaUsage301to400 = <%=@doctorquotausage301to400%>
+              var doctorQuotaUsage401to500 = <%=@doctorquotausage401to500%>
+              var doctorQuotaUsage501to600 = <%=@doctorquotausage501to600%>
+              var doctorQuotaUsage601to700 = <%=@doctorquotausage601to700%>
+              var doctorQuotaUsage701to800 = <%=@doctorquotausage701to800%>
               anychart.onDocumentReady(function () {
-                  // create column chart
+
                   var chart = anychart.column3d();
 
-                  // turn on chart animation
+
                   chart.animation(true);
 
-                  // set chart title text settings
 
-                  // create area series with passed data
-                  chart.column([
-                      ['< 1 ', '<%=@doctorquotausagezero%>'],
-                      ['1 - 100', '<%=@doctorquotausage1to100%>'],
-                      ['101 - 200', '<%=@doctorquotausage101to200%>'],
-                      ['201 - 300', '<%=@doctorquotausage201to300%>'],
-                      ['301 - 400', '<%=@doctorquotausage301to400%>'],
-                      ['401 - 500', '<%=@doctorquotausage401to500%>'],
-                      ['501 - 600', '<%=@doctorquotausage501to600%>'],
-                      ['601 - 700', '<%=@doctorquotausage601to700%>'],
-                      ['701 - 800', '<%=@doctorquotausage701to800%>']
-                  ]);
+                  if (doctorQuotaUsageZero > 0 || doctorQuotaUsage1to100 > 0 || doctorQuotaUsage101to200 > 0 || doctorQuotaUsage201to300 > 0 || doctorQuotaUsage301to400 > 0 || doctorQuotaUsage401to500 > 0 || doctorQuotaUsage501to600 > 0 || doctorQuotaUsage601to700 > 0 || doctorQuotaUsage701to800 > 0)
+                  {
 
-                  chart
-                      .tooltip()
-                      .position('center-top')
-                      .anchor('center-bottom')
-                      .offsetX(0)
-                      .offsetY(5)
-                      .format('{%Value}');
+                      chart.column([
+                          ['< 1 ', '<%=@doctorquotausagezero%>'],
+                          ['1 - 100', '<%=@doctorquotausage1to100%>'],
+                          ['101 - 200', '<%=@doctorquotausage101to200%>'],
+                          ['201 - 300', '<%=@doctorquotausage201to300%>'],
+                          ['301 - 400', '<%=@doctorquotausage301to400%>'],
+                          ['401 - 500', '<%=@doctorquotausage401to500%>'],
+                          ['501 - 600', '<%=@doctorquotausage501to600%>'],
+                          ['601 - 700', '<%=@doctorquotausage601to700%>'],
+                          ['701 - 800', '<%=@doctorquotausage701to800%>']
+                      ]);
 
-                  // set scale minimum
-                  chart.yScale().minimum(0);
+                      chart
+                          .tooltip()
+                          .position('center-top')
+                          .anchor('center-bottom')
+                          .offsetX(0)
+                          .offsetY(5)
+                          .format('{%Value}');
 
-                  // set yAxis labels formatter
-                  chart.yAxis().labels().format('{%Value}{groupsSeparator: }');
+                      chart.yScale().minimum(0);
 
-                  chart.tooltip().positionMode('point');
-                  chart.interactivity().hoverMode('by-x');
+                      chart.yAxis().labels().format('{%Value}{groupsSeparator: }');
 
-                  chart.xAxis().title('Quote Use');
-                  chart.yAxis().title('#of Doctor');
+                      chart.tooltip().positionMode('point');
+                      chart.interactivity().hoverMode('by-x');
 
-                  // set container id for the chart
-                  chart.container('container');
+                      chart.xAxis().title('Quote Use');
+                      chart.yAxis().title('#of Doctor');
 
-                  // initiate chart drawing
-                  chart.draw();
+
+                      chart.container('container');
+
+
+                      chart.draw();
+                  }
+              else
+                  {
+                      document.getElementById('container').innerHTML = '<div>No data to display</div>';
+                  }
               });
 
           </script>
@@ -226,25 +238,32 @@
                         <div id="donutchart1"></div>
                       </div>
                       <script type="text/javascript">
-                          google.charts.load("current", {packages: ["corechart"]});
-                          google.charts.setOnLoadCallback(drawChart);
+                          var certifyDoctorPerYesTotal = <%= @ceritifydoctorperyestotal %>;
 
-                          function drawChart() {
-                              var data = google.visualization.arrayToDataTable([
-                                  ['Task', 'Hours per Day'],
-                                  [' ', <%=@ceritifydoctorperyestotal%>],
-                                  ['', '']
-                              ]);
+                          google.charts.load("current", { packages: ["corechart"] });
+                          google.charts.setOnLoadCallback(drawChart1);
 
-                              var options = {
-                                  title: 'Doctor Transmit certification within TAT',
-                                  legend: 'none',
-                                  colors: ['#0e7dc1', '#99bed6'],
-                                  pieHole: 0.4,
-                              };
+                          function drawChart1() {
+                              if (certifyDoctorPerYesTotal > 0) {
 
-                              var chart = new google.visualization.PieChart(document.getElementById('donutchart1'));
-                              chart.draw(data, options);
+                                  var data = google.visualization.arrayToDataTable([
+                                      ['Task', 'Hours per Day'],
+                                      [' ', certifyDoctorPerYesTotal],
+                                      ['', 0]
+                                  ]);
+
+                                  var options = {
+                                      title: 'Doctor Transmit certification within TAT',
+                                      legend: 'none',
+                                      colors: ['#0e7dc1', '#99bed6'],
+                                      pieHole: 0.4,
+                                  };
+
+                                  var chart = new google.visualization.PieChart(document.getElementById('donutchart1'));
+                                  chart.draw(data, options);
+                              } else {
+                                  document.getElementById('donutchart1').innerHTML = '<div>No data to display </div>';
+                              }
                           }
                       </script>
 
@@ -262,26 +281,36 @@
                       <div class="card-body p-0">
                         <div id="donutchart5"></div>
                         <script type="text/javascript">
-                            google.charts.load("current", {packages: ["corechart"]});
-                            google.charts.setOnLoadCallback(drawChart);
+                            var doctorTransmitAccuratelyData = [
+                                7,
+                                2
+                            ];
 
-                            function drawChart() {
-                                var data = google.visualization.arrayToDataTable([
-                                    ['Task', 'Hours per Day'],
-                                    [' ', 7],
-                                    ['', 2]
-                                ]);
+                            google.charts.load("current", { packages: ["corechart"] });
+                            google.charts.setOnLoadCallback(drawChart5);
 
-                                var options = {
-                                    title: 'Doctor Transmit Accurately',
-                                    pieHole: 0.4,
-                                    legend: 'none',
-                                    colors: ['#0e7dc1', '#99bed6'],
+                            function drawChart5() {
+                                // Check if there is data available
+                                if (doctorTransmitAccuratelyData.some(function(value) { return value > 0; })) {
+                                    // Data is available, create the chart
+                                    var data = google.visualization.arrayToDataTable([
+                                        ['Task', 'Hours per Day'],
+                                        [' ', doctorTransmitAccuratelyData[0]],
+                                        ['', doctorTransmitAccuratelyData[1]]
+                                    ]);
 
-                                };
+                                    var options = {
+                                        title: 'Doctor Transmit Accurately',
+                                        pieHole: 0.4,
+                                        legend: 'none',
+                                        colors: ['#0e7dc1', '#99bed6'],
+                                    };
 
-                                var chart = new google.visualization.PieChart(document.getElementById('donutchart5'));
-                                chart.draw(data, options);
+                                    var chart = new google.visualization.PieChart(document.getElementById('donutchart5'));
+                                    chart.draw(data, options);
+                                } else {
+                                    document.getElementById('donutchart5').innerHTML = '<div style="display: flex; justify-content: center; align-items: center; height: 100%;">No data to display</div>';
+                                }
                             }
                         </script>
 
@@ -291,7 +320,6 @@
                 </div>
 
 
-
                 <div class="col-6 col-sm-12 col-md-4" id="divlabtrans">
                   <div class="custompie-cardone">
                     <div class="card">
@@ -299,26 +327,32 @@
                         <i class="fa fa-ellipsis-h" aria-hidden="true"></i></div>
                       <div class="card-body p-0">
                         <script type="text/javascript">
-                            google.charts.load("current", {packages: ["corechart"]});
-                            google.charts.setOnLoadCallback(drawChart);
+                            var laboratoryDonutWithin48 = <%= @laboratorydonutwithin48 %>;
+                            var laboratoryDonutBeyond48 = <%= @laboratorydonutbeyond48 %>;
 
-                            function drawChart() {
-                                var data = google.visualization.arrayToDataTable([
-                                    ['Task', 'Hours per Day'],
-                                    ['', <%=@laboratorydonutwithin48%>],
-                                    ['', <%=@laboratorydonutbeyond48%>]
-                                ]);
+                            google.charts.load("current", { packages: ["corechart"] });
+                            google.charts.setOnLoadCallback(drawChart2);
 
-                                var options = {
-                                    title: 'Lab Submit Results Within TAT',
-                                    legend: 'none',
+                            function drawChart2() {
+                                if (laboratoryDonutWithin48 > 0 || laboratoryDonutBeyond48 > 0) {
+                                    var data = google.visualization.arrayToDataTable([
+                                        ['Task', 'Hours per Day'],
+                                        ['', laboratoryDonutWithin48],
+                                        ['', laboratoryDonutBeyond48]
+                                    ]);
 
-                                    colors: ['#0e7dc1', '#99bed6'],
-                                    pieHole: 0.4,
-                                };
+                                    var options = {
+                                        title: 'Lab Submit Results Within TAT',
+                                        legend: 'none',
+                                        colors: ['#0e7dc1', '#99bed6'],
+                                        pieHole: 0.4,
+                                    };
 
-                                var chart = new google.visualization.PieChart(document.getElementById('donutchart2'));
-                                chart.draw(data, options);
+                                    var chart = new google.visualization.PieChart(document.getElementById('donutchart2'));
+                                    chart.draw(data, options);
+                                } else {
+                                    document.getElementById('donutchart2').innerHTML = '<div style="display: flex; justify-content: center; align-items: center; height: 100%;">No data to display</div>';
+                                }
                             }
                         </script>
 
@@ -339,26 +373,35 @@
                       <div class="card-body p-0">
                         <div id="donutchart"></div>
                         <script type="text/javascript">
-                            google.charts.load("current", {packages: ["corechart"]});
-                            google.charts.setOnLoadCallback(drawChart);
+                            var xrayQualityComplianceData = [
+                                7,
+                                2
+                            ];
 
-                            function drawChart() {
-                                var data = google.visualization.arrayToDataTable([
-                                    ['Task', 'Hours per Day'],
-                                    [' ', 7],
-                                    ['', 2]
-                                ]);
+                            google.charts.load("current", { packages: ["corechart"] });
+                            google.charts.setOnLoadCallback(drawChart5);
 
-                                var options = {
-                                    title: 'X-ray Facility Achieve Quality Compliance',
-                                    pieHole: 0.4,
-                                    legend: 'none',
-                                    colors: ['#0e7dc1', '#99bed6'],
+                            function drawChart5() {
+                                if (xrayQualityComplianceData.some(function(value) { return value > 0; })) {
+                                    var data = google.visualization.arrayToDataTable([
+                                        ['Task', 'Hours per Day'],
+                                        [' ', xrayQualityComplianceData[0]],
+                                        ['', xrayQualityComplianceData[1]]
+                                    ]);
 
-                                };
+                                    var options = {
+                                        title: 'X-ray Facility Achieve Quality Compliance',
+                                        pieHole: 0.4,
+                                        legend: 'none',
+                                        colors: ['#0e7dc1', '#99bed6'],
 
-                                var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
-                                chart.draw(data, options);
+                                    };
+
+                                    var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
+                                    chart.draw(data, options);
+                                } else {
+                                    document.getElementById('donutchart').innerHTML = '<div style="display: flex; justify-content: center; align-items: center; height: 100%;">No data to display</div>';
+                                }
                             }
                         </script>
 
@@ -370,31 +413,39 @@
                 <div class="col-6 col-sm-12 col-md-4" id="divxraytrans">
                   <div class="custompie-cardone">
                     <div class="card">
-                      <div class="card-header pr-0">
-                        X-rayTransmission
+                      <div class="card-header pr-0"> X-rayTransmission
                       </div>
                       <div class="card-body p-0">
                         <script type="text/javascript">
-                            google.charts.load("current", {packages: ["corechart"]});
-                            google.charts.setOnLoadCallback(drawChart);
+                            var xrayTransmissionData = [
+                                10,
+                                10
+                            ];
 
-                            function drawChart() {
-                                var data = google.visualization.arrayToDataTable([
-                                    ['Task', 'Hours per Day'],
-                                    ['', 10],
-                                    ['', 10]
-                                ]);
+                            google.charts.load("current", { packages: ["corechart"] });
+                            google.charts.setOnLoadCallback(drawChart5);
 
-                                var options = {
-                                    title: 'X-Ray Submit Results Within TAT',
-                                    legend: 'none',
+                            function drawChart5() {
+                                if (xrayTransmissionData.some(function(value) { return value > 0; })) {
+                                    var data = google.visualization.arrayToDataTable([
+                                        ['Task', 'Hours per Day'],
+                                        [' ', xrayTransmissionData[0]],
+                                        ['', xrayTransmissionData[1]]
+                                    ]);
 
-                                    colors: ['#0e7dc1', '#99bed6'],
-                                    pieHole: 0.4,
-                                };
+                                    var options = {
+                                        title: 'X-Ray Submit Results Within TAT',
+                                        legend: 'none',
 
-                                var chart = new google.visualization.PieChart(document.getElementById('div_self'));
-                                chart.draw(data, options);
+                                        colors: ['#0e7dc1', '#99bed6'],
+                                        pieHole: 0.4,
+                                    };
+
+                                    var chart = new google.visualization.PieChart(document.getElementById('div_self'));
+                                    chart.draw(data, options);
+                                } else {
+                                    document.getElementById('div_self').innerHTML = '<div style="display: flex; justify-content: center; align-items: center; height: 100%;">No data to display</div>';
+                                }
                             }
                         </script>
                         <div class="w-100" style="float: left;height: 250px;">
