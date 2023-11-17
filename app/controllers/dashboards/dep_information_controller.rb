@@ -2,10 +2,11 @@ class Dashboards::DepInformationController < ApplicationController
   before_action :initialize_date_range, only: [:index, :kpi_percentage, :review_xray, :pcr_xray]
 
   def index
+    @current_year = Time.now.year
     @task_list = tasks
     result_key
     page_number = params[:page] || 1
-    @users = User.select(:name, :designation).paginate(page: page_number, per_page: 10)
+    @users = User.where("EXTRACT(YEAR FROM created_at) = ?", @current_year).select(:name, :designation).paginate(page: page_number, per_page: 10)
   end
 
   def third_db_data
@@ -13,7 +14,7 @@ class Dashboards::DepInformationController < ApplicationController
     page_number = params[:page] || 1
     @task_list = tasks
     result_key
-    @users = User.select(:name, :designation).paginate(page: page_number, per_page: 10)
+    @users = User.where("EXTRACT(YEAR FROM created_at) = ?", @current_year).select(:name, :designation).paginate(page: page_number, per_page: 10)
   end
 
   def initialize_date_range
@@ -239,40 +240,40 @@ class Dashboards::DepInformationController < ApplicationController
 
     case model_name
     when "Employer"
-      achieved_count = Employer.where("created_at <= registration_approved_at + interval '? days'", tat).count
-      not_achieved_count = Employer.where("created_at > registration_approved_at + interval '? days'", tat).count
+      achieved_count = Employer.where("EXTRACT(YEAR FROM created_at) = ?", @current_year).where("created_at <= registration_approved_at + interval '? days'", tat).count
+      not_achieved_count = Employer.where("EXTRACT(YEAR FROM created_at) = ?", @current_year).where("created_at > registration_approved_at + interval '? days'", tat).count
 
     when "Agencies"
-      achieved_count = Agency.where("created_at <= registration_approved_at + interval '? days'", tat).count
-      not_achieved_count = Agency.where("created_at > registration_approved_at + interval '? days'", tat).count
+      achieved_count = Agency.where("EXTRACT(YEAR FROM created_at) = ?", @current_year).where("created_at <= registration_approved_at + interval '? days'", tat).count
+      not_achieved_count = Agency.where("EXTRACT(YEAR FROM created_at) = ?", @current_year).where("created_at > registration_approved_at + interval '? days'", tat).count
 
     when "ApprovalRequest"
-      achieved_count = ApprovalRequest.where("approved_at <= requested_at + interval '? days'", tat).count
+      achieved_count = ApprovalRequest.where("EXTRACT(YEAR FROM created_at) = ?", @current_year).where("approved_at <= requested_at + interval '? days'", tat).count
       not_achieved_count = ApprovalRequest.where("approved_at > requested_at + interval '? days'", tat).count
 
     when "FwChangeEmployer"
-      achieved_count = FwChangeEmployer.where("approval_at <= requested_at + interval '? days'", tat).count
-      not_achieved_count = FwChangeEmployer.where("approval_at > requested_at + interval '? days'", tat).count
+      achieved_count = FwChangeEmployer.where("EXTRACT(YEAR FROM created_at) = ?", @current_year).where("approval_at <= requested_at + interval '? days'", tat).count
+      not_achieved_count = FwChangeEmployer.where("EXTRACT(YEAR FROM created_at) = ?", @current_year).where("approval_at > requested_at + interval '? days'", tat).count
 
     when "Laboratory"
-      total_active = Laboratory.where(status: 'ACTIVE').count
-      total_visit = VisitReport.where(visit_date: start_date..end_date).count
+      total_active = Laboratory.where("EXTRACT(YEAR FROM created_at) = ?", @current_year).where(status: 'ACTIVE').count
+      total_visit = VisitReport.where("EXTRACT(YEAR FROM created_at) = ?", @current_year).where(visit_date: start_date..end_date).count
 
     when "DoctorVisit"
-      total_active = Doctor.where(status: 'ACTIVE').count
-      total_visit = VisitReport.where(visit_date: start_date..end_date).count
+      total_active = Doctor.where("EXTRACT(YEAR FROM created_at) = ?", @current_year).where(status: 'ACTIVE').count
+      total_visit = VisitReport.where("EXTRACT(YEAR FROM created_at) = ?", @current_year).where(visit_date: start_date..end_date).count
 
     when "XrayFacility"
-      total_active = XrayFacility.where(status: 'ACTIVE').count
+      total_active = XrayFacility.where("EXTRACT(YEAR FROM created_at) = ?", @current_year).where(status: 'ACTIVE').count
       total_visit = VisitReport.where(visit_date: start_date..end_date).count
 
     when "ApprovalandActivation"
-      doctor_achieved = Doctor.where("registration_approved_at <= created_at + interval '? days'", tat).count
-      doctor_not_achieved = Doctor.where("registration_approved_at > created_at + interval '? days'", tat).count
-      xray_achieved = XrayFacility.where("registration_approved_at <= created_at + interval '? days'", tat).count
-      xray_not_achieved = XrayFacility.where("registration_approved_at > created_at + interval '? days'", tat).count
-      lab_achived = Laboratory.where("registration_approved_at <= created_at + interval '? days'", tat).count
-      lab_not_achieved = Laboratory.where("registration_approved_at > created_at + interval '? days'", tat).count
+      doctor_achieved = Doctor.where("EXTRACT(YEAR FROM created_at) = ?", @current_year).where("registration_approved_at <= created_at + interval '? days'", tat).count
+      doctor_not_achieved = Doctor.where("EXTRACT(YEAR FROM created_at) = ?", @current_year).where("registration_approved_at > created_at + interval '? days'", tat).count
+      xray_achieved = XrayFacility.where("EXTRACT(YEAR FROM created_at) = ?", @current_year).where("registration_approved_at <= created_at + interval '? days'", tat).count
+      xray_not_achieved = XrayFacility.where("EXTRACT(YEAR FROM created_at) = ?", @current_year).where("registration_approved_at > created_at + interval '? days'", tat).count
+      lab_achived = Laboratory.where("EXTRACT(YEAR FROM created_at) = ?", @current_year).where("registration_approved_at <= created_at + interval '? days'", tat).count
+      lab_not_achieved = Laboratory.where("EXTRACT(YEAR FROM created_at) = ?", @current_year).where("registration_approved_at > created_at + interval '? days'", tat).count
       achieved_count = doctor_achieved + xray_achieved + lab_achived
       not_achieved_count = doctor_not_achieved + xray_not_achieved + lab_not_achieved
     end
