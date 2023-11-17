@@ -63,7 +63,6 @@ class Dashboards::FwInformationController < ApplicationController
         chart_data[year] = [0] * 12 # Initialize an array of zeros for each month
       end
     end
-    # binding.pry
     @fw_pending_view = {
       xqcc_pool_received: Transaction.joins("JOIN xqcc_pools ON xqcc_pools.transaction_id = transactions.id").order('transactions.created_at DESC')
                                      .limit(50)
@@ -112,8 +111,6 @@ class Dashboards::FwInformationController < ApplicationController
       format.js { render layout: false } # Add this line to you respond_to block
     end
   end
-
-  # binding.pry
 
   def excel_generate
     @total_fw_registration = {}
@@ -499,93 +496,73 @@ class Dashboards::FwInformationController < ApplicationController
 
     @latest_transactions = Transaction.order(created_at: :desc).limit(50).pluck(:created_at).map { |date| date.strftime("%Y-%m-%d %H:%M:%S") }
 
-    @raw_data_2023 = Transaction.where(created_at: (Time.new(2023, 1, 1)..Time.new(2023, 12, 31, 23, 59, 59)))
-                                .order(created_at: :desc)
-                                .limit(50)
-                                .pluck(:created_at, :medical_examination_date, :certification_date)
-                                .map { |record| record.map { |date| date&.strftime("%Y-%m-%d %H:%M:%S") } }
 
-    @raw_data_2022 = Transaction.where(created_at: (Time.new(2022, 1, 1)..Time.new(2022, 12, 31, 23, 59, 59)))
-                                .order(created_at: :desc)
-                                .limit(50)
-                                .pluck(:created_at, :medical_examination_date, :certification_date)
-                                .map { |record| record.map { |date| date&.strftime("%Y-%m-%d %H:%M:%S") } }
+    current_year = Date.current.year
 
-    @raw_data_2021 = Transaction.where(created_at: (Time.new(2021, 1, 1)..Time.new(2021, 12, 31, 23, 59, 59)))
-                                .order(created_at: :desc)
-                                .limit(50)
-                                .pluck(:created_at, :medical_examination_date, :certification_date)
-                                .map { |record| record.map { |date| date&.strftime("%Y-%m-%d %H:%M:%S") } }
 
-    @raw_data_2020 = Transaction.where(created_at: (Time.new(2020, 1, 1)..Time.new(2020, 12, 31, 23, 59, 59)))
-                                .order(created_at: :desc)
-                                .limit(50)
-                                .pluck(:created_at, :medical_examination_date, :certification_date)
-                                .map { |record| record.map { |date| date&.strftime("%Y-%m-%d %H:%M:%S") } }
+    (0..4).each do |i|
+      year = current_year - i
+      raw_data_for_year = Transaction
+                            .where(created_at: (Time.new(year, 1, 1)..Time.new(year, 12, 31, 23, 59, 59)))
+                            .order(created_at: :desc)
+                            .limit(50)
+                            .pluck(:created_at, :medical_examination_date, :certification_date)
+                            .map { |record| record.map { |date| date&.strftime("%Y-%m-%d %H:%M:%S") } }
 
-    @raw_data_2019 = Transaction.where(created_at: (Time.new(2019, 1, 1)..Time.new(2019, 12, 31, 23, 59, 59)))
-                                .order(created_at: :desc)
-                                .limit(50)
-                                .pluck(:created_at, :medical_examination_date, :certification_date)
-                                .map { |record| record.map { |date| date&.strftime("%Y-%m-%d %H:%M:%S") } }
+      # Creating  instance variable dynamically
+      instance_variable_set("@raw_data_#{year}", raw_data_for_year)
+    end
 
-    @sheet_data = {
-      'FW Reg. by Country' => [
-        'FW Registration by Country',
-        ['FW Registration by Country', 'Total FW Registration', 'FW went for medical examination', 'Certification', 'XQCC Pool (Film Received)', 'XQCC Pool (Film Reviewed)', 'PCR Pool (Film Received)', 'PCR Pool (Film Reviewed)', 'X-Ray Pending Review (Film Received)', 'X-Ray Pending Review (Film Reviewed)', 'X-Ray Pending Decision (Film Received)', 'X-Ray Pending Decision (Film Reviewed)', 'Medical Review (Received)', 'Medical Review (Reviewed)', 'Final Result Released', 'Result Transmitted to Immigration', 'Blocked FW', 'Appeal', 'FW Insured'],
-      ],
-      'FW Reg. by State' => [
-        'FW Registration by State',
-        ['FW Registration by State', 'Total FW Registration', 'FW went for medical examination', 'Certification', 'XQCC Pool (Film Received)', 'XQCC Pool (Film Reviewed)', 'PCR Pool (Film Received)', 'PCR Pool (Film Reviewed)', 'X-Ray Pending Review (Film Received)', 'X-Ray Pending Review (Film Reviewed)', 'X-Ray Pending Decision (Film Received)', 'X-Ray Pending Decision (Film Reviewed)', 'Medical Review (Received)', 'Medical Review (Reviewed)', 'Final Result Released', 'Result Transmitted to Immigration', 'Blocked FW', 'Appeal', 'FW Insured'],
-      ],
-      'FW Reg. by Sector' => [
-        'FW Registration by Sector',
-        ['FW Registration by Sector', 'Total FW Registration', 'FW went for medical examination', 'Certification', 'XQCC Pool (Film Received)', 'XQCC Pool (Film Reviewed)', 'PCR Pool (Film Received)', 'PCR Pool (Film Reviewed)', 'X-Ray Pending Review (Film Received)', 'X-Ray Pending Review (Film Reviewed)', 'X-Ray Pending Decision (Film Received)', 'X-Ray Pending Decision (Film Reviewed)', 'Medical Review (Received)', 'Medical Review (Reviewed)', 'Final Result Released', 'Result Transmitted to Immigration', 'Blocked FW', 'Appeal', 'FW Insured'],
-      ],
-      'FW Reg. by Gender' => [
-        'FW Registration by Gender',
-        ['FW Registration by Gender', 'Total FW Registration', 'FW went for medical examination', 'Certification', 'XQCC Pool (Film Received)', 'XQCC Pool (Film Reviewed)', 'PCR Pool (Film Received)', 'PCR Pool (Film Reviewed)', 'X-Ray Pending Review (Film Received)', 'X-Ray Pending Review (Film Reviewed)', 'X-Ray Pending Decision (Film Received)', 'X-Ray Pending Decision (Film Reviewed)', 'Medical Review (Received)', 'Medical Review (Reviewed)', 'Final Result Released', 'Result Transmitted to Immigration', 'Blocked FW', 'Appeal', 'FW Insured'],
-      ],
-      'FW Reg. by Registration at' => [
-        'FW Registration by Registration at',
-        ['FW Registration by Sector', 'Total FW Registration', 'FW went for medical examination', 'Certification', 'XQCC Pool (Film Received)', 'XQCC Pool (Film Reviewed)', 'PCR Pool (Film Received)', 'PCR Pool (Film Reviewed)', 'X-Ray Pending Review (Film Received)', 'X-Ray Pending Review (Film Reviewed)', 'X-Ray Pending Decision (Film Received)', 'X-Ray Pending Decision (Film Reviewed)', 'Medical Review (Received)', 'Medical Review (Reviewed)', 'Final Result Released', 'Result Transmitted to Immigration', 'Blocked FW', 'Appeal', 'FW Insured'],
-      ],
-      'FW Reg. by FW Type' => [
-        'FW Registration by FW Type',
-        ['FW Registration by FW Type', 'Total FW Registration', 'FW went for medical examination', 'Certification', 'XQCC Pool (Film Received)', 'XQCC Pool (Film Reviewed)', 'PCR Pool (Film Received)', 'PCR Pool (Film Reviewed)', 'X-Ray Pending Review (Film Received)', 'X-Ray Pending Review (Film Reviewed)', 'X-Ray Pending Decision (Film Received)', 'X-Ray Pending Decision (Film Reviewed)', 'Medical Review (Received)', 'Medical Review (Reviewed)', 'Final Result Released', 'Result Transmitted to Immigration', 'Blocked FW', 'Appeal', 'FW Insured'],
-      ],
-      'Trend of FW Reg. by year' => [
-        'Trend of FW registration by Year',
-        ['Transaction date by Month', 'Transaction date by Day', '2019', '2020', '2021', '2022', '2023', 'Count'],
-      ],
-      'Raw Data 2023' => [
-        'Data 2023',
-        ['Transaction Date (Month)', 'Medical Examination Date (Month)', 'Certification Date (Month)', 'State', 'Country', 'Age', 'Gender', 'Registration at', 'Foreign Worker Type', 'XQCC Pool (Film Received)', 'XQCC Pool (Film Reviewed)', 'PCR Pool (Film Received)', 'PCR Pool (Film Reviewed)', 'X-Ray Pending Review (Film Received)', 'X-Ray Pending Review (Film Reviewed)', 'X-Ray Pending Decision (Film Received)', 'X-Ray Pending Decision (Film Reviewed)', 'Medical Review (Received)', 'Medical Review (Reviewed)', 'Final Result Released', 'Result Transmitted to Immigration', 'Blocked FW', 'Appeal', 'FW Insured'],
-      ],
-      'Raw Data 2022' => [
-        'Data 2022',
-        ['Transaction Date (Month)', 'Medical Examination Date (Month)', 'Certification Date (Month)', 'State', 'Country', 'Age', 'Gender', 'Registration at', 'Foreign Worker Type', 'XQCC Pool (Film Received)', 'XQCC Pool (Film Reviewed)', 'PCR Pool (Film Received)', 'PCR Pool (Film Reviewed)', 'X-Ray Pending Review (Film Received)', 'X-Ray Pending Review (Film Reviewed)', 'X-Ray Pending Decision (Film Received)', 'X-Ray Pending Decision (Film Reviewed)', 'Medical Review (Received)', 'Medical Review (Reviewed)', 'Final Result Released', 'Result Transmitted to Immigration', 'Blocked FW', 'Appeal', 'FW Insured'],
-      ],
-      'Raw Data 2021' => [
-        'Data 2021',
-        ['Transaction Date (Month)', 'Medical Examination Date (Month)', 'Certification Date (Month)', 'State', 'Country', 'Age', 'Gender', 'Registration at', 'Foreign Worker Type', 'XQCC Pool (Film Received)', 'XQCC Pool (Film Reviewed)', 'PCR Pool (Film Received)', 'PCR Pool (Film Reviewed)', 'X-Ray Pending Review (Film Received)', 'X-Ray Pending Review (Film Reviewed)', 'X-Ray Pending Decision (Film Received)', 'X-Ray Pending Decision (Film Reviewed)', 'Medical Review (Received)', 'Medical Review (Reviewed)', 'Final Result Released', 'Result Transmitted to Immigration', 'Blocked FW', 'Appeal', 'FW Insured'],
-      ],
-      'Raw Data 2020' => [
-        'Data 2020',
-        ['Transaction Date (Month)', 'Medical Examination Date (Month)', 'Certification Date (Month)', 'State', 'Country', 'Age', 'Gender', 'Registration at', 'Foreign Worker Type', 'XQCC Pool (Film Received)', 'XQCC Pool (Film Reviewed)', 'PCR Pool (Film Received)', 'PCR Pool (Film Reviewed)', 'X-Ray Pending Review (Film Received)', 'X-Ray Pending Review (Film Reviewed)', 'X-Ray Pending Decision (Film Received)', 'X-Ray Pending Decision (Film Reviewed)', 'Medical Review (Received)', 'Medical Review (Reviewed)', 'Final Result Released', 'Result Transmitted to Immigration', 'Blocked FW', 'Appeal', 'FW Insured'],
-      ],
-      'Raw Data 2019' => [
-        'Data 2019',
-        ['Transaction Date (Month)', 'Medical Examination Date (Month)', 'Certification Date (Month)', 'State', 'Country', 'Age', 'Gender', 'Registration at', 'Foreign Worker Type', 'XQCC Pool (Film Received)', 'XQCC Pool (Film Reviewed)', 'PCR Pool (Film Received)', 'PCR Pool (Film Reviewed)', 'X-Ray Pending Review (Film Received)', 'X-Ray Pending Review (Film Reviewed)', 'X-Ray Pending Decision (Film Received)', 'X-Ray Pending Decision (Film Reviewed)', 'Medical Review (Received)', 'Medical Review (Reviewed)', 'Final Result Released', 'Result Transmitted to Immigration', 'Blocked FW', 'Appeal', 'FW Insured'],
-      ]
-    }
+
+    @sheet_data = generate_dynamic_sheet_data
 
     respond_to do |format|
       format.xlsx { render xlsx: 'excel_generate', filename: 'Report.xlsx' }
     end
   end
 
-  private
+end
+
+private
+
+  def generate_dynamic_sheet_data
+    current_year = Time.now.year
+    years = (current_year.downto(current_year - 4)).to_a
+
+    sheet_data = {}
+
+    sheet_data['FW Reg. by Country'] = generate_sheet_data_for_category('FW Registration by Country', years)
+    sheet_data['FW Reg. by State'] = generate_sheet_data_for_category('FW Registration by State', years)
+    sheet_data['FW Reg. by Sector'] = generate_sheet_data_for_category('FW Registration by Sector', years)
+    sheet_data['FW Reg. by Gender'] = generate_sheet_data_for_category('FW Registration by Gender', years)
+    sheet_data['FW Reg. by Registration at'] = generate_sheet_data_for_category('FW Registration by Registration at', years)
+    sheet_data['FW Reg. by FW Type'] = generate_sheet_data_for_category('FW Registration by FW Type', years)
+    sheet_data['Trend of FW Reg. by year'] = ['Trend of FW registration by Year', ['Transaction date by Month', 'Transaction date by Day'] + years.map(&:to_s) + ['Count']]
+
+    years.each do |year|
+      sheet_name = "Raw Data #{year}"
+      title = "Data #{year}"
+      headers = [
+        'Transaction Date (Month)', 'Medical Examination Date (Month)', 'Certification Date (Month)',
+        'State', 'Country', 'Age', 'Gender', 'Registration at', 'Foreign Worker Type',
+        'XQCC Pool (Film Received)', 'XQCC Pool (Film Reviewed)',
+        'PCR Pool (Film Received)', 'PCR Pool (Film Reviewed)',
+        'X-Ray Pending Review (Film Received)', 'X-Ray Pending Review (Film Reviewed)',
+        'X-Ray Pending Decision (Film Received)', 'X-Ray Pending Decision (Film Reviewed)',
+        'Medical Review (Received)', 'Medical Review (Reviewed)',
+        'Final Result Released', 'Result Transmitted to Immigration',
+        'Blocked FW', 'Appeal', 'FW Insured'
+      ]
+
+      sheet_data[sheet_name] = [title, headers]
+    end
+
+    sheet_data
+  end
+
+  def generate_sheet_data_for_category(category_name, years)
+    [category_name, [category_name, 'Total FW Registration', 'FW went for medical examination', 'Certification', 'XQCC Pool (Film Received)', 'XQCC Pool (Film Reviewed)', 'PCR Pool (Film Received)', 'PCR Pool (Film Reviewed)', 'X-Ray Pending Review (Film Received)', 'X-Ray Pending Review (Film Reviewed)', 'X-Ray Pending Decision (Film Received)', 'X-Ray Pending Decision (Film Reviewed)', 'Medical Review (Received)', 'Medical Review (Reviewed)', 'Final Result Released', 'Result Transmitted to Immigration', 'Blocked FW', 'Appeal', 'FW Insured']]
+  end
 
   def convert_values_to_arrays(hash)
     converted_hash = {}
@@ -700,4 +677,4 @@ class Dashboards::FwInformationController < ApplicationController
     insurance_purchase_counts.values.sum
   end
 
-end
+

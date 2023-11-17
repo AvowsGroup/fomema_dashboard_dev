@@ -205,30 +205,15 @@ wb = xlsx_package.workbook
             sheet.add_row([date, date, 0, 0, 0, 0, 1, 1], style: data_style, row_offset: index)
           end
 
-         when 'Raw Data 2023'
-             @raw_data_2023.each do |record|
-               sheet.add_row([record[0], record[1], record[2] ], style: data_style)
-             end
+         when /Raw Data \d{4}/
+          year = sheet_name.match(/\d{4}/)[0].to_i
+          raw_data_variable = instance_variable_get("@raw_data_#{year}".to_sym)
 
-          when 'Raw Data 2022'
-              @raw_data_2022.each do |record|
-                sheet.add_row([record[0], record[1], record[2] ], style: data_style)
-              end
-
-           when 'Raw Data 2021'
-               @raw_data_2021.each do |record|
-                 sheet.add_row([record[0], record[1], record[2] ], style: data_style)
-               end
-
-            when 'Raw Data 2020'
-                @raw_data_2020.each do |record|
-                  sheet.add_row([record[0], record[1], record[2] ], style: data_style)
-                end
-
-             when 'Raw Data 2019'
-                 @raw_data_2019.each do |record|
-                   sheet.add_row([record[0], record[1], record[2] ], style: data_style)
-                 end
+          raw_data_variable.each do |record|
+            sheet.add_row(record, style: data_style)
+          end
         end
       end
     end
+
+
