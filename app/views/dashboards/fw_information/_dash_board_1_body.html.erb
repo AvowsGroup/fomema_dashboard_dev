@@ -267,7 +267,7 @@
                   </div>
 
 
-                  <div class="card-body p-0">
+                  <div class="card-body p-0" >
                     <div class="row">
                       <div class="col-12 col-sm-10 pr-0">
                         <div class="chartjs-size-monitor">
@@ -278,7 +278,7 @@
                             <div class=""></div>
                           </div>
                         </div>
-                        <canvas id="canvas" style="display: block; width: 100%; height: 198px;" class="chartjs-render-monitor"></canvas>
+                        <canvas id="canvas"  style="display: block; width: 100%; height: 198px;" class="chartjs-render-monitor p-2"></canvas>
                       </div>
 
                       <div class="col-12 col-sm-2">
@@ -287,7 +287,12 @@
                             <div class="col col-sm-12">
                               <div class="d-flex align-items-baseline">
                                 <h4 class="tx-numeric">
-                                  <b><%= data.sum rescue nil %></b><span>Year <%= year %></span>
+                                  <b>
+                                    <a href="javascript:void(0);" onclick="showChart('<%= year %>')">
+                                      <%= data.sum rescue nil %>
+                                    </a>
+                                  </b>
+                                  <span>Year <%= year %></span>
                                 </h4>
                               </div>
                             </div>
@@ -295,14 +300,11 @@
                         </div>
                       </div>
 
+
                     </div>
                     <script src="https://cdn2.hubspot.net/hubfs/476360/Chart.js"></script>
                     <script src="https://cdn2.hubspot.net/hubfs/476360/utils.js"></script>
                     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-                    <canvas id="canvas"></canvas>
-                    <div id="linechart-container" style="width: 100%; height: 100%; position: relative;">
-                      <canvas id="canvas" style="display: block; width: 100%; height: 100%;" class="chartjs-render-monitor"></canvas>
-                    </div>
 
                     <script>
                         var yearLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -433,10 +435,67 @@
                             myLine = new Chart(ctx, chartConfig);
                         }
 
+                        function showChart(selectedYear) {
+                            if (window.myLine) {
+                                window.myLine.destroy();
+                            }
 
+                            // Create or re-create the chart for the selected year
+                            var selectedYearData = yearData[selectedYear];
+
+                            var colorIndex = Object.keys(yearData).indexOf(selectedYear) % fixedColors.length;
+
+                            // Use the original color combination
+                            var datasets = [{
+                                label: 'Year ' + selectedYear,
+                                backgroundColor: fixedColors[colorIndex],
+                                borderColor: fixedColors[colorIndex],
+                                fill: false,
+                                data: selectedYearData
+                            }];
+
+
+                            var config = {
+                                type: 'line',
+                                data: {
+                                    labels: yearLabels,
+                                    datasets: datasets
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    title: {
+                                        display: false,
+                                        text: 'Chart.js Line Chart - Logarithmic'
+                                    },
+                                    scales: {
+                                        xAxes: [{
+                                            display: true,
+                                            scaleLabel: {
+                                                display: false,
+                                                labelString: 'Date'
+                                            },
+                                        }],
+                                        yAxes: [{
+                                            display: true,
+                                            scaleLabel: {
+                                                display: false,
+                                                labelString: 'Index Returns'
+                                            },
+                                            ticks: {
+                                                min: 0,
+                                                max: 1000,
+                                                stepSize: 100
+                                            }
+                                        }]
+                                    }
+                                }
+                            };
+
+                            var ctx = document.getElementById('canvas').getContext('2d');
+                            window.myLine = new Chart(ctx, config);
+                        }
                     </script>
-
-
                   </div>
                 </div>
               </div>
