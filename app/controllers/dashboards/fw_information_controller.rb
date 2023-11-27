@@ -1,6 +1,6 @@
 class Dashboards::FwInformationController < ApplicationController
   def index
-    # data for filter drop down 
+    # data for filter drop down
     @countries = Country.pluck(:name).compact
     @states = State.pluck(:name).compact.uniq
     @job_type = JobType.pluck(:name).compact.uniq
@@ -53,6 +53,7 @@ class Dashboards::FwInformationController < ApplicationController
       @fw_reg_by_states = State.joins(doctors: :transactions).group('states.name').count.to_a
       @fw_Reg_by_countries = Transaction.joins(:country).group('countries.name').count.to_a
       @transaction_line_chart = Transaction.transaction_data_last_5_years
+      @sums_by_year = @transaction_line_chart.transform_values { |data| data.sum }
     end
 
     if @transaction_line_chart == {} || @transaction_line_chart.nil?
@@ -60,9 +61,11 @@ class Dashboards::FwInformationController < ApplicationController
       last_five_years = (current_year - 4..current_year)
 
       @transaction_line_chart = last_five_years.each_with_object({}) do |year, chart_data|
-        chart_data[year] = [0] * 12 # Initialize an array of zeros for each month
+        chart_data[year] = [0] * 12  # Initialize an array of zeros for each month
       end
+      @sums_by_year = @transaction_line_chart.transform_values { |data| data.sum }
     end
+
     @fw_pending_view = {
       xqcc_pool_received: Transaction.joins("JOIN xqcc_pools ON xqcc_pools.transaction_id = transactions.id").order('transactions.created_at DESC')
                                      .limit(50)
