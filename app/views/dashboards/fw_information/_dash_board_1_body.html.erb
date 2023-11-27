@@ -116,7 +116,7 @@
                             if (!chartData.length) {
                                 var placeholderDiv = document.getElementById('columnchart_values');
                                 placeholderDiv.innerHTML = '<div class="center-message">No Data to Display</div>';
-                            }else{
+                            } else {
                                 var data = new google.visualization.DataTable();
                                 data.addColumn('string', 'Total ');
                                 data.addColumn('number', 'Total');
@@ -131,9 +131,7 @@
                                         slantedText: true,
                                         slantedTextAngle: 45,
                                     },
-                                    vAxis: {
-
-                                    },
+                                    vAxis: {},
                                     'chartArea': {'width': '90%'},
                                 };
 
@@ -279,14 +277,16 @@
                       </div>
                       <div class="col-12 col-sm-2">
                         <div class="row no-gutters bg-gray">
-
+                          <% @current_year = Time.now.year %>
                           <% @sums_by_year.each do |year, sum| %>
                             <div class="col col-sm-12">
                               <div class="d-flex align-items-baseline">
                                 <h4 class="tx-numeric">
                                   <b>
                                     <a href="javascript:void(0);" onclick="showChart('<%= year %>')">
-                                      <%= sum.nil? ? 'N/A' : sum %>
+                                      <span id="value-for-year-<%= year %>">
+              <%= (year == @current_year - 2 || year == @current_year - 3 || year == @current_year - 4) ? 0 : (sum.nil? ? 'N/A' : sum) %>
+            </span>
                                     </a>
                                   </b>
                                   <span>Year <%= year %></span>
@@ -294,6 +294,7 @@
                               </div>
                             </div>
                           <% end %>
+
 
                         </div>
 
@@ -463,6 +464,21 @@
                             <% @transaction_line_chart.each do |year, data| %>
                             yearData[<%= year %>] = <%= data.to_json.html_safe %>;
                             <% end %>
+
+                            if (selectedYear == <%= @current_year - 2 %>) {
+                                sumForSelectedYear = <%= @sums_by_year[@current_year - 2].nil? ? 0 : @sums_by_year[@current_year - 2] %>;
+                            } else if (selectedYear == <%= @current_year - 3 %>) {
+                                sumForSelectedYear = <%= @sums_by_year[@current_year - 3].nil? ? 0 : @sums_by_year[@current_year - 3] %>;
+                            } else if (selectedYear == <%= @current_year - 4 %>) {
+                                sumForSelectedYear = <%= @sums_by_year[@current_year - 4].nil? ? 0 : @sums_by_year[@current_year - 4] %>;
+                            }
+
+
+
+                            var divValueElement = document.getElementById('value-for-year-' + selectedYear);
+                            if (divValueElement) {
+                                divValueElement.innerHTML = sumForSelectedYear;
+                            }
 
                             if (window.myLine) {
                                 window.myLine.destroy();
