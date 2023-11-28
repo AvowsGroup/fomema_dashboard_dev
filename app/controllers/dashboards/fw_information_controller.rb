@@ -25,8 +25,11 @@ class Dashboards::FwInformationController < ApplicationController
         @pi_chart_data = [['Task', 'Hours per Day']]
         @transactions = Transaction.where(id: @transactions.ids)
         @transaction_line_chart = @transactions.transaction_data_last_5_years rescue {}
+        @sums_by_year = @transaction_line_chart.transform_values { |data| data.sum }
 
-        # filtered data for data_pints
+
+
+        # filtered data for data_points
         @passed_examination_count = @transactions.where("EXTRACT(YEAR FROM medical_examination_date) = ? AND medical_examination_date < ?", @current_year, Date.current).count
         @certification_count = @transactions.where("EXTRACT(YEAR FROM certification_date) = ? AND certification_date < ?", @current_year, Date.current).count
         @final_result = @transactions.where(final_result: nil).count
@@ -42,7 +45,12 @@ class Dashboards::FwInformationController < ApplicationController
         converted_hash = {}
         state_names.each_with_index { |value, index| converted_hash[value] = hash.values[index] }
         @fw_reg_by_states = converted_hash.to_a
-        @fw_Reg_by_countries = @transactions.joins(:country).group('countries.name').count.to_a
+
+        @fw_Reg_by_countries = Transaction
+                                 .joins(:country)
+                                 .group('countries.name', 'countries.code')
+                                 .select("countries.name || ',' || countries.code AS country_info, COUNT(*) AS count")
+                                 .map { |entry| entry.country_info.split(',') + [entry.count.to_i] }
       end
     else
       @block_fw = Transaction.joins(:myimms_transactions).pluck('myimms_transactions.status').map { |i| displayed_status(i) }.group_by { |status| status }.transform_values(&:count)
@@ -51,7 +59,13 @@ class Dashboards::FwInformationController < ApplicationController
       @pi_chart_data = [['Task', 'Hours per Day']]
       Transaction.joins(:job_type).group('job_types.name').count.to_a.map { |i| @pi_chart_data << i }
       @fw_reg_by_states = State.joins(doctors: :transactions).group('states.name').count.to_a
-      @fw_Reg_by_countries = Transaction.joins(:country).group('countries.name').count.to_a
+
+      @fw_Reg_by_countries = Transaction
+                               .joins(:country)
+                               .group('countries.name', 'countries.code')
+                               .select("countries.name || ',' || countries.code AS country_info, COUNT(*) AS count")
+                               .map { |entry| entry.country_info.split(',') + [entry.count.to_i] }
+
       @transaction_line_chart = Transaction.transaction_data_last_5_years
       @sums_by_year = @transaction_line_chart.transform_values { |data| data.sum }
     end
@@ -63,7 +77,6 @@ class Dashboards::FwInformationController < ApplicationController
       @transaction_line_chart = last_five_years.each_with_object({}) do |year, chart_data|
         chart_data[year] = [0] * 12  # Initialize an array of zeros for each month
       end
-      @sums_by_year = @transaction_line_chart.transform_values { |data| data.sum }
     end
 
     @fw_pending_view = {
