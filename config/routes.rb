@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :refresh_dashboards
   resources :laboratory_examinations
   resources :radiologists
   resources :status_schedules
@@ -12,6 +13,10 @@ Rails.application.routes.draw do
 
   namespace :dashboards do
     get 'fw_information/index', to: 'fw_information#index'
+    namespace :fw_information do
+      get 'index'
+      get 'apply_filter'
+    end
     get 'geographical', to: 'geographical#index'
     namespace :geographical do
       get 'index'
@@ -31,6 +36,7 @@ Rails.application.routes.draw do
     get 'service_provider', to: 'service_provider#index'
     namespace :service_provider do
       get 'index'
+      get 'apply_filter'
     end
     resources :fw_information, only: [:index] do
       collection do

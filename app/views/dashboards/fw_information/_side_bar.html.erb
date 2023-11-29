@@ -211,11 +211,24 @@
                       <li>
                         <input type="checkbox" id="registrationcheckall" name="all_selected" value=""> Select All
                       </li>
-                      <% @organizations.each do |org| %>
-                        <li>
-                          <input type="checkbox" name="registrationcheck" value="<%= "#{org}" %>"> <%= "#{org.capitalize}" %>
-                        </li>
-                      <% end %>
+                      <li>
+                        <input type="checkbox" name="registrationcheck" value="WEBPORTAL"> Web Portal
+                      </li>
+                      <li>
+                        <input type="checkbox" name="registrationcheck" value="AGENCY"> Agency
+                      </li>
+                      <li>
+                        <input type="checkbox" name="registrationcheck" value="EAST COAST"> East Coast
+                      </li>
+                      <li>
+                        <input type="checkbox" name="registrationcheck" value="NORTHERN"> Northern
+                      </li>
+                      <li>
+                        <input type="checkbox" name="registrationcheck" value="SOUTHERN"> Southern
+                      </li>
+                      <li>
+                        <input type="checkbox" name="registrationcheck" value="CENTRAL"> Central
+                      </li>
                     </ul>
                   </div>
                 </div>
@@ -411,7 +424,7 @@
             return $(this).val();
         }).get().join(' ');
 
-
+        console.log(checkedValues)
         return checkedValues;
 
 
