@@ -106,7 +106,7 @@
                   </div>
                   <div class="card-body p-1">
                     <script type="text/javascript">
-                        google.charts.load('current', { packages: ['corechart', 'bar'] });
+                        google.charts.load('current', {packages: ['corechart', 'bar']});
                         google.charts.setOnLoadCallback(drawStacked);
 
                         function drawStacked() {
@@ -121,7 +121,7 @@
                                 var data = new google.visualization.DataTable();
                                 data.addColumn('string', 'State Code');
                                 data.addColumn('number', 'Total');
-                                data.addColumn({ type: 'string', role: 'tooltip' });
+                                data.addColumn({type: 'string', role: 'tooltip'});
 
                                 var stateCodeMap = {
                                     "JOHOR": "JHR",
@@ -157,14 +157,18 @@
                                         },
                                         slantedText: true,
                                         slantedTextAngle: 45,
+                                        textStyle: {
+                                            fontSize: 8,
+                                        },
                                     },
                                     vAxis: {},
-                                    'chartArea': { 'width': '90%' },
+                                    'chartArea': {'width': '90%'},
                                 };
 
 
                                 var chart = new google.visualization.ColumnChart(document.getElementById('columnchart_values'));
                                 chart.draw(data, options);
+
                             }
                         }
 
@@ -244,10 +248,10 @@
                   </div>
                   <div class="card-body p-1">
                     <script type="text/javascript">
-                    google.charts.load('current', { 'packages': ['corechart'] });
-                    google.charts.setOnLoadCallback(drawStacked);
+                        google.charts.load('current', {'packages': ['corechart']});
+                        google.charts.setOnLoadCallback(drawStacked);
 
-                    function drawStacked() {
+                        function drawStacked() {
                             var chartData = <%= @fw_Reg_by_countries.nil? ? [] : @fw_Reg_by_countries.to_json.html_safe %>;
 
                             if (!chartData.length) {
@@ -260,12 +264,16 @@
                                 data.addColumn({type: 'string', role: 'tooltip'});
 
                                 chartData.forEach(function (entry) {
-                                    var countryName = entry[0][0];
-                                    var countryCode = entry[0][1];
-                                    var total = entry[1];
+                                    var countryName = entry[0];
+                                    var countryCode = entry[1];
+                                    var total = entry[2];
                                     var tooltip = countryName + ' (' + countryCode + ') \nTotal: ' + total;
+
                                     data.addRow([countryCode, total, tooltip]);
                                 });
+
+
+
 
                                 var options = {
                                     hAxis: {
@@ -275,13 +283,16 @@
                                         },
                                         slantedText: true,
                                         slantedTextAngle: 45,
+                                        textStyle: {
+                                            fontSize: 7,
+                                        },
                                     },
                                     vAxis: {
                                         scaleType: 'log', // Use logarithmic scale for vertical axis
                                         minValue: 1, // Set a minimum value for the logarithmic scale
                                     },
                                     'chartArea': {'width': '90%'},
-                                    'bar': {'groupWidth': '75%'},
+                                    'bar': {'groupWidth': '70%'},
                                 };
 
                                 var chart = new google.visualization.ColumnChart(document.getElementById('columnchart_values1'));
