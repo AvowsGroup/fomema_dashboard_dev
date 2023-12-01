@@ -158,20 +158,6 @@
                             }
                         }
 
-                        function zoomInChart() {
-                            options.hAxis.viewWindow = {
-                                min: 0,
-                                max: 100
-                            };
-                            drawStacked();
-                        }
-
-                        function zoomOutChart() {
-                            options.hAxis.viewWindow = {};
-                            drawStacked();
-                        }
-
-
                     </script>
                     <div id="columnchart_values" style="width: 100%; height:100%;"></div>
                   </div>
@@ -272,9 +258,6 @@
                                     data.addRow([countryCode, total, tooltip]);
                                 });
 
-
-
-
                                 var options = {
                                     hAxis: {
                                         title: 'Country Codes',
@@ -288,8 +271,8 @@
                                         },
                                     },
                                     vAxis: {
-                                        scaleType: 'log', // Use logarithmic scale for vertical axis
-                                        minValue: 1, // Set a minimum value for the logarithmic scale
+                                        scaleType: 'log',
+                                        minValue: 1,
                                     },
                                     'chartArea': {'width': '90%'},
                                     'bar': {'groupWidth': '70%'},
@@ -341,8 +324,6 @@
                               </div>
                             </div>
                           <% end %>
-
-
                         </div>
 
                         <!-- row -->
@@ -352,25 +333,21 @@
                     <script src="https://cdn2.hubspot.net/hubfs/476360/utils.js"></script>
                     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
                     <canvas id="canvas"></canvas>
-                    <!-- <button id="randomizeData">Randomize Data</button> -->
+
                     <script>
                         var yearLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
                         var fixedColors = ['#FF5733', '#33FF57', '#5733FF', '#33FFFF', '#FFFF33'];
+
+                        var yearData = {};
+
+                        <% @transaction_line_chart.each do |year, data| %>
+                        yearData[<%= year %>] = <%= data.to_json.html_safe %>;
+                        <% end %>
 
 
                         var myLine;
 
                         function initializeChart() {
-                            var yearData = {};
-
-
-                            <% @transaction_line_chart.each do |year, data| %>
-                            yearData[<%= year %>] = <%= data.to_json.html_safe %>;
-                            <% end %>
-
-
-                            // Define an array of fixed colors
-                            var fixedColors = ['#FF5733', '#33FF57', '#5733FF', '#33FFFF', '#FFFF33'];
 
                             var datasets = Object.keys(yearData).map(function (year, index) {
                                 return {
@@ -426,12 +403,8 @@
                         // Call the initialization function
                         initializeChart();
 
-                        function updateChartByYearRange(selectedDateRange) {
-                            var yearData = {};
 
-                            <% @transaction_line_chart.each do |year, data| %>
-                            yearData[<%= year %>] = <%= data.to_json.html_safe %>;
-                            <% end %>
+                        function updateChartByYearRange(selectedDateRange) {
 
                             // Destroy the existing chart only if it exists
                             if (window.myLine) {
@@ -456,6 +429,7 @@
                                     };
                                 }
                             }).filter(Boolean);
+
 
                             var chartConfig = {
                                 type: 'line',
@@ -500,10 +474,6 @@
 
 
                         function showChart(selectedYear) {
-
-                            var yearData = {};
-
-
                             if (window.myLine) {
                                 window.myLine.destroy();
                             }
