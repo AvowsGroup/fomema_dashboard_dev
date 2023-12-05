@@ -16,26 +16,26 @@ class Transaction < ApplicationRecord
   belongs_to :laboratory_examination, foreign_key: 'id'
   belongs_to :xray_facility, foreign_key: 'xray_facility_id'
   enum registration_type: { new_registration: 0, renewal: 1 }
-
+  # Define a method to retrieve transaction data for the last 5 years
   def self.transaction_data_last_5_years
-
     current_year = Time.now.year
 
-    # Batch query to get transactions for the last 5 years
-    transactions = Transaction.where(created_at: (Time.new(current_year - 4, 1, 1)..Time.new(current_year, 12, 31, 23, 59, 59)))
+    transactions_data = Transaction
+                          .where(created_at: (Time.new(current_year - 4, 1, 1)..Time.new(current_year, 12, 31, 23, 59, 59)))
+                          .group("EXTRACT(YEAR FROM created_at)")
+                          .select("EXTRACT(YEAR FROM created_at) AS year, array_agg(EXTRACT(MONTH FROM created_at) ORDER BY EXTRACT(MONTH FROM created_at)) AS months")
+                          .order("EXTRACT(YEAR FROM created_at)")
 
-    transaction_data_by_month = transactions.group_by { |t| [t.created_at.year, t.created_at.month] }
-                                            .transform_values { |data| data.size }
+    transaction_data_by_year = transactions_data.inject({}) do |result, data|
+      year = data.year.to_i
+      months = data.months.map(&:to_i)
 
-    transaction_data_by_year = {}
+      result[year] ||= Array.new(12, 0)
+      months.each { |month| result[year][month - 1] += 1 }
 
-    transaction_data_by_month.each do |(year, month), count|
-      transaction_data_by_year[year] ||= Array.new(12, 0)
-      transaction_data_by_year[year][month - 1] = count
+      result
     end
-    sorted_transaction_data = transaction_data_by_year.sort.to_h
-
-    sorted_transaction_data
+    transaction_data_by_year
   end
 
 end
