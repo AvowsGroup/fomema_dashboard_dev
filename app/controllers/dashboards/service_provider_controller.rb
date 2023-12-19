@@ -62,8 +62,19 @@ class Dashboards::ServiceProviderController < ApplicationController
       @ceritifydoctorperyestotal = 0
       @ceritifydoctorpernototal = 0
     end
-    @laboratorydonutwithin48 = Transaction.joins(:laboratory_examination).where("transactions.status not in ('CANCELLED','REJECTED') and specimen_taken_date is not null and  DATE_PART('Day',laboratory_transmit_date - specimen_taken_date) < 2 and extract(year from transactions.created_at) = ?", @current_year).count
-    @laboratorydonutbeyond48 = Transaction.joins(:laboratory_examination).where("transactions.status not in ('CANCELLED','REJECTED') and specimen_taken_date is not null and  DATE_PART('Day',laboratory_transmit_date - specimen_taken_date) > 2 and extract(year from transactions.created_at) = ?", @current_year).count
+
+    @laboratorydonutwithin48 = Transaction
+                                 .joins("JOIN laboratory_examinations ON laboratory_examinations.transaction_id = transactions.id")
+                                 .joins("JOIN laboratories ON laboratories.id = transactions.laboratory_id")
+                                 .where("transactions.status not in ('CANCELLED','REJECTED') and laboratory_examinations.specimen_taken_date is not null and DATE_PART('Day', transactions.laboratory_transmit_date - laboratory_examinations.specimen_taken_date) < 2")
+                                 .count
+
+    @laboratorydonutbeyond48 = Transaction
+                                 .joins("JOIN laboratory_examinations ON laboratory_examinations.transaction_id = transactions.id")
+                                 .joins("JOIN laboratories ON laboratories.id = transactions.laboratory_id")
+                                 .where("transactions.status not in ('CANCELLED','REJECTED') and laboratory_examinations.specimen_taken_date is not null and DATE_PART('Day', transactions.laboratory_transmit_date - laboratory_examinations.specimen_taken_date) > 2")
+                                 .count
+
 
     @Xrayfacilitywithinhours24 = Transaction.joins("join xray_facilities on xray_facilities.id=transactions.xray_facility_id").joins("join xray_examinations on xray_examinations.transaction_id=transactions.id").where("xray_facilities.radiologist_operated='TRUE' and transactions.radiologist_id is null and xray_facilities.radiologist_operated='FALSE' and xray_examinations.xray_taken_date is not null and transactions.status not IN('CANCELLED','REJECTED') and DATE_PART('Day',transmitted_at - xray_taken_date) < 1").count
     @Xrayfacilitywithinhours48 = Transaction.joins("join xray_facilities on xray_facilities.id=transactions.xray_facility_id").joins("join xray_examinations on xray_examinations.transaction_id=transactions.id").where("xray_facilities.radiologist_operated='TRUE' and transactions.radiologist_id is not null and xray_facilities.radiologist_operated='FALSE' and xray_examinations.xray_taken_date is not null and transactions.status not IN('CANCELLED','REJECTED') and DATE_PART('Day',transmitted_at - xray_taken_date) < 2").count
@@ -102,11 +113,12 @@ class Dashboards::ServiceProviderController < ApplicationController
       when "DateRange"
         if param_value.present?
           start_date, end_date = param_value.split(" - ")
+
           @doctorsactive = Doctor.where('doctors.status=? and created_at>=? and created_at<=?', 'ACTIVE', start_date, end_date).count
           @doctornew = Doctor.where("created_at>=? and created_at<=?", start_date, end_date).count
-          @doctorwithdrawl = Doctor.joins(:status_schedule).where("doctors.status=? and status_schedules.status_reason IN(?) and status_schedules.from>=? and status_schedules.from<=?", 'INACTIVE', ["01", "02"], start_date, end_date).count
-          @doctordemised = Doctor.joins(:status_schedule).where('doctors.status=? and status_schedules.status_reason IN(?) and status_schedules.from>=? and status_schedules.from<=?', 'INACTIVE', '07', start_date, end_date).count
-          @doctornoncomp = Doctor.joins(:status_schedule).where('doctors.status=? and status_schedules.status_reason IN(?) and status_schedules.from>=? and status_schedules.from<=?', 'INACTIVE', ["06", "03"], start_date, end_date).count
+          @doctorwithdrawl = Doctor.joins(:status_schedules).where('doctors.status=? and status_schedules.status_reason IN(?) and status_schedules.from>=? and status_schedules.from<=? and status_schedules.status_scheduleable_type=?', 'INACTIVE', %w[01 02], start_date, end_date, 'Doctor').count
+          @doctordemised = Doctor.joins(:status_schedules).where('doctors.status=? and status_schedules.status_reason IN(?) and status_schedules.from>=? and status_schedules.from<=? and status_schedules.status_scheduleable_type=?', 'INACTIVE', '07', start_date, end_date, 'Doctor').count
+          @doctornoncomp = Doctor.joins(:status_schedules).where('doctors.status=? and status_schedules.status_reason IN(?) and status_schedules.from>=? and status_schedules.from<=? and status_schedules.status_scheduleable_type=?', 'INACTIVE', %w[06 03], start_date, end_date, 'Doctor').count
           @doctorstates = Doctor.joins(:state).where('doctors.status=? and doctors.created_at>=? and doctors.created_at<=?', 'ACTIVE', start_date, end_date).group('states.name').count
 
           @doctorquotausagezero = Doctor.where('quota_used=? and doctors.created_at>=? and doctors.created_at<=?', 0, start_date, end_date).count
@@ -119,37 +131,28 @@ class Dashboards::ServiceProviderController < ApplicationController
           @doctorquotausage601to700 = Doctor.where('quota_used>601 and quota_used<=700 and doctors.created_at>=? and doctors.created_at<=?', start_date, end_date).count
           @doctorquotausage701to800 = Doctor.where('quota_used>701 and quota_used<=800 and doctors.created_at>=? and doctors.created_at<=?', start_date, end_date).count
 
-          @xrayfacilityactive = XrayFacility.where('xray_facilities.status=? and doctors.created_at>=? and doctors.created_at<=?', 'ACTIVE', start_date, end_date).count
-          @xrayfacilitynew = XrayFacility.where("doctors.created_at>=? and doctors.created_at<=?", start_date, end_date).count
-          @xrayfacilitywithdrawl = XrayFacility.joins(:status_schedule).where('xray_facilities.status=? and  status_schedules.status_reason IN(?) and status_schedules.from>=? and status_schedules.from<=?', 'INACTIVE', ["01", "02"], start_date, end_date).count
-          @xrayfacilitydemised = XrayFacility.joins(:status_schedule).where('xray_facilities.status=? and status_schedules.status_reason IN(?) and status_schedules.from>=? and status_schedules.from<=?', 'INACTIVE', '07', start_date, end_date).count
-          @xrayfacilitynoncomp = XrayFacility.joins(:status_schedule).where('xray_facilities.status=? and status_schedules.status_reason IN(?) and status_schedules.from>=? and status_schedules.from<=?', 'INACTIVE', ["06", "03"], start_date, end_date).count
-          @xrayfacilitiesstates = XrayFacility.joins(:state).where('xray_facilities.status=? and doctors.created_at>=? and doctors.created_at<=?', 'ACTIVE', start_date, end_date).group('states.name').count
+          @xrayfacilityactive = XrayFacility.joins(:doctors).where('xray_facilities.status=? and doctors.created_at>=? and doctors.created_at<=?', 'ACTIVE', start_date, end_date).count
+          @xrayfacilitynew = XrayFacility.joins(:doctors).where('doctors.created_at>=? and doctors.created_at<=?', start_date, end_date).count
+          @xrayfacilitywithdrawl = XrayFacility.joins(:status_schedules).where('xray_facilities.status=? and status_schedules.status_reason IN(?) and status_schedules.from>=? and status_schedules.from<=?', 'INACTIVE', ["01", "02"], start_date, end_date).count
+          @xrayfacilitydemised = XrayFacility.joins(:status_schedules).where('xray_facilities.status=? and status_schedules.status_reason IN(?) and status_schedules.from>=? and status_schedules.from<=?', 'INACTIVE', '07', start_date, end_date).count
+          @xrayfacilitynoncomp = XrayFacility.joins(:status_schedules).where('xray_facilities.status=? and status_schedules.status_reason IN(?) and status_schedules.from>=? and status_schedules.from<=?', 'INACTIVE', ["06", "03"], start_date, end_date).count
+          @xrayfacilitiesstates = XrayFacility.joins(:state).where('xray_facilities.status=? and xray_facilities.created_at>=? and xray_facilities.created_at<=?', 'ACTIVE', start_date, end_date).group('states.name').count
 
-          @laboratoriesactive = Laboratory.where('laboratories.status=? and doctors.created_at>=? and doctors.created_at<=?', 'ACTIVE', start_date, end_date).count
-          @laboratoriesnew = Laboratory.where("doctors.created_at>=? and doctors.created_at<=?", start_date, end_date).count
-          @laboratorywithdrawl = Laboratory.joins(:status_schedule).where('laboratories.status=? and status_schedules.status_reason IN(?) and status_schedules.from>=? and status_schedules.from<=?', 'INACTIVE', ["01", "02"], start_date, end_date).count
-          @laboratorydemised = Laboratory.joins(:status_schedule).where('laboratories.status=? and status_schedules.status_reason IN(?) and status_schedules.from>=? and status_schedules.from<=?', 'INACTIVE', '07', start_date, end_date).count
-          @laboratorynoncomp = Laboratory.joins(:status_schedule).where('laboratories.status=? and status_schedules.status_reason IN(?) and status_schedules.from>=? and status_schedules.from<=?', 'INACTIVE', ["06", "03"], start_date, end_date).count
-          @laboratoriesstates = Laboratory.joins(:state).where('laboratories.status=? and doctors.created_at>=? and doctors.created_at<=?', 'ACTIVE', start_date, end_date).group('states.name').count
-
-          @radiologistactive = Radiologist.where('radiologists.status=? and doctors.created_at>=? and doctors.created_at<=?', 'ACTIVE', start_date, end_date).count
-          @radiologistnew = Radiologist.where("doctors.created_at>=? and doctors.created_at<=?", start_date, end_date).count
-          @radiologistwithdrawl = Radiologist.joins(:status_schedule).where('radiologists.status=? and status_schedules.status_reason IN(?) and status_schedules.from>=? and status_schedules.from<=?', 'INACTIVE', ["01", "02"], start_date, end_date).count
-          @radiologistdemised = Radiologist.joins(:status_schedule).where('radiologists.status=? and status_schedules.status_reason IN(?) and status_schedules.from>=? and status_schedules.from<=?', 'INACTIVE', '07', start_date, end_date).count
-          @radiologistnoncomp = Radiologist.joins(:status_schedule).where('radiologists.status=? and status_schedules.status_reason IN(?) and status_schedules.from>=? and status_schedules.from<=?', 'INACTIVE', ["06", "03"], start_date, end_date).count
-          @radiologiststates = Radiologist.joins(:state).where('radiologists.status=? and doctors.created_at>=? and doctors.created_at<=?', 'ACTIVE', start_date, end_date).group('states.name').count
+          @radiologistactive = Radiologist.where('radiologists.status=? and radiologists.created_at>=? and radiologists.created_at<=?', 'ACTIVE', start_date, end_date).count
+          @radiologistnew = Radiologist.where("radiologists.created_at>=? and radiologists.created_at<=?", start_date, end_date).count
+          @radiologistwithdrawl = Radiologist.joins(:status_schedules).where('radiologists.status=? and status_schedules.status_reason IN(?) and status_schedules.from>=? and status_schedules.from<=?', 'INACTIVE', ["01", "02"], start_date, end_date).count
+          @radiologistdemised = Radiologist.joins(:status_schedules).where('radiologists.status=? and status_schedules.status_reason IN(?) and status_schedules.from>=? and status_schedules.from<=?', 'INACTIVE', '07', start_date, end_date).count
+          @radiologistnoncomp = Radiologist.joins(:status_schedules).where('radiologists.status=? and status_schedules.status_reason IN(?) and status_schedules.from>=? and status_schedules.from<=?', 'INACTIVE', ["06", "03"], start_date, end_date).count
+          @radiologiststates = Radiologist.joins(:state).where('radiologists.status=? and radiologists.created_at>=? and radiologists.created_at<=?', 'ACTIVE', start_date, end_date).group('states.name').count
         end
       when "doctor"
         if param_value.present?
           @doctorsactive = Doctor.where('status=? and code=?', 'ACTIVE', param_value).count
           @current_year = Date.today.year
-          @doctornew = Doctor.where("extract(year from created_at) = ? and code=?", @current_year, param_value).count
-          @doctorwithdrawl = Doctor.joins(:status_schedule).where("doctors.status=? and status_schedules.status_reason IN(?) and code=?", 'INACTIVE', ["01", "02"], param_value).count
-          @doctordemised = Doctor.joins(:status_schedule).where('doctors.status=? and status_schedules.status_reason IN(?) and code=?', 'INACTIVE', '07', param_value).count
-          @doctornoncomp = Doctor.joins(:status_schedule).where('doctors.status=? and status_schedules.status_reason IN(?) and code=?', 'INACTIVE', ["06", "03"], param_value).count
+          @doctorwithdrawl = Doctor.joins(:status_schedules).where("doctors.status=? and status_schedules.status_reason IN(?) and code=?", 'INACTIVE', ["01", "02"], param_value).count
+          @doctordemised = Doctor.joins(:status_schedules).where('doctors.status=? and status_schedules.status_reason IN(?) and code=?', 'INACTIVE', '07', param_value).count
+          @doctornoncomp = Doctor.joins(:status_schedules).where('doctors.status=? and status_schedules.status_reason IN(?) and code=?', 'INACTIVE', ["06", "03"], param_value).count
           @doctorstates = Doctor.joins(:state).where('doctors.status=? and doctors.code=?', 'ACTIVE', param_value).group('states.name').count
-
           @doctorquotausagezero = Doctor.where('quota_used=? and code=?', 0, param_value).count
           @doctorquotausage1to100 = Doctor.where('quota_used>0 and quota_used<=100 and code=?', param_value).count
           @doctorquotausage101to200 = Doctor.where('quota_used>101 and quota_used<=200 and code=?', param_value).count
@@ -180,21 +183,28 @@ class Dashboards::ServiceProviderController < ApplicationController
             @ceritifydoctorperyestotal = 0
             @ceritifydoctorpernototal = 0
           end
-          @doctoraccuracycertified = Transaction.joins(:transaction_result_update).joins(:doctor).where("transactions.status not in ('CANCELLED','REJECTED') and transactions.certification_date is not null and doctors.code IN(?)", param_value).group("doctors.name").count
-          @doctoraccuracywrongtransmission = Transaction.joins(:transaction_result_update).joins(:doctor).where("transactions.status not in ('CANCELLED','REJECTED') and transaction_result_updates.wrong_transmission_doctor='TRUE' and doctors.code IN(?)", param_value).group("doctors.name").count
+          @doctoraccuracycertified = Transaction.joins(:transaction_result_updates).joins(:doctor).where("transactions.status not in ('CANCELLED','REJECTED') and transactions.certification_date is not null and doctors.code IN(?)", param_value).group("doctors.name").count
+          @doctoraccuracywrongtransmission = Transaction.joins(:transaction_result_updates).joins(:doctor).where("transactions.status not in ('CANCELLED','REJECTED') and transaction_result_updates.wrong_transmission_doctor='TRUE' and doctors.code IN(?)", param_value).group("doctors.name").count
           @doctoraccuracytransmissiontotal = @doctoraccuracycertified.count - @doctoraccuracywrongtransmission.count
         end
       when 'xray'
         if param_value.present?
           @xrayfacilityactive = XrayFacility.where('status=? and code=?', 'ACTIVE', param_value).count
-          @xrayfacilitynew = XrayFacility.where("extract(year from created_at) = ? and code=?", @current_year, param_value).count
-          @xrayfacilitywithdrawl = XrayFacility.joins(:status_schedule).where('xray_facilities.status=? and status_schedules.status_reason IN(?) and code=?', 'INACTIVE', ["01", "02"], param_value).count
-          @xrayfacilitydemised = XrayFacility.joins(:status_schedule).where('xray_facilities.status=? and status_schedules.status_reason IN(?) and code=?', 'INACTIVE', '07', param_value).count
-          @xrayfacilitynoncomp = XrayFacility.joins(:status_schedule).where('xray_facilities.status=? and status_schedules.status_reason IN(?) and code=?', 'INACTIVE', ["06", "03"], param_value).count
+          @xrayfacilitywithdrawl = XrayFacility.joins(:status_schedules).where('xray_facilities.status=? and status_schedules.status_reason IN(?) and code=?', 'INACTIVE', ["01", "02"], param_value).count
+          @xrayfacilitydemised = XrayFacility.joins(:status_schedules).where('xray_facilities.status=? and status_schedules.status_reason IN(?) and code=?', 'INACTIVE', '07', param_value).count
+          @xrayfacilitynoncomp = XrayFacility.joins(:status_schedules).where('xray_facilities.status=? and status_schedules.status_reason IN(?) and code=?', 'INACTIVE', ["06", "03"], param_value).count
           @xrayfacilitiesstates = XrayFacility.joins(:state).where('xray_facilities.status=? and xray_facilities.code=?', 'ACTIVE', param_value).group('states.name').count
 
-          @Xrayfacilitywithinhours24 = Transaction.joins(:xray_facility).joins(:xray_examination).where("xray_facilities.radiologist_operated='TRUE' and transactions.radiologist_id is null and xray_facilities.radiologist_operated='FALSE' and xray_examinations.xray_taken_date is not null and transactions.status not IN('CANCELLED','REJECTED') and DATE_PART('Day',transmitted_at - xray_taken_date) < 1 and xray_facilities.code IN(?)", param_value).count
-          @Xrayfacilitywithinhours48 = Transaction.joins(:xray_facility).joins(:xray_examination).where("xray_facilities.radiologist_operated='TRUE' and transactions.radiologist_id is not null and xray_facilities.radiologist_operated='FALSE' and xray_examinations.xray_taken_date is not null and transactions.status not IN('CANCELLED','REJECTED') and DATE_PART('Day',transmitted_at - xray_taken_date) < 2 and xray_facilities.code IN(?)", param_value).count
+          @Xrayfacilitywithinhours24 = Transaction.joins("JOIN xray_examinations ON xray_examinations.transaction_id = transactions.id")
+                                                  .joins("JOIN xray_facilities ON xray_facilities.id = transactions.xray_facility_id")
+                                                  .where("xray_facilities.radiologist_operated='TRUE' and transactions.radiologist_id is null and xray_facilities.radiologist_operated='FALSE' and xray_examinations.xray_taken_date is not null and transactions.status not IN('CANCELLED','REJECTED') and DATE_PART('Day',transmitted_at - xray_examinations.xray_taken_date) < 1 and xray_facilities.code IN(?)", param_value)
+                                                  .count
+
+          @Xrayfacilitywithinhours48 = Transaction.joins("JOIN xray_examinations ON xray_examinations.transaction_id = transactions.id")
+                                                  .joins("JOIN xray_facilities ON xray_facilities.id = transactions.xray_facility_id")
+                                                  .where("xray_facilities.radiologist_operated='TRUE' and transactions.radiologist_id is not null and xray_facilities.radiologist_operated='FALSE' and xray_examinations.xray_taken_date is not null and transactions.status not IN('CANCELLED','REJECTED') and DATE_PART('Day',transmitted_at - xray_taken_date) < 2 and xray_facilities.code IN(?)", param_value)
+                                                  .count
+
           @xraytransmissionpercentage = @Xrayfacilitywithinhours24 + @Xrayfacilitywithinhours48
           @xraytransmissionpercentagetotal = @xraytransmissionpercentage / 2
           @xrayqualitycompliance = Transaction.joins(:xray_review).joins(:xray_facility).where("xray_reviews.transmitted_at is not null and transactions.status not IN('CANCELLED') and transactions.xray_film_type IN ('DIGITAL') and xray_facilities.code IN(?)", param_value).group("xray_facilities.code").count
@@ -214,13 +224,12 @@ class Dashboards::ServiceProviderController < ApplicationController
       when 'lab'
         if param_value.present?
           @laboratoriesactive = Laboratory.where('status=? and code=?', 'ACTIVE', param_value).count
-          @laboratoriesnew = Laboratory.where("extract(year from created_at) = ? and code=?", @current_year, param_value).count
-          @laboratorywithdrawl = Laboratory.joins(:status_schedule).where('laboratories.status=? and status_schedules.status_reason IN(?) and code=?', 'INACTIVE', ["01", "02"], param_value).count
-          @laboratorydemised = Laboratory.joins(:status_schedule).where('laboratories.status=? and status_schedules.status_reason IN(?) and code=?', 'INACTIVE', '07', param_value).count
-          @laboratorynoncomp = Laboratory.joins(:status_schedule).where('laboratories.status=? and status_schedules.status_reason IN(?) and code=?', 'INACTIVE', ["06", "03"], param_value).count
-          @laboratoriesstates = Laboratory.joins(:state).where('laboratories.status=? and laboratories.code=?', 'ACTIVE', param_value).group('states.name').count
-          @laboratorydonutwithin48 = Transaction.joins(:laboratory_examination).where("transactions.status not in ('CANCELLED','REJECTED') and specimen_taken_date is not null and  DATE_PART('Day',laboratory_transmit_date - specimen_taken_date) < 2 and laboratories.code IN(?) ", param_value).count
-          @laboratorydonutbeyond48 = Transaction.joins(:laboratory_examination).where("transactions.status not in ('CANCELLED','REJECTED') and specimen_taken_date is not null and  DATE_PART('Day',laboratory_transmit_date - specimen_taken_date) > 2 and laboratories.code IN(?)", param_value).count
+          @laboratorywithdrawl = Laboratory.joins(:status_schedules).where('laboratories.status=? and status_schedules.status_reason IN(?) and code=?', 'INACTIVE', ["01", "02"], param_value).count
+          @laboratorydemised = Laboratory.joins(:status_schedules).where('laboratories.status=? and status_schedules.status_reason IN(?) and code=?', 'INACTIVE', '07', param_value).count
+          @laboratorynoncomp = Laboratory.joins(:status_schedules).where('laboratories.status=? and status_schedules.status_reason IN(?) and code=?', 'INACTIVE', ["06", "03"], param_value).count
+          @laboratoriesstates = Laboratory.joins("JOIN states ON laboratories.state_id = states.id").where('laboratories.status=? and laboratories.code=?', 'ACTIVE', param_value).group('states.name').count
+          @laboratorydonutwithin48 = Transaction.joins("JOIN laboratory_examinations ON laboratory_examinations.transaction_id = transactions.id").joins("JOIN laboratories ON laboratories.id = transactions.laboratory_id").where("transactions.status not in ('CANCELLED','REJECTED') and laboratory_examinations.specimen_taken_date is not null and DATE_PART('Day', transactions.laboratory_transmit_date - laboratory_examinations.specimen_taken_date) < 2 and laboratories.code IN(?)", param_value).count
+          @laboratorydonutbeyond48 = Transaction.joins("JOIN laboratory_examinations ON laboratory_examinations.transaction_id = transactions.id").joins("JOIN laboratories ON laboratories.id = transactions.laboratory_id").where("transactions.status not in ('CANCELLED','REJECTED') and laboratory_examinations.specimen_taken_date is not null and DATE_PART('Day', transactions.laboratory_transmit_date - laboratory_examinations.specimen_taken_date) > 2 and laboratories.code IN(?)", param_value).count
         end
       end
     end
