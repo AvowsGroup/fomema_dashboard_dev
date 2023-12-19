@@ -167,7 +167,7 @@
     <li>
       <div class="month-filter ">
         <div class="filter-btn" style="margin-top: 5px;">
-          <button class="btn-apply" onclick="filter_date(true)"> Apply</button>
+          <button class="btn-apply" onclick="filter_kpi(true)">Apply</button>
           <button id="clear-button" class="btn-clear" onclick="cancel_filter()">Clear</button>
         </div>
       </div>
@@ -180,11 +180,11 @@
 </body>
 </html>
 <script>
-
     function filter_date(boolean) {
         const selectedWeek = $('#week').val();
         const dateRange = $('input[name="daterange"]').val();
         const selectedMonth = $('#month').val();
+
 
         const formData = {
             week: selectedWeek,
@@ -195,9 +195,7 @@
 
         const data = JSON.stringify(formData);
 
-
         const url = '/dashboards/dep_information/third_db_data.js';
-
 
 
         $.ajax({
@@ -205,7 +203,6 @@
             type: "GET",
             data: data,
             success: function (response) {
-                // Handle the response or execute any necessary actions
             },
             error: function (xhr, status, error) {
                 // Handle error
@@ -213,15 +210,9 @@
         });
     }
 
-    $('.btn-apply').on('click', function () {
-        filter_date(true);
-    });
-
-
-
     function cancel_filter() {
 
-        const url =  '/dashboards/dep_information/index.js';
+        const url = '/dashboards/dep_information/index.js';
 
         $.ajax({
             url: url,
@@ -308,11 +299,68 @@
 
 </script>
 
+
 <script>
-    function getBaseUrl() {
-        return window.location.origin;
+    function filter_kpi(boolean) {
+        const dateRange = $('input[name="daterange"]').val();
+        const selectedMonth = $('#month').val();
+
+        const formData = {
+            dateRange: dateRange,
+            month: selectedMonth,
+            boolean: boolean
+        };
+
+        const url = '/dashboards/dep_information/filter_kpi';
+
+        $.ajax({
+            url: url,
+            type: "GET",
+            data: formData,
+            success: function (response) {
+                const managementOfSpAverage = response.management_of_sp_average;
+                const humanCapitalAverage = response.human_capital_average;
+                const inpectorateAverage = response.inpectorate_average;
+                const xrayQcc = response.xray_qcc;
+                const medicalReviewAppeal = response.medical_review_appeal;
+                const financeAdm = response.finance_adm;
+                const regionalOfficeAvgKpi = response.regional_office_avg_kpi;
+                const customerService = response.customer_service;
+                const lqcc = response.lqcc;
+                const supportServiceAvgKpi = response.suppor_service_avg_kpi;
+
+                // Now you can use these values as needed
+                console.log("Management of SP Average:", managementOfSpAverage);
+                console.log("Human Capital Average:", humanCapitalAverage);
+                console.log("Inpectorate Average:", inpectorateAverage);
+                console.log("Xray QCC:", xrayQcc);
+                console.log("Medical Review Appeal:", medicalReviewAppeal);
+                console.log("Finance ADM:", financeAdm);
+                console.log("Regional Office Avg KPI:", regionalOfficeAvgKpi);
+                console.log("Customer Service:", customerService);
+                console.log("LQCC:", lqcc);
+                console.log("Support Service Avg KPI:", supportServiceAvgKpi);
+
+                $('.progress-value-management').text(managementOfSpAverage);
+                $('.progress-value-hcm').text(humanCapitalAverage);
+                $('.progress-value-inspectorate').text(inpectorateAverage);
+                $('.progress-value-xrayqcc').text(xrayQcc);
+                $('.progress-value-mra').text(medicalReviewAppeal);
+                $('.progress-value-finance').text(financeAdm);
+                $('.progress-value-regional').text(regionalOfficeAvgKpi);
+                $('.progress-value-css').text(customerService);
+                $('.progress-value-lqcc').text(lqcc);
+                $('.progress-value-support').text(supportServiceAvgKpi);
+
+            },
+            error: function (xhr, status, error) {
+                // Handle error
+            }
+        });
     }
 
-    console.log('Base URL:', getBaseUrl());
+    // Call filter_kpi on apply button click
+    $('.btn-apply').on('click', function () {
+        filter_kpi(true);
+    });
 </script>
-
