@@ -56,6 +56,9 @@ Rails.application.routes.draw do
       collection do
         get 'edit', to: 'department_configuration#edit'
         get 'audit_logs', to: 'department_configuration#audit_logs'
+        get 'filter_data', to: 'department_configuration#filter_data'
+        get 'filter_audit_logs', to: 'department_configuration#filter_audit_logs'
+        post 'calculate_kpi'
       end
     end
   end

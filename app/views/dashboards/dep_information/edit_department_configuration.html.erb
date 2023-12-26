@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Fomema Dashboard</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://nios-uat.fomema.my/assets/application-c91769e8cc6c86f7aad7e6e6bf56853208c5f6dd99806a170cd9e5eb931003c9.css">
+  <link rel="stylesheet" href="css/stylenew.css">
+  <link rel="stylesheet" href="css/stylenew5.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <%= csrf_meta_tags %>
+</head>
+<body class="">
+<div class="header">
+  <nav class="navbar navbar-expand-md bg-light navbar-dark">
+    <div class="admin-logo"><img src="img/logo.png"></div>
+    <!-- Topbar Search -->
+  </nav>
+</div>
+<div class="chard-box pt-2">
+  <div class="chard-box">
+    <div class="wrapper">
+      <!-- Page Content  -->
+      <div id="content">
+        <div class="dashboard-body">
+          <div class="container-fluid">
+            <div class="row my-1">
+              <div class="col-12">
+                <main class="main">
+                  <ol class="breadcrumb">
+                    <a class="breadcrumb-item " href="/">Home </a>
+                    <a class="breadcrumb-item active" href="https://nios-uat.fomema.my/foreign_workers">Department
+                      Information</a>
+                    <li class="breadcrumb-menu d-md-down-none">
+                      <div class="btn-group" role="group" aria-label="Button group">
+                      </div>
+                    </li>
+                  </ol>
+                  <div class="container-fluid">
+                    <div class="animated fadeIn">
+                      <div class="card">
+                        <div class="card-header">
+                          <strong>Department Information</strong>
+                        </div>
+                        <!-- card-body -->
+                        <div class="card-body">
+                          <div class="row">
+                            <div class="col-md-4">
+                              <div class="form-group row">
+                                <label for="code" class="col-sm-12 col-form-label">Category</label>
+                                <div class="col-sm-12">
+                                  <select id="categoryDropdown1" class="form-control">
+                                    <option value="" disabled selected hidden>Select option</option>
+                                    <% @department_details = DepartmentConfiguration.all %>
+                                    <% unique_categories = Set.new %>
+                                    <% @department_details.each do |record| %>
+                                      <% unless unique_categories.include?(record.category) %>
+                                        <option><%= record.category %></option>
+                                        <% unique_categories.add(record.category) %>
+                                      <% end %>
+                                    <% end %>
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-md-4">
+                              <div class="form-group row">
+                                <label for="code" class="col-sm-12 col-form-label">Status</label>
+                                <div class="col-sm-12">
+                                  <select id="statusDropdown1" class="form-control">
+                                    <option value="" disabled selected hidden>Select option</option>
+                                    <option>Active</option>
+                                    <option>Inactive</option>
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-md-4">
+                              <div class="form-group row">
+                                <label for="code" class="col-sm-12 col-form-label">User</label>
+                                <div class="col-sm-12">
+                                  <select class="form-control" id="UserDropdown">
+                                    <option>
+                                      Employer Registration
+                                    </option>
+                                    <option>
+                                      Agency Registration
+                                    </option>
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-4">
+                              <div class="form-group row">
+                                <label for="code" class="col-sm-12 col-form-label">Task</label>
+                                <div class="col-sm-12">
+                                  <select id="taskDropdown1" class="form-control">
+                                    <option value="" disabled selected hidden>Select option</option>
+                                    <% unique_tasks = Set.new %>
+                                    <% @department_details.each do |record| %>
+                                      <% unless unique_tasks.include?(record.task) %>
+                                        <option><%= record.task %></option>
+                                        <% unique_tasks.add(record.task) %>
+                                      <% end %>
+                                    <% end %>
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-md-4">
+                              <div class="form-group row">
+                                <label for="code" class="col-sm-12 col-form-label">TAT</label>
+                                <div class="col-sm-12">
+                                  <input type="text" class="form-control" id="TatInput">
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-md-4">
+                              <div class="form-group row">
+                                <label for="code" class="col-sm-12 col-form-label">Target</label>
+                                <div class="col-sm-12">
+                                  <input type="text" class="form-control" id="TargetInput">
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- /card-body -->
+                        </div>
+                        <div class="card-footer">
+                          <div class="text-right">
+                            <%= link_to dashboards_department_configuration_index_path, class: 'btn btn-sm btn-danger', title: 'Clear' do %>
+                              Back
+                            <% end %>
+                            <button class="btn btn-sm btn-primary" type="submit" id="saveButton"> Save</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </main>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</body>
+</html>
+<div class="modal fade bd-example-modal-md exampleModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      ...
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        const saveButton = $('#saveButton');
+
+
+
+        if (saveButton.length) {
+            saveButton.on('click', function (event) {
+                event.preventDefault();
+                console.log("Submit button clicked!");
+                calculateKPI();
+
+            });
+        }
+
+
+    });
+
+
+    function calculateKPI() {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+        const selectedCategory = $('#categoryDropdown1').val();
+        const selectedTask = $('#taskDropdown1').val();
+        const tat = $('#TatInput').val();
+        const target = $('#TargetInput').val();
+        const status = $('#statusDropdown1').val()
+        const user = $('#UserDropdown').val()
+
+        console.log('Selected Service:', selectedCategory);
+        console.log('Selected Task:', selectedTask);
+        console.log('TAT:', tat);
+        console.log('Target:', target);
+        console.log('Status:', status);
+        console.log('User:', user);
+
+
+        // Make an AJAX request with only model_name and tat
+        $.ajax({
+            url: '<%= calculate_kpi_dashboards_department_configuration_index_path %>',
+            method: 'POST',
+            data: {
+                model_name: getModelName(selectedTask),
+                tat: tat,
+                task: selectedTask,
+                category: selectedCategory,
+                target: target,
+                status: status,
+                user: user,
+            },
+            headers: {'X-CSRF-Token': csrfToken},
+            success: function (response) {
+                // Handle the response as needed
+                console.log('KPI Calculation Result:', response);
+            },
+            error: function (error) {
+                console.error('Error calculating KPI:', error);
+            }
+        });
+
+        return false;
+    }
+
+    function getModelName(selectedTask) {
+        switch (selectedTask) {
+            case "Approval for registration of service provider":
+            case "Activating new service provider":
+                return "ApprovalRequest";
+            case "Employer Registration":
+                return "Employer"
+            case "Change of employer (transfer)":
+                return "FwChangeEmployer";
+            case "Agency Registration'":
+                return "Agency";
+            case "Special Renewal Approval (unfit)'":
+            case "Update Employer Detail Approval (Employer)":
+                return "ApprovalRequest";
+            case "Laboratory'":
+                return "Laboratory";
+            case "Doctor Visit":
+                return "DoctorVisit";
+            case "X-ray Visit'":
+                return "XrayFacility";
+            case "Amendment of Foreign worker info":
+            case "Special Renewal Approval (unfit)":
+            case "Update employer details":
+            case "Employer Registration Approval":
+                return "ApprovalRequest"
+            default:
+                return "DefaultModel";
+        }
+    }
+</script>

@@ -1,0 +1,49 @@
+<% if @filtered_records.present? %>
+  <% @filtered_records.each_with_index do |record, index| %>
+    <tr>
+      <td><%= index + 1 %></td>
+      <td><%= record.category %></td>
+      <td><%= "Yuvraj" %></td> <!-- Add specific value for Approver -->
+      <td><%= record.task %></td>
+      <td><%= record.tat %></td>
+      <td><%= record.target %></td>
+      <td><%= "KPI Value" %></td> <!-- Add specific value for KPI -->
+      <td><%= "Active" %></td> <!-- Add specific value for Status -->
+      <td>
+        <button class="btn btn-sm btn-secondary" onclick="window.location.href='dashboard-3settingsadd.html'">
+          <i class="fa fa-search"></i>
+        </button>
+        <%= link_to edit_dashboards_department_configuration_index_path, class: 'btn btn-sm btn-primary' do %>
+          <i class="fa fa-edit"></i>
+        <% end %>
+        <%= link_to audit_logs_dashboards_department_configuration_index_path, class: 'btn btn-sm btn-primary' do %>
+          <i class="fa fa-bars"></i>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+<% else %>
+  <% @department_details.each_with_index do |record, index| %>
+    <tr>
+      <td><%= index + 1 %></td>
+      <td><%= record.category %></td>
+      <td><%= "Yuvraj" %></td> <!-- Add specific value for Approver -->
+      <td><%= record.task %></td>
+      <td><%= record.tat %></td>
+      <td><%= record.target %></td>
+      <td><%= "KPI Value" %></td> <!-- Add specific value for KPI -->
+      <td><%= "Active" %></td> <!-- Add specific value for Status -->
+      <td>
+        <button class="btn btn-sm btn-secondary" onclick="window.location.href='dashboard-3settingsadd.html'">
+          <i class="fa fa-search"></i>
+        </button>
+        <%= link_to edit_dashboards_department_configuration_index_path, class: 'btn btn-sm btn-primary' do %>
+          <i class="fa fa-edit"></i>
+        <% end %>
+        <%= link_to audit_logs_dashboards_department_configuration_index_path, class: 'btn btn-sm btn-primary' do %>
+          <i class="fa fa-bars"></i>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+<% end %>
