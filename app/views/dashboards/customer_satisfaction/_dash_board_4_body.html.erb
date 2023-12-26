@@ -80,67 +80,6 @@ https://d3js.org/d3.v3.min.js"
 
                   <script src="https://cdn2.hubspot.net/hubfs/476360/Chart.js"></script>
                   <script src="https://cdn2.hubspot.net/hubfs/476360/utils.js"></script>
-
-                  <script>
-
-                      var config = {
-                          type: 'line',
-                          data: {
-                              labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'November', 'December'],
-                              datasets: [
-
-                                  {
-                                      label: 'Number of Respondents',
-                                      backgroundColor: window.chartColors.blue,
-                                      borderColor: window.chartColors.blue,
-                                      fill: false,
-                                      data: <%=@transaction_line_chart[@current_year].to_json.html_safe%>
-
-                                  }]
-                          },
-                          options: {
-                              responsive: true,
-                              title: {
-                                  display: true,
-                                  text: ''
-                              },
-                              scales: {
-                                  xAxes: [{
-                                      display: true,
-                                      scaleLabel: {
-                                          display: true,
-                                          labelString: 'Date'
-                                      },
-
-                                  }],
-                                  yAxes: [{
-                                      display: true,
-                                      //type: 'logarithmic',
-                                      scaleLabel: {
-                                          display: true,
-                                          labelString: ''
-                                      },
-                                      ticks: {
-                                          min: 0,
-                                          max: 1000,
-
-                                          // forces step size to be 5 units
-                                          stepSize: 200
-                                      }
-                                  }]
-                              }
-                          }
-                      };
-
-                      window.onload = function () {
-                          var ctx = document.getElementById('canvas').getContext('2d');
-                          window.myLine = new Chart(ctx, config);
-                      };
-                      var ctx = document.getElementById('canvas').getContext('2d');
-                      window.myLine = new Chart(ctx, config);
-
-
-                  </script>
                 </div>
 
               </div>
@@ -148,29 +87,46 @@ https://d3js.org/d3.v3.min.js"
 
                 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
                 <script type="text/javascript">
-                    google.charts.load('current', {'packages': ['bar']});
-                    google.charts.setOnLoadCallback(drawChart);
+                    var respondentsAgeGroupMore65 = <%= @respondentsagegroupmore65 %>;
+                    var respondentsAgeGroup5565 = <%= @respondentsagegroup5565 %>;
+                    var respondentsAgeGroup4554 = <%= @respondentsagegroup4554 %>;
+                    var respondentsAgeGroup3544 = <%= @respondentsagegroup3544 %>;
+                    var respondentsAgeGroup2534 = <%= @respondentsagegroup2534 %>;
+                    var respondentsAgeGroup1824 = <%= @respondentsagegroup1824 %>;
 
-                    function drawChart() {
-                        var data = google.visualization.arrayToDataTable([
-                            ['', '', {role: "style"}],
-                            ['65 +', <%=@respondentsagegroupmore65%>, "#0e7dc1"],
-                            ['55-65', <%=@respondentsagegroup5565%>, "#0e7dc1"],
-                            ['45-54', <%=@respondentsagegroup4554%>, "#0e7dc1"],
-                            ['35-44', <%=@respondentsagegroup3544%>, "#0e7dc1"],
-                            ['25-34', <%=@respondentsagegroup2534%>, "#0e7dc1"],
-                            ['18-24', <%=@respondentsagegroup1824%>, "#0e7dc1"]
-                        ]);
 
-                        var options = {
-                            legend: {position: "none"},
-                            bars: 'horizontal' // Required for Material Bar Charts.
+                    if (
+                        respondentsAgeGroupMore65 > 0 ||
+                        respondentsAgeGroup5565 > 0 ||
+                        respondentsAgeGroup4554 > 0 ||
+                        respondentsAgeGroup3544 > 0 ||
+                        respondentsAgeGroup2534 > 0 ||
+                        respondentsAgeGroup1824 > 0
+                    ) {
+                        google.charts.load('current', {'packages': ['bar']});
+                        google.charts.setOnLoadCallback(drawChart);
 
-                        };
+                        function drawChart() {
+                            var data = google.visualization.arrayToDataTable([
+                                ['', '', {role: "style"}],
+                                ['65 +', respondentsAgeGroupMore65, "#0e7dc1"],
+                                ['55-65', respondentsAgeGroup5565, "#0e7dc1"],
+                                ['45-54', respondentsAgeGroup4554, "#0e7dc1"],
+                                ['35-44', respondentsAgeGroup3544, "#0e7dc1"],
+                                ['25-34', respondentsAgeGroup2534, "#0e7dc1"],
+                                ['18-24', respondentsAgeGroup1824, "#0e7dc1"]
+                            ]);
 
-                        var chart = new google.charts.Bar(document.getElementById('barchart_material'));
+                            var options = {
+                                legend: {position: "none"},
+                                bars: 'horizontal' // Required for Material Bar Charts.
+                            };
 
-                        chart.draw(data, google.charts.Bar.convertOptions(options));
+                            var chart = new google.charts.Bar(document.getElementById('barchart_material'));
+                            chart.draw(data, google.charts.Bar.convertOptions(options));
+                        }
+                    } else {
+                        document.getElementById('home').innerHTML = '<div style="display: flex; justify-content: center; align-items: center; height: 100%;">No data to display</div>';
                     }
                 </script>
 
@@ -232,31 +188,36 @@ https://d3js.org/d3.v3.min.js"
                 google.charts.load('current', {packages: ['corechart', 'bar']});
                 google.charts.setOnLoadCallback(drawStacked);
 
-                function drawStacked() {/* w  w w  . j  a  v a  2  s  .  c  om*/
-                    var data = new google.visualization.DataTable();
-                    data.addColumn('string', 'Total ');
-                    data.addColumn('number', 'Total');
-                    data.addRows(<%=@linechart_data.to_json.html_safe%>);
+                function drawStacked() {
+                    var jsonData = <%=@linechart_data.to_json.html_safe%>;
 
-                    var options = {
-                        bar: {groupWidth: "40%"},
-                        hAxis: {
-                            title: 'Sectors',
-                            titleTextStyle: {
-                                color: '#000000',
+                    if (jsonData.length > 0) {
+                        var data = new google.visualization.DataTable();
+                        data.addColumn('string', 'Total ');
+                        data.addColumn('number', 'Total');
+                        data.addRows(jsonData);
+
+                        var options = {
+                            bar: {groupWidth: "40%"},
+                            hAxis: {
+                                title: 'Sectors',
+                                titleTextStyle: {
+                                    color: '#000000',
+                                },
+                                slantedText: true,
+                                slantedTextAngle: 40,
                             },
-                            slantedText: true,
-                            slantedTextAngle: 40,
+                            vAxis: {
+                                title: 'Kits'
+                            },
+                            'chartArea': {'width': '100%'},
+                        };
 
-                        },
-                        vAxis: {
-                            title: 'Kits'
-                        },
-                        'chartArea': {'width': '100%'},
-
-                    };
-                    var chart = new google.visualization.ColumnChart(document.getElementById('columnchart_values'));
-                    chart.draw(data, options);
+                        var chart = new google.visualization.ColumnChart(document.getElementById('columnchart_values'));
+                        chart.draw(data, options);
+                    } else {
+                        document.getElementById('columnchart_values').innerHTML = '<div style="display: flex; justify-content: center; align-items: center; height: 100%;">No data to display</div>';
+                    }
                 }
             </script>
             <div id="columnchart_values" style="width: 100%; height:100%;"></div>
@@ -320,25 +281,45 @@ https://d3js.org/d3.v3.min.js"
                 google.charts.setOnLoadCallback(drawBasic);
 
                 function drawBasic() {
+                    var employeeregregsum = <%=@employeeregregsum%>;
+                    var employeeregweballsum = <%=@employeeregweballsum%>;
+                    var workerregregsum = <%=@workerregregsum%>;
+                    var workerregweballsum = <%=@workerregweballsum%>;
+                    var panelregregsum = <%=@panelregregsum%>;
+                    var panelregweballsum = <%=@panelregweballsum%>;
+                    var overallregregsum = <%=@overallregregsum%>;
+                    var overallregweballsum = <%=@overallregweballsum%>;
 
-                    var data = google.visualization.arrayToDataTable([
-                        ['Ro', 'Ro', 'WebPortal',],
-                        ['Employers Registration', <%=@employeeregregsum%>, <%=@employeeregweballsum%>],
-                        ['Workers Registration', <%=@workerregregsum%>, <%=@workerregweballsum%>],
-                        ['choosing  Fomema Panel Clinic/ X - Ray', <%=@panelregregsum%>, <%=@panelregweballsum%>],
-                        ['Overall Registration Process', <%=@overallregregsum%>, <%=@overallregweballsum%>]
+                    // Check if all data values are 0
+                    if (
+                        employeeregregsum === 0 &&
+                        employeeregweballsum === 0 &&
+                        workerregregsum === 0 &&
+                        workerregweballsum === 0 &&
+                        panelregregsum === 0 &&
+                        panelregweballsum === 0 &&
+                        overallregregsum === 0 &&
+                        overallregweballsum === 0
+                    ) {
+                        // Display a message when there is no data
+                        document.getElementById('dual_x_div').innerHTML = '<div style="display: flex; justify-content: center; align-items: center; height: 100%;">No data to display</div>';
+                    } else {
+                        var data = google.visualization.arrayToDataTable([
+                            ['Ro', 'Ro', 'WebPortal'],
+                            ['Employers Registration', employeeregregsum, employeeregweballsum],
+                            ['Workers Registration', workerregregsum, workerregweballsum],
+                            ['choosing  Fomema Panel Clinic/ X - Ray', panelregregsum, panelregweballsum],
+                            ['Overall Registration Process', overallregregsum, overallregweballsum]
+                        ]);
 
-                    ]);
+                        var options = {
+                            legend: 'bottom',
+                            chartArea: {width: '90%'}
+                        };
 
-                    var options = {
-                        legend: 'bottom',
-                        chartArea: {width: '90%'}
-
-                    };
-
-                    var chart = new google.visualization.BarChart(document.getElementById('dual_x_div'));
-
-                    chart.draw(data, options);
+                        var chart = new google.visualization.BarChart(document.getElementById('dual_x_div'));
+                        chart.draw(data, options);
+                    }
                 }
             </script>
 
@@ -358,36 +339,50 @@ https://d3js.org/d3.v3.min.js"
                   google.charts.load('current', {packages: ['corechart', 'bar']});
                   google.charts.setOnLoadCallback(drawStacked);
 
-                  function drawStacked() {/* w  w w  . j  a  v a  2  s  .  c  om*/
-                      var data = new google.visualization.DataTable();
-                      data.addColumn('string', ' Total');
-                      data.addColumn('number', 'Total');
-                      data.addRows([
-                          ["Location of Panel Clinic is Nearvy", <%=@panelclinics%>],
-                          ["Process of Medical Examination are under standable", <%=@understantable%>],
-                          ["Result of Medical Examination are Easily Obtainable", <%=@obtainable%>],
-                          ["Over Satisfaction Towards Fomema Examination", <%=@overallexp%>]
+                  function drawStacked() {
+                      var panelclinics =  <%=@panelclinics%>;
+                      var understantable = <%=@understantable%>;
+                      var obtainable =  <%=@obtainable%>;
+                      var overallexp =  <%=@overallexp%>;
 
-                      ]);
 
-                      var options = {
-                          hAxis: {
-                              title: '',
-                              titleTextStyle: {
-                                  color: '#000000',
+                      if (
+                          panelclinics > 0 ||
+                          understantable > 0 ||
+                          obtainable > 0 ||
+                          overallexp > 0
+                      ) {
+                          var data = new google.visualization.DataTable();
+                          data.addColumn('string', 'Total');
+                          data.addColumn('number', 'Total');
+                          data.addRows([
+                              ["Location of Panel Clinic is Nearby", panelclinics],
+                              ["Process of Medical Examination are Understandable", understantable],
+                              ["Result of Medical Examination are Easily Obtainable", obtainable],
+                              ["Overall Satisfaction Towards Fomema Examination", overallexp]
+                          ]);
+
+                          var options = {
+                              hAxis: {
+                                  title: '',
+                                  titleTextStyle: {
+                                      color: '#000000',
+                                  },
+                                  slantedText: true,
+                                  slantedTextAngle: 45,
                               },
-                              slantedText: true,
-                              slantedTextAngle: 45,
-                          },
-                          bar: {groupWidth: "30%"},
-                          vAxis: {
-                              title: 'Kits'
-                          },
-                          'chartArea': {'width': '100%'},
+                              bar: {groupWidth: "30%"},
+                              vAxis: {
+                                  title: 'Kits'
+                              },
+                              'chartArea': {'width': '100%'},
+                          };
 
-                      };
-                      var chart = new google.visualization.ColumnChart(document.getElementById('columnchart_values1'));
-                      chart.draw(data, options);
+                          var chart = new google.visualization.ColumnChart(document.getElementById('columnchart_values1'));
+                          chart.draw(data, options);
+                      } else {
+                          document.getElementById('columnchart_values1').innerHTML = '<div style="display: flex; justify-content: center; align-items: center; height: 100%;">No data to display</div>';
+                      }
                   }
               </script>
               <div id="columnchart_values1" style="width: 100%; height:100%;"></div>
@@ -409,27 +404,39 @@ https://d3js.org/d3.v3.min.js"
                 google.charts.setOnLoadCallback(drawBasic);
 
                 function drawBasic() {
+                    var appealworkerstatus = <%= @appealworkerstatus %>;
+                    var appealworkerstatusNo = <%= @appealworkerstatusNo %>;
+                    var appealundergostatus =  <%= @appealundergostatus %>;
+                    var appealundergostatusNo =  <%= @appealundergostatusNo %>;
+                    var appealoverallsum =  <%= @appealoverallsum %>;
 
-                    var data = google.visualization.arrayToDataTable([
-                        ['', '', '',],
-                        ['Did you Undergo your Worker through appeal Process', <%=@appealworkerstatus%>, <%=@appealworkerstatusNo%>],
-                        ['Did you know that you may apply for an appeal for your Worker?', <%=@appealundergostatus%>, <%=@appealundergostatusNo%>],
-                        ['Over Appeal Process', <%=@appealoverallsum%>, 0]
-                    ]);
+                    if (
+                        appealworkerstatus > 0 ||
+                        appealworkerstatusNo > 0 ||
+                        appealundergostatus > 0 ||
+                        appealundergostatusNo > 0 ||
+                        appealoverallsum > 0
+                    ) {
+                        var data = google.visualization.arrayToDataTable([
+                            ['', '', ''],
+                            ['Did you Undergo your Worker through the Appeal Process', appealworkerstatus, appealworkerstatusNo],
+                            ['Did you know that you may apply for an appeal for your Worker?', appealundergostatus, appealundergostatusNo],
+                            ['Over Appeal Process', appealoverallsum, 0]
+                        ]);
 
-                    var options = {
+                        var options = {
+                            chartArea: {width: '90%'},
+                            hAxis: {
+                                title: 'Appeal Process',
+                                minValue: 0
+                            }
+                        };
 
-                        chartArea: {width: '90%'},
-                        hAxis: {
-                            title: 'Appeal Process',
-                            minValue: 0
-                        }
-
-                    };
-
-                    var chart = new google.visualization.BarChart(document.getElementById('chart_div2'));
-
-                    chart.draw(data, options);
+                        var chart = new google.visualization.BarChart(document.getElementById('chart_div2'));
+                        chart.draw(data, options);
+                    } else {
+                        document.getElementById('chart_div2').innerHTML = '<div style="display: flex; justify-content: center; align-items: center; height: 100%;">No data to display</div>';
+                    }
                 }
             </script>
           </div>
@@ -622,23 +629,29 @@ Telegram
                 google.charts.setOnLoadCallback(drawChart);
 
                 function drawChart() {
-                    var data = google.visualization.arrayToDataTable([
-                        ['Task', 'Hours per Day'],
-                        ['Yes', <%=@operatingsocial%>],
-                        ['No', <%=@operatingsocialNo%>]
-                    ]);
+                    var operatingsocial =  <%=@operatingsocial%>;
+                    var operatingsocialNo = <%=@operatingsocialNo%>;
 
-                    var options = {
-                        legend: 'bottom',
-                        colors: ['#0e7dc1', '#99bed6'],
-                        pieHole: 0.4,
-                    };
+                    if (operatingsocial > 0 || operatingsocialNo > 0) {
+                        var data = google.visualization.arrayToDataTable([
+                            ['Task', 'Hours per Day'],
+                            ['Yes', operatingsocial],
+                            ['No', operatingsocialNo]
+                        ]);
 
-                    var chart = new google.visualization.PieChart(document.getElementById('donutchart1'));
-                    chart.draw(data, options);
+                        var options = {
+                            legend: 'bottom',
+                            colors: ['#0e7dc1', '#99bed6'],
+                            pieHole: 0.4,
+                        };
+
+                        var chart = new google.visualization.PieChart(document.getElementById('donutchart1'));
+                        chart.draw(data, options);
+                    } else {
+                        document.getElementById('donutchart1').innerHTML = '<div style="display: flex; justify-content: center; align-items: center; height: 100%;">No data to display</div>';
+                    }
                 }
             </script>
-
 
           </div>
         </div>
@@ -655,20 +668,28 @@ Telegram
                 google.charts.setOnLoadCallback(drawChart);
 
                 function drawChart() {
-                    var data = google.visualization.arrayToDataTable([
-                        ['Task', 'Hours per Day'],
-                        ['Yes', <%=@health_awareness%>],
-                        ['No', <%=@health_awarenessNo%>]
-                    ]);
+                    var healthAwareness = <%=@health_awareness%>;
+                    var healthAwarenessNo =  <%=@health_awarenessNo%>;
 
-                    var options = {
-                        legend: 'bottom',
-                        colors: ['#0e7dc1', '#99bed6'],
-                        pieHole: 0.4,
-                    };
 
-                    var chart = new google.visualization.PieChart(document.getElementById('donutchart2'));
-                    chart.draw(data, options);
+                    if (healthAwareness > 0 || healthAwarenessNo > 0) {
+                        var data = google.visualization.arrayToDataTable([
+                            ['Task', 'Hours per Day'],
+                            ['Yes', healthAwareness],
+                            ['No', healthAwarenessNo]
+                        ]);
+
+                        var options = {
+                            legend: 'bottom',
+                            colors: ['#0e7dc1', '#99bed6'],
+                            pieHole: 0.4,
+                        };
+
+                        var chart = new google.visualization.PieChart(document.getElementById('donutchart2'));
+                        chart.draw(data, options);
+                    } else {
+                        document.getElementById('donutchart2').innerHTML = '<div style="display: flex; justify-content: center; align-items: center; height: 100%;">No data to display</div>';
+                    }
                 }
             </script>
 
@@ -691,20 +712,27 @@ Telegram
                   google.charts.setOnLoadCallback(drawChart);
 
                   function drawChart() {
-                      var data = google.visualization.arrayToDataTable([
-                          ['Task', 'Hours per Day'],
-                          ['Yes', <%=@moh_moha%>],
-                          ['No', <%=@moh_mohaNo%>]
-                      ]);
+                      var mohMoha =  <%= @moh_moha %>;
+                      var mohMohaNo =  <%= @moh_mohaNo %>;
 
-                      var options = {
-                          legend: 'bottom',
-                          colors: ['#0e7dc1', '#99bed6'],
-                          pieHole: 0.4,
-                      };
+                      if (mohMoha > 0 || mohMohaNo > 0) {
+                          var data = google.visualization.arrayToDataTable([
+                              ['Task', 'Hours per Day'],
+                              ['Yes', mohMoha],
+                              ['No', mohMohaNo]
+                          ]);
 
-                      var chart = new google.visualization.PieChart(document.getElementById('donutchart4'));
-                      chart.draw(data, options);
+                          var options = {
+                              legend: 'bottom',
+                              colors: ['#0e7dc1', '#99bed6'],
+                              pieHole: 0.4,
+                          };
+
+                          var chart = new google.visualization.PieChart(document.getElementById('donutchart4'));
+                          chart.draw(data, options);
+                      } else {
+                          document.getElementById('donutchart4').innerHTML = '<div style="display: flex; justify-content: center; align-items: center; height: 100%;">No data to display</div>';
+                      }
                   }
               </script>
 

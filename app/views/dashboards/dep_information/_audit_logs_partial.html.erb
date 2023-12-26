@@ -1,0 +1,28 @@
+<% if @filtered_logs.present? %>
+  <% @filtered_logs.each_with_index do |record, index| %>
+    <tr>
+      <td><%= index + 1 %></td>
+      <td><%= record.user_id %></td>
+      <td><%= record.version %></td>
+      <td><%= record.name %></td>
+      <td><%= "Create" %></td>
+      <td><%= record.created_at.strftime('%d/%m/%Y %l:%M %p') %></td>
+      <td><%= record.changed_fields %></td>
+      <td><%= record.action %></td>
+    </tr>
+  <% end %>
+<% else %>
+  <% @audit_logs = AuditLog.all %>
+  <% @audit_logs.each_with_index do |record, index| %>
+    <tr>
+      <td><%= index + 1 %></td>
+      <td><%= record.user_id %></td>
+      <td><%= record.version %></td>
+      <td><%= record.name %></td>
+      <td><%= "Create" %></td>
+      <td><%= record.created_at.strftime('%d/%m/%Y %l:%M %p') %></td>
+      <td><%= record.changed_fields %></td>
+      <td><%= record.action %></td>
+    </tr>
+  <% end %>
+<% end %>

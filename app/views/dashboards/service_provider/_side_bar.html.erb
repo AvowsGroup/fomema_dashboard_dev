@@ -55,7 +55,7 @@
                 </div>
                 <div id="doctorcode" class="collapse" aria-labelledby="filter2" data-parent="#filter">
                   <div class="card-body">
-                    <ul class="subment-li">
+                    <ul class="subment-li" style="height: auto">
                       <li>
                         <input type="text" class="form-control" id='txtdoctor'>
                       </li>
@@ -70,7 +70,7 @@
                 </div>
                 <div id="xray" class="collapse" aria-labelledby="filter3" data-parent="#filter">
                   <div class="card-body">
-                    <ul class="subment-li">
+                    <ul class="subment-li" style="height: auto">
                       <li>
                         <input type="text" class="form-control" id='txtxray'>
                       </li>
@@ -85,7 +85,7 @@
                 </div>
                 <div id="laboratory" class="collapse" aria-labelledby="filter4" data-parent="#filter">
                   <div class="card-body">
-                    <ul class="subment-li">
+                    <ul class="subment-li" style="height: auto">
                       <li>
                         <input type="text" class="form-control" id='txtlab'>
                       </li>
@@ -94,7 +94,7 @@
                 </div>
               </div>
               <div class="filter-btn mb-2">
-                <a class="btn-apply" data-toggle="collapse" data-target="#tag_demo" onclick="apply_filter()"> Apply</a>
+                <button class="btn-apply" data-toggle="collapse" data-target="#tag_demo" onclick="apply_filter()">Apply</button>
                 <button class="btn-clear" onclick="clear_filter()">Clear</button>
               </div>
             </div>
@@ -155,7 +155,6 @@
     }
 
     function apply_filter() {
-
         if ($('#txtdoctor').val() != "") {
             $('#divcertdoctor').css("display", "block");
             $('#divdoctortransm').css("display", "block");
@@ -196,11 +195,12 @@
             type: 'GET',
             url: url,
             data: selectedValues,
+            dataType: 'script',
             success: function () {
+
                 closeSidebar();
             }
         });
-        closeSidebar();
     }
 
 </script>

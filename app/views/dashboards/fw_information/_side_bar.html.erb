@@ -1,8 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-</head>
-
 <div id="sidebar">
   <div class="filter_row">
     <div class="filter_div">
@@ -179,7 +174,7 @@
                         <input type="checkbox" name="agecheck" value="55-64"> 55-64
                       </li>
                       <li>
-                        <input type="checkbox" name="agecheck" value="65-nil">65+
+                        <input type="checkbox" name="agecheck" value="More than 65">65+
                       </li>
                     </ul>
                   </div>
@@ -216,11 +211,24 @@
                       <li>
                         <input type="checkbox" id="registrationcheckall" name="all_selected" value=""> Select All
                       </li>
-                      <% @organizations.each do |org| %>
-                        <li>
-                          <input type="checkbox" name="registrationcheck" value="<%= "#{org}" %>"> <%= "#{org.capitalize}" %>
-                        </li>
-                      <% end %>
+                      <li>
+                        <input type="checkbox" name="registrationcheck" value="WEBPORTAL"> Web Portal
+                      </li>
+                      <li>
+                        <input type="checkbox" name="registrationcheck" value="AGENCY"> Agency
+                      </li>
+                      <li>
+                        <input type="checkbox" name="registrationcheck" value="EAST COAST"> East Coast
+                      </li>
+                      <li>
+                        <input type="checkbox" name="registrationcheck" value="NORTHERN"> Northern
+                      </li>
+                      <li>
+                        <input type="checkbox" name="registrationcheck" value="SOUTHERN"> Southern
+                      </li>
+                      <li>
+                        <input type="checkbox" name="registrationcheck" value="CENTRAL"> Central
+                      </li>
                     </ul>
                   </div>
                 </div>
@@ -271,6 +279,8 @@
                   }
               }
           </script>
+          <!-- <ul class="list"><li>
+                     Time Period</li><li>Sector</li><li>State</li><li>Country</li><li>Age</li><li>Gender</li><li>Registration at</li><li>Foregin Worker Type</li></ul> -->
         </div>
       </div>
       <div class="filter d-none">
@@ -305,8 +315,26 @@
     </div>
   </div>
 </div>
-<script type="text/javascript">
 
+<style>
+    #sidebar {
+        height: 600px; /* Adjust the height as needed */
+    }
+
+    /* Maintain proper alignment for filter and buttons */
+    .filter-btn {
+        position: sticky;
+        bottom: 0;
+        z-index: 999;
+    }
+
+    .collapse.show {
+        margin-bottom: 0; /* Adjust as needed */
+    }
+</style>
+
+
+<script type="text/javascript">
     function getCheckedValues() {
         var checkedValues = {
             'DateRange': '',
@@ -396,44 +424,28 @@
             return $(this).val();
         }).get().join(' ');
 
-
+        console.log(checkedValues)
         return checkedValues;
 
 
     }
 
-</script>
-
-<script type="text/javascript">
     function apply_filter() {
         const selectedValues = JSON.stringify(getCheckedValues());
-
-        // handling line chart with year range of filters
         const selectedDateRange = $('#date-range').val();
-        let [startDate, endDate] = selectedDateRange.split(' - ');
-        let startYear = parseInt(startDate.split('-')[0]);
-        let endYear = parseInt(endDate.split('-')[0]);
 
-        let yearRange = [];
-
-        if (startYear === endYear) {
-            yearRange.push(startYear);
-        } else {
-            for (let year = startYear; year <= endYear; year++) {
-                yearRange.push(year);
-            }
-        }
-
-
-        updateChartByYearRange(yearRange);
-
-
+        // Make the AJAX request
         $.ajax({
             type: 'GET',
             url: '/dashboards/fw_information/index.js', // Replace with your Rails route
-            data: selectedValues
+            data: selectedValues,
+            success: function() {
+                // Update chart with the selected date range after the AJAX call is successful
+                updateChartByYearRange(selectedDateRange);
+            }
         });
     }
+
 
     function clear_filter() {
         var selectedValues = JSON.stringify({value: false});
@@ -460,5 +472,5 @@
     $('#clearButton').on('click', function () {
         clearAllInputs();
     });
+
 </script>
-</html>
