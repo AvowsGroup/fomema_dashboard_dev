@@ -229,8 +229,9 @@
     function getModelName(selectedTask) {
         switch (selectedTask) {
             case "Approval for registration of service provider":
+                return "ApprovalandActivation";
             case "Activating new service provider":
-                return "ApprovalRequest";
+                return "ApprovalandActivation";
             case "Employer Registration":
                 return "Employer"
             case "Change of employer (transfer)":
@@ -238,18 +239,20 @@
             case "Agency Registration'":
                 return "Agency";
             case "Special Renewal Approval (unfit)'":
+                return "ApprovalRequest"
             case "Update Employer Detail Approval (Employer)":
                 return "ApprovalRequest";
+            case "Amendment of Foreign worker info":
+                return "ApprovalRequest"
             case "Laboratory'":
                 return "Laboratory";
             case "Doctor Visit":
                 return "DoctorVisit";
             case "X-ray Visit'":
                 return "XrayFacility";
-            case "Amendment of Foreign worker info":
-            case "Special Renewal Approval (unfit)":
-            case "Update employer details":
             case "Employer Registration Approval":
+                return "ApprovalRequest"
+            case "Update employer details":
                 return "ApprovalRequest"
             default:
                 return "DefaultModel";
